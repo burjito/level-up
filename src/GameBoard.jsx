@@ -1,5 +1,5 @@
 export default function GameBoard({ categories, questions, teams, onPick }) {
-  const find = (catId, n) => questions.find((q) => q.categoryId === catId && q.id === `${catId}-${n}`);
+  const find = (catId, n) => questions.find((q) => q.id === `${catId}-${n}`);
   const ranked = [...teams].sort((a, b) => b.score - a.score);
 
   return (
@@ -17,22 +17,16 @@ export default function GameBoard({ categories, questions, teams, onPick }) {
       </header>
 
       <div className="overflow-x-auto pb-4">
-        <div
-          className="grid min-w-[900px] gap-2"
-          style={{ gridTemplateColumns: 'minmax(150px,1.6fr) repeat(10, minmax(64px,1fr))' }}
-        >
-          {/* top-left logo cell */}
+        <div className="grid min-w-[980px] gap-2" style={{ gridTemplateColumns: 'minmax(180px,2fr) repeat(10, minmax(70px,1fr))' }}>
           <div className="glass flex items-center justify-center rounded-2xl p-3 text-center text-lg font-extrabold leading-tight">
             Level<br />Up!
           </div>
-          {/* question number / point multiplier row */}
           {Array.from({ length: 10 }, (_, i) => (
             <div key={i} className="flex flex-col items-center justify-center rounded-2xl bg-white/[0.03] py-2">
               <span className="text-2xl font-extrabold">{i + 1}</span>
               <span className="text-xs text-white/50">{(i + 1) * 100} pts</span>
             </div>
           ))}
-
           {categories.map((c) => (
             <Row key={c.id} category={c} find={find} onPick={onPick} />
           ))}
@@ -45,12 +39,15 @@ export default function GameBoard({ categories, questions, teams, onPick }) {
 function Row({ category: c, find, onPick }) {
   return (
     <>
-      <div
-        className="glass relative flex min-h-[84px] items-end overflow-hidden rounded-2xl p-3"
-        style={{ backgroundImage: `linear-gradient(to top, rgba(8,10,20,.85), rgba(8,10,20,.2)), url(${c.bg})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
-      >
-        <span className="absolute right-3 top-2 text-2xl" aria-hidden>{c.emoji}</span>
-        <span className="font-bold leading-tight">{c.name}</span>
+      <div className="flex min-h-[96px] items-center justify-center overflow-hidden rounded-2xl ring-1 ring-white/20" style={{ background: c.color }}>
+        {c.img ? (
+          <img src={c.img} alt={c.name} className="h-full w-full object-contain" />
+        ) : (
+          <div className="p-3 text-center">
+            <div className="text-4xl" aria-hidden>{c.emoji}</div>
+            <div className="mt-1 text-lg font-extrabold leading-tight text-white">{c.name}</div>
+          </div>
+        )}
       </div>
       {Array.from({ length: 10 }, (_, i) => {
         const q = find(c.id, i + 1);
