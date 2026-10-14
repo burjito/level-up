@@ -1,89 +1,95 @@
-// Mock game data. Types: 'text' | 'photo' | 'truefalse' | 'video'
-// Replace mediaPlaceholder paths with files placed in /public/media/...
+// Types: 'text' | 'photo' | 'truefalse' | 'video'
+// Media files go in /public/media/<categoryId>/<n>.jpg|mp4 (or set `media` to a URL).
 export const CATEGORIES = [
-  { id: 'pop', name: 'Pop Culture', emoji: '🎬', bg: '/media/pop/cover.jpg', voiceover: '/audio/pop.mp3' },
-  { id: 'bible', name: 'Bible Questions', emoji: '📖', bg: '/media/bible/cover.jpg', voiceover: '/audio/bible.mp3' },
-  { id: 'gaming', name: 'Gaming', emoji: '🎮', bg: '/media/gaming/cover.jpg', voiceover: '/audio/gaming.mp3' },
-  { id: 'ph', name: 'Filipino Life', emoji: '🇵🇭', bg: '/media/ph/cover.jpg', voiceover: '/audio/ph.mp3' },
-  { id: 'mix', name: 'Youth Night Mix', emoji: '🔥', bg: '/media/mix/cover.jpg', voiceover: '/audio/mix.mp3' },
+  { id: 'grade5', name: 'Kakasa Ka Ba Sa Grade 5?', color: '#dd0000', img: '/media/categories/grade5.webp' },
+  { id: 'scroll', name: 'Kaka-scroll Mo Yan!', color: '#512dc3', img: '/media/categories/scroll.webp' },
+  { id: 'sino', name: 'Sino Yarn?', color: '#0cb820', img: '/media/categories/sino.webp' },
+  { id: 'trot', name: 'Trot o Charot', color: '#0040ff', img: '/media/categories/trot.webp' },
+  { id: 'bible', name: 'Bible Questions', color: '#ff8a00', img: '/media/categories/bible.webp' },
 ];
 
-const SET = 'Set your answer';
-// [type, questionText, answerText] — index 0..9 = question 1..10
+export const DEFAULT_SECONDS = 20; // default timer per question; override with { seconds: 30 } in a question's options
+const TC = ['Trot', 'Charot'];
+const TT = (code) => ({ media: `https://vt.tiktok.com/${code}/` });
+const SET = 'Ilagay ang sagot';
+
+// [type, questionText, answerText, options?] — index 0..9 = question 1..10
 const RAW = {
-  pop: [
-    ['text', "Who is known as the 'Queen of Pop'?", 'Madonna'],
-    ['truefalse', "Taylor Swift's Eras Tour became the highest-grossing tour of all time.", 'True'],
-    ['photo', 'Name the superhero in this silhouette.', SET],
-    ['text', "Which Disney film features 'Let It Go'?", 'Frozen'],
-    ['video', 'Name the movie this clip is from.', SET],
-    ['text', "Which series has a place called 'the Upside Down'?", 'Stranger Things'],
-    ['truefalse', 'BTS is from Japan.', 'False — South Korea'],
-    ['text', "Who sings 'Shape of You'?", 'Ed Sheeran'],
-    ['photo', 'Name the brand logo shown.', SET],
-    ['text', "Which group sings 'Dynamite'?", 'BTS'],
+  grade5: [
+    ['truefalse', 'True or False. Ang araw ay isang bituin.', 'TRUE'],
+    ['text', 'Anong bansa ang sumakop sa Pilipinas nang 333 years?', 'Spain / Espanya'],
+    ['text', 'Ano ang title ng pambansang awit ng Pilipinas?', 'Lupang Hinirang'],
+    ['text', 'Kailan ipinagdiriwang ang Araw ng Kalayaan?', 'June 12'],
+    ['text', 'Ilang sides meron ang isang hexagon?', '6'],
+    ['text', 'Ilang taon ang bumubuo sa isang siglo?', '100'],
+    ['text', 'Ano ang sinasagisag ng tatlong bituin sa watawat ng Pilipinas?', 'Luzon, Visayas, Mindanao'],
+    ['text', 'Anong tawag sa hayop na kumakain lamang ng halaman?', 'Herbivore'],
+    ['text', 'Anong proseso ang ginagawa ng halaman gamit ang sikat ng araw, tubig, at hangin para makagawa ng pagkain?', 'Photosynthesis'],
+    ['text', 'Ano ang 20% ng 250?', '50'],
+  ],
+  scroll: [
+    ['video', 'Sa kanta ni Lyca, ano ang meron din naman palang ganda?', 'Buhay a.k.a Mariel', TT('ZSboMQskA')],
+    ['text', 'Sa anong larangan sikat si Dwight Ramos?', 'Basketball'],
+    ['text', 'Ilan ang miyembro ng Kpop group na Seventeen?', '13 members'],
+    ['text', 'Sino ang bida sa teleseryeng Agua Bendita?', 'Xyriel Manabat'],
+    ['text', 'Kung ang bumida sa teleseryeng Annaliza ay si Andrea Brillantes, sino naman ang CEO ng Brillant Skin?', 'Glenda Dela Cruz / Ms. Glenda'],
+    ['video', 'Sa FlordeLiza, ano ang dapat mahawakan ni Flor para maging mabait na sa kanya si Liza?', 'Magkabilang dulo ng rainbow', TT('ZSgJNbXt4')],
+    ['text', "Ilang years na simula unang ma-ere ang noontime tv show na It's Showtime?", '17 years'],
+    ['text', 'Sino-sino ang tatlong lola ni Yaya Dub sa Kalyeserye?', 'Lola Nidora, Lola Tidora, Lola Tinidora'],
+    ['video', 'Kumpletuhin ang linya ng sikat na meme: "Hi! I\'m (1)____ from Las Vegas (2)______. We\'re hiring new (3)______ (4)_______ to work in Las Vegas (5)______."', "Hi! I'm (1) LYN from Las Vegas (2) MODELS. We're hiring new (3) PROMOTIONAL (4) MODELS to work in Las Vegas (5) USA.", TT('ZSgJNeQmJ')],
+    ['text', 'Sa sikat na kanta ng BINI na Karera, ilang beses binanggit ng kanta ang salitang "karera"?', '15 times'],
+  ],
+  sino: [
+    ['video', 'Sino ang original na kumanta ng kantang ito? (audio)', 'Vhong Navarro'],
+    ['photo', 'Bonus Question: Sino ito? (zoomed-in picture)', 'Jemuel Ocampo / Kuya Jem'],
+    ['text', '"O... my... goodness! Ungkatan ng past! Kapag binalik ang past, magugulo ang present."', 'Toni Gonzaga / Teddy Salazar'],
+    ['text', 'ActSong: Hulaan ang kanta! (ilagay dito ang lyrics mula sa sheet mo)', 'Cup of Joe'],
+    ['photo', 'Sino ito?', 'Melai Cantiveros'],
+    ['text', 'Sinong mga tao ang nasa lumang 500 Peso bill?', 'Corazon Aquino & Ninoy Aquino'],
+    ['text', 'Sino ang babae sa septic tank?', 'Eugene Domingo'],
+    ['text', 'Sino ang nag-deny kay Jesus nang tatlong beses?', 'Peter'],
+    ['text', 'Sino ang Senate President sa kasalukuyan?', 'Win Gatchalian'],
+    ['text', 'Sino ang Filipino TikToker na may pinakamaraming followers?', 'Niana Guerrero'],
+  ],
+  trot: [
+    ['truefalse', "Ang 'nonchalant' ay taong hindi nagpapakita ng emosyon, habang ang 'chalant' ay taong expressive.", 'Trot', { choices: TC }],
+    ['truefalse', 'Kapag in-unfollow mo ang isang tao sa Instagram, automatic siyang makakatanggap ng notification.', 'Charot', { choices: TC }],
+    ['truefalse', 'Kapag nag-delete ka ng message sa Messenger gamit ang "Remove for you," mawawala rin ito sa inbox ng ka-chat mo.', 'Charot', { choices: TC }],
+    ['truefalse', 'Kapag naka-off ang "Profile view history" mo sa TikTok, makikita mo pa rin kung sino ang bumisita sa profile mo.', 'Charot', { choices: TC }],
+    ['truefalse', 'Ang "www" sa website address ay nangangahulugang "World Wide Web."', 'Trot', { choices: TC }],
+    ['truefalse', 'Sa Instagram, makikita ng isang tao kung ilang beses mong pinanood ang kanyang Story.', 'Charot', { choices: TC }],
+    ['truefalse', 'Ang "Ctrl + F" ay shortcut para maghanap ng salita o phrase sa maraming computer applications at web browsers.', 'Trot', { choices: TC }],
+    ['video', 'Ito ay totoong cabbage.', 'Trot', { choices: TC, note: 'Clip: 0:01 - 0:07' }],
+    ['video', 'Ang nag-cover ng kantang ito ay si Jared Lim Almendras, known professionally as... (kumpletuhin mula sa sheet)', 'Charot', { choices: TC }],
+    ['video', 'Ito ay totoong sibuyas.', 'Charot', { choices: TC, note: 'Clip: 0:44 - 0:49' }],
   ],
   bible: [
-    ['text', 'What is the first book of the Bible?', 'Genesis'],
-    ['truefalse', 'David defeated Goliath with a sword.', 'False — a sling and a stone'],
-    ['text', 'How many disciples did Jesus choose?', '12'],
-    ['photo', 'Which Bible story does this picture show?', SET],
-    ['text', 'Who built the ark?', 'Noah'],
-    ['truefalse', "The shortest verse in the Bible is 'Jesus wept.'", 'True'],
-    ['video', 'Which parable is acted out in this clip?', SET],
-    ['text', 'Who was swallowed by a great fish?', 'Jonah'],
-    ['text', 'On which mountain did Moses receive the Ten Commandments?', 'Mount Sinai'],
-    ['text', 'Who betrayed Jesus for thirty pieces of silver?', 'Judas Iscariot'],
-  ],
-  gaming: [
-    ['text', 'Which plumber rescues Princess Peach?', 'Mario'],
-    ['truefalse', 'Minecraft was created by Mojang.', 'True'],
-    ['photo', 'Name this game character.', SET],
-    ['text', 'Which console is the best-selling of all time?', 'PlayStation 2'],
-    ['text', 'In Among Us, what are the bad players called?', 'Impostors'],
-    ['video', 'Guess the game from this gameplay clip.', SET],
-    ['truefalse', 'Pikachu is a Water-type Pokémon.', 'False — Electric'],
-    ['text', 'What color is Sonic the Hedgehog?', 'Blue'],
-    ['text', 'Which game has the Battle Bus?', 'Fortnite'],
-    ['text', 'Mobile Legends belongs to which genre (3 letters + 1)?', 'MOBA'],
-  ],
-  ph: [
-    ['text', 'What is the national fruit of the Philippines?', 'Mango'],
-    ['truefalse', 'Jollibee started as an ice cream parlor.', 'True'],
-    ['photo', 'Which Philippine landmark is this?', SET],
-    ['text', 'What are the Christmas dawn masses called?', 'Simbang Gabi'],
-    ['text', 'About how many islands does the Philippines have?', '7,641'],
-    ['video', 'Name the jingle or commercial.', SET],
-    ['truefalse', "'Kuya' is used to address an older sister.", 'False — older brother'],
-    ['text', 'Who is the national hero of the Philippines?', 'José Rizal'],
-    ['text', 'Which province is famous for the Chocolate Hills?', 'Bohol'],
-    ['text', 'Which dish is meat stewed in vinegar and soy sauce?', 'Adobo'],
-  ],
-  mix: [
-    ['text', "Finish it: 'Faith, hope, and ___'", 'Love'],
-    ['truefalse', 'Our theme tonight is Level Up!', 'True'],
-    ['photo', 'Who is this youth leader?', SET],
-    ['text', 'Which fruit of the Spirit comes first in Galatians 5:22?', 'Love'],
-    ['text', 'How many books are in the Bible?', '66'],
-    ['video', 'Throwback clip: which youth event is this?', SET],
-    ['truefalse', 'Mercury is the planet closest to the sun.', 'True'],
-    ['text', 'What is 12 × 12?', '144'],
-    ['text', "Joshua 1:9 — 'Be strong and ___'", 'Courageous'],
-    ['text', 'What is the capital of the Philippines?', 'Manila'],
+    ['text', 'Ilang araw nasa loob ng tyan ng isda si Noah?', '0'],
+    ['truefalse', '"When God closes a door, He opens a window."', 'CAP', { choices: ['Scripture', 'CAP'] }],
+    ['text', 'Ano ang ika-anim na utos sa Ten Commandments?', '"Thou shalt not murder" / "Huwag kang papatay"'],
+    ['photo', 'Guess the phrase! (sheep puzzle)', 'Lost Sheep'],
+    ['text', 'Gibberish: JAR USE SA LAMB', 'Jerusalem'],
+    ['text', 'Unshuffle the words: SSOEM', 'Moses'],
+    ['truefalse', '"Jesus wept"', 'Scripture — John 11:35', { choices: ['Scripture', 'CAP'] }],
+    ['text', 'How many books are there in the Bible?', '66'],
+    ['truefalse', 'True or False: David killed Goliath with a sword.', 'FALSE'],
+    ['photo', 'Guess the book in the Bible! (emoji puzzle)', 'Isaiah'],
   ],
 };
 
 export const buildQuestions = () =>
   CATEGORIES.flatMap((c) =>
-    RAW[c.id].map(([type, questionText, answerText], i) => ({
+    RAW[c.id].map(([type, questionText, answerText, o = {}], i) => ({
       id: `${c.id}-${i + 1}`,
       categoryId: c.id,
       points: (i + 1) * 100,
       type,
       questionText,
       answerText,
-      mediaPlaceholder:
-        type === 'photo' ? `/media/${c.id}/${i + 1}.jpg` : type === 'video' ? `/media/${c.id}/${i + 1}.mp4` : null,
+      choices: o.choices ?? (type === 'truefalse' ? ['True', 'False'] : null),
+      note: o.note ?? null,
+      seconds: o.seconds ?? DEFAULT_SECONDS,
+      mediaPlaceholder: o.media ?? (type === 'photo' ? `/media/${c.id}/${i + 1}.jpg` : type === 'video' ? `/media/${c.id}/${i + 1}.mp4` : null),
       isAnswered: false,
     }))
   );
