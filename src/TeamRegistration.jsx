@@ -17,14 +17,12 @@ export default function TeamRegistration({ teams, setTeams, onStart }) {
 
   return (
     <main className="mx-auto grid min-h-screen max-w-6xl items-center gap-10 px-6 py-12 lg:grid-cols-5">
-      <section className="lg:col-span-2">
-        <h1 className="text-6xl font-extrabold leading-none tracking-tight sm:text-7xl">Level Up!</h1>
-        <p className="mt-5 max-w-sm text-lg text-white/70">
-          Youth Night trivia. Register your teams, pick a color, then pick a question.
-        </p>
+      <section className="lg:col-span-3">
+        <h1 className="sr-only">Level Up!</h1>
+        <img src="/media/level-up.webp" alt="Level Up! Youth Night, Oct 23, 5:30 PM, Jesus' Flock Gateway Church" className="w-full rounded-3xl shadow-2xl shadow-black/50 ring-1 ring-white/20" />
       </section>
 
-      <section className="glass rounded-3xl p-6 sm:p-8 lg:col-span-3">
+      <section className="glass rounded-3xl p-6 sm:p-8 lg:col-span-2">
         <form onSubmit={addTeam} className="space-y-5">
           <div>
             <label htmlFor="team" className="mb-2 block text-sm text-white/70">Team name</label>
