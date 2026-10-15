@@ -30,13 +30,7 @@ export default function App() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden">
-      {/* aurora backdrop gives the glass something to blur */}
-      <div aria-hidden className="pointer-events-none fixed inset-0 -z-10">
-        <div className="absolute -top-40 -left-32 h-[28rem] w-[28rem] rounded-full bg-violet-600/40 blur-[120px]" />
-        <div className="absolute top-1/3 -right-40 h-[30rem] w-[30rem] rounded-full bg-cyan-500/30 blur-[130px]" />
-        <div className="absolute -bottom-48 left-1/4 h-[26rem] w-[26rem] rounded-full bg-fuchsia-600/25 blur-[120px]" />
-      </div>
+    <div className="h-full">
 
       {currentPhase === 'registration' && (
         <TeamRegistration teams={teams} setTeams={setTeams} onStart={() => setCurrentPhase('board')} />
