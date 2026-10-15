@@ -19,13 +19,10 @@ export default function TeamRegistration({ teams, setTeams, onStart }) {
   return (
     <main className="relative flex min-h-full items-center overflow-hidden px-6 py-10">
       <Stars />
-      <div className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-8 lg:grid-cols-2">
-        <section className="flex flex-col items-center text-center">
-          <h1 className="sr-only">Level Up!</h1>
-          <img src="/elements/logo.webp" alt="Level Up!" className="w-full max-w-md drop-shadow-[0_10px_0_rgba(0,64,255,0.12)]" />
-          <p className="font-display text-4xl text-poster-orange">Oct 24 <span className="ml-2 rounded-full bg-poster-violet px-4 py-1 align-middle text-xl text-white">3:30 PM</span></p>
-          <p className="mt-2 font-display text-lg uppercase tracking-wide text-poster-orange">Jesus' Flock Gateway Church</p>
-          <p className="mt-1 font-display text-xl"><span className="text-poster-red">RadGen</span> <span className="text-poster-violet">Yth Nyt</span></p>
+      <div className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-8 lg:grid-cols-[1.2fr_1fr]">
+        <section>
+          <h1 className="sr-only">Level Up! Youth Night, Oct 24, 3:30 PM</h1>
+          <img src="/elements/logo.webp" alt="" className="mx-auto w-full max-w-2xl" />
         </section>
 
         <section className="glass rounded-[2rem] p-6 sm:p-8">
@@ -37,14 +34,16 @@ export default function TeamRegistration({ teams, setTeams, onStart }) {
                 className="w-full rounded-2xl border-2 border-ink/15 bg-white px-4 py-3 text-lg outline-none placeholder:text-ink/35 focus:border-poster-blue" />
             </div>
             <div>
-              <span className="mb-1.5 block text-sm font-semibold">Team color</span>
-              <div className="flex flex-wrap items-center gap-3">
+              <span className="mb-2.5 block text-sm font-semibold">Team color</span>
+              <div className="flex flex-wrap items-center gap-2.5 p-1">
                 {SWATCHES.map((c) => (
-                  <button type="button" key={c} aria-label={`Color ${c}`} aria-pressed={color === c} onClick={() => setColor(c)}
-                    style={{ background: c }}
-                    className={`h-9 w-9 rounded-full border-2 border-white shadow transition ${color === c ? 'scale-125 ring-4 ring-ink' : 'hover:scale-110'}`} />
+                  <button type="button" key={c} aria-label={`Color ${c}`} aria-pressed={color === c} onClick={() => setColor(c)} style={{ background: c }}
+                    className={`h-7 w-7 rounded-full border-2 border-white shadow transition ${color === c ? 'ring-2 ring-ink ring-offset-2' : 'hover:scale-110'}`} />
                 ))}
-                <input type="color" value={color} onChange={(e) => setColor(e.target.value)} aria-label="Custom color" className="h-9 w-9 cursor-pointer rounded-full border-0 bg-transparent" />
+                <label title="Custom color" className="relative h-7 w-7 cursor-pointer overflow-hidden rounded-full border-2 border-white shadow transition hover:scale-110"
+                  style={{ background: 'conic-gradient(#dd0000,#ff8a00,#eab308,#0cb820,#0040ff,#512dc3,#dd0000)' }}>
+                  <input type="color" value={color} onChange={(e) => setColor(e.target.value)} aria-label="Custom color" className="absolute inset-0 h-full w-full cursor-pointer opacity-0" />
+                </label>
               </div>
             </div>
             <button type="submit" className="btn-ghost w-full" disabled={!name.trim()}>Add team</button>
