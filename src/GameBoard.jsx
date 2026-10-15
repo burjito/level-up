@@ -1,3 +1,5 @@
+import TeamRank from './TeamRank.jsx';
+
 // Fits the viewport exactly: no scrolling. Sizes come from the grid tracks.
 export default function GameBoard({ categories, questions, teams, onPick, onShowTally }) {
   const find = (catId, n) => questions.find((q) => q.id === `${catId}-${n}`);
@@ -8,11 +10,7 @@ export default function GameBoard({ categories, questions, teams, onPick, onShow
       <header className="flex shrink-0 items-center justify-end gap-2">
         <ul className="flex min-w-0 gap-2 overflow-hidden">
           {top3.map((t, i) => (
-            <li key={t.id} className="glass flex shrink-0 items-center gap-2 rounded-full px-3 py-1 text-sm font-semibold">
-              <span className="font-display text-poster-violet">{i + 1}</span>
-              <span className="h-3 w-3 rounded-full" style={{ background: t.color }} />{t.name}
-              <b className="font-display text-base text-poster-blue">{t.score}</b>
-            </li>
+            <li key={t.id} className="shrink-0"><TeamRank team={t} rank={i + 1} size="sm" /></li>
           ))}
         </ul>
         <button onClick={onShowTally} className="btn-ghost shrink-0 px-4 py-1 text-sm">Scoreboard</button>
@@ -20,7 +18,7 @@ export default function GameBoard({ categories, questions, teams, onPick, onShow
 
       <div className="grid min-h-0 flex-1 gap-1.5 sm:gap-2"
         style={{ gridTemplateColumns: 'minmax(0,1.5fr) repeat(10,minmax(0,1fr))', gridTemplateRows: 'minmax(0,.8fr) repeat(5,minmax(0,1fr))' }}>
-        <div className="flex items-center justify-center"><img src="/elements/logo-wide.webp" alt="Level Up!" className="h-full w-full object-contain" /></div>
+        <div className="flex items-center justify-center"><img src="/elements/logo-wide.webp" alt="Level Up!" className="h-[72%] w-[84%] object-contain" /></div>
         {Array.from({ length: 10 }, (_, i) => (
           <div key={i} className="flex flex-col items-center justify-center rounded-2xl border-2 border-poster-violet/20 bg-white leading-none shadow-[0_3px_0_rgba(81,45,195,.18)]">
             <span className="font-display text-[clamp(16px,3.6vh,38px)] text-poster-violet">{i + 1}</span>
