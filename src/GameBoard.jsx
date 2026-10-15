@@ -4,15 +4,18 @@ import TeamRank from './TeamRank.jsx';
 export default function GameBoard({ categories, questions, teams, onPick, onShowTally }) {
   const find = (catId, n) => questions.find((q) => q.id === `${catId}-${n}`);
   const top3 = [...teams].sort((a, b) => b.score - a.score).slice(0, 3);
+  const started = teams.some((t) => t.score > 0); // no top 3 until the first points are awarded
 
   return (
     <main className="flex h-full flex-col gap-2 overflow-hidden p-3 sm:p-4">
       <header className="flex shrink-0 items-center justify-end gap-2">
-        <ul className="flex min-w-0 gap-2 overflow-hidden">
+        {started && (
+          <ul className="flex min-w-0 gap-2 overflow-hidden">
           {top3.map((t, i) => (
             <li key={t.id} className="shrink-0"><TeamRank team={t} rank={i + 1} size="sm" /></li>
           ))}
         </ul>
+        )}
         <button onClick={onShowTally} className="btn-ghost shrink-0 px-4 py-1 text-sm">Scoreboard</button>
       </header>
 
@@ -21,8 +24,8 @@ export default function GameBoard({ categories, questions, teams, onPick, onShow
         <div className="flex items-center justify-center"><img src="/elements/logo-wide.webp" alt="Level Up!" className="h-[72%] w-[84%] object-contain" /></div>
         {Array.from({ length: 10 }, (_, i) => (
           <div key={i} className="flex flex-col items-center justify-center rounded-2xl border-2 border-poster-violet/20 bg-white leading-none shadow-[0_3px_0_rgba(81,45,195,.18)]">
-            <span className="font-display text-[clamp(16px,3.6vh,38px)] text-poster-violet">{i + 1}</span>
-            <span className="mt-0.5 text-[clamp(9px,1.5vh,15px)] font-semibold text-ink/55">{(i + 1) * 100} pts</span>
+            <span className="font-display text-[clamp(22px,5vh,52px)] text-poster-violet">{i + 1}</span>
+            <span className="mt-0.5 text-[clamp(12px,2.2vh,22px)] font-semibold text-ink/55">{(i + 1) * 100} pts</span>
           </div>
         ))}
         {categories.map((c) => (
