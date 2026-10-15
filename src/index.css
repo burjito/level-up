@@ -1,12 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Titan+One&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer components {
-  .glass { @apply bg-white/[0.06] backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/40; }
-  .btn { @apply rounded-xl px-6 py-3 font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-300 disabled:opacity-40 disabled:cursor-not-allowed; }
-  .btn-primary { @apply btn bg-gradient-to-r from-violet-500 to-cyan-400 text-slate-950 hover:brightness-110; }
-  .btn-ghost { @apply btn bg-white/10 text-white hover:bg-white/20; }
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  color: #1c1650;
+  font-family: Outfit, system-ui, sans-serif;
+  background-color: #fdfdfd;
+  background-image: linear-gradient(#e4e4ea 1px, transparent 1px), linear-gradient(90deg, #e4e4ea 1px, transparent 1px);
+  background-size: 28px 28px;
 }
-body { @apply bg-[#080a14] text-white font-sans antialiased; }
+
+@layer components {
+  .glass { @apply bg-white/75 backdrop-blur-xl border-2 border-white shadow-[0_12px_40px_rgba(81,45,195,0.18)]; }
+  .btn { @apply rounded-full px-7 py-3 font-display text-lg transition active:translate-y-[3px] disabled:pointer-events-none disabled:opacity-40 focus-visible:outline focus-visible:outline-4 focus-visible:outline-poster-orange; }
+  .btn-primary { @apply btn bg-poster-blue text-white shadow-[0_5px_0_#00208f] hover:brightness-110 active:shadow-[0_2px_0_#00208f]; }
+  .btn-ghost { @apply btn border-2 border-poster-violet bg-white text-poster-violet shadow-[0_4px_0_#512dc3] active:shadow-[0_1px_0_#512dc3]; }
+}
+@media (prefers-reduced-motion: reduce) { .animate-float { animation: none !important; } }

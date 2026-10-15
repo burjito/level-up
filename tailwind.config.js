@@ -3,14 +3,13 @@ export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
     extend: {
-      fontFamily: { sans: ['Sora', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
+      colors: { poster: { red: '#dd0000', blue: '#0040ff', violet: '#512dc3', green: '#0cb820', orange: '#ff8a00' }, ink: '#1c1650' },
+      fontFamily: { display: ['"Titan One"', 'Outfit', 'sans-serif'], sans: ['Outfit', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
       keyframes: {
-        pop: {
-          from: { opacity: 0, transform: 'scale(.96) translateY(14px)' },
-          to: { opacity: 1, transform: 'none' },
-        },
+        pop: { from: { opacity: 0, transform: 'scale(.94) translateY(16px)' }, to: { opacity: 1, transform: 'none' } },
+        float: { '0%,100%': { transform: 'translateY(0) rotate(0deg)' }, '50%': { transform: 'translateY(-26px) rotate(18deg)' } },
       },
-      animation: { pop: 'pop .5s cubic-bezier(.2,.8,.2,1) both' },
+      animation: { pop: 'pop .45s cubic-bezier(.2,.8,.2,1) both', float: 'float 8s ease-in-out infinite' },
     },
   },
   plugins: [],
