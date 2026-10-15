@@ -1,11 +1,11 @@
 // Types: 'text' | 'photo' | 'truefalse' | 'video'
 // Media files go in /public/media/<categoryId>/<n>.jpg|mp4 (or set `media` to a URL).
 export const CATEGORIES = [
-  { id: 'grade5', name: 'Kakasa Ka Ba Sa Grade 5?', color: '#dd0000', img: '/public/grade5.webp' },
-  { id: 'scroll', name: 'Kaka-scroll Mo Yan!', color: '#512dc3', img: '/public/scroll.webp' },
-  { id: 'sino', name: 'Sino Yarn?', color: '#0cb820', img: '/public/sino.webp' },
-  { id: 'trot', name: 'Trot o Charot', color: '#0040ff', img: '/public/trot.webp' },
-  { id: 'bible', name: 'Bible Questions', color: '#ff8a00', img: '/public/bible.webp' },
+  { id: 'grade5', name: 'Kakasa Ka Ba Sa Grade 5?', color: '#dd0000', img: '/grade5.webp', vo: '/vo/grade-5.m4a' },
+  { id: 'scroll', name: 'Kaka-scroll Mo Yan!', color: '#512dc3', img: '/scroll.webp', vo: '/vo/scroll.m4a' },
+  { id: 'sino', name: 'Sino Yarn?', color: '#0cb820', img: '/sino.webp', vo: '/vo/sino-yarn.m4a' },
+  { id: 'trot', name: 'Trot o Charot', color: '#0040ff', img: '/trot.webp', vo: '/vo/trotcharot.m4a' },
+  { id: 'bible', name: 'Bible Questions', color: '#ff8a00', img: '/bible.webp', vo: '/vo/bible.m4a' },
 ];
 
 export const DEFAULT_SECONDS = 20; // default timer per question; override with { seconds: 30 } in a question's options
