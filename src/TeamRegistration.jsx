@@ -49,7 +49,7 @@ export default function TeamRegistration({ teams, setTeams, onStart }) {
             <button type="submit" className="btn-ghost w-full" disabled={!name.trim()}>Add team</button>
           </form>
 
-          <ul className="mt-5 max-h-48 space-y-2 overflow-y-auto">
+          <ul className="mt-4 max-h-[10.25rem] space-y-2 overflow-y-auto p-1">
             {teams.length === 0 && <li className="text-ink/55">No teams yet. Add your first team above.</li>}
             {teams.map((t) => (
               <li key={t.id} className="flex items-center justify-between rounded-2xl bg-white px-4 py-2.5 shadow-sm ring-1 ring-ink/10">
