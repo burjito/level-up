@@ -45,7 +45,7 @@ export default function Scoreboard({ question: q, teams, onAward, onReturn, onSh
           <button onClick={onShowTally} className="btn mt-5 w-full border-2 border-white px-4 py-2 text-base text-white shadow-[0_4px_0_rgba(255,255,255,0.35)] hover:bg-white/10">
             Full scoreboard{teams.length > 3 ? ` (${teams.length} teams)` : ''}
           </button>
-          <button onClick={onReturn} disabled={!awarded} className="btn mt-3 w-full bg-poster-orange text-white shadow-[0_5px_0_#a85b00] hover:brightness-110">Return to board</button>
+          <button onClick={onReturn} disabled={!awarded} className="btn mt-3 w-full bg-poster-orange text-white shadow-[0_5px_0_#a85b00] hover:brightness-110 disabled:bg-white disabled:text-ink/40 disabled:opacity-100 disabled:shadow-[0_5px_0_rgba(255,255,255,0.35)]">Return to board</button>
           {!awarded && <p className="mt-2 text-sm text-white/80">Award points first. Choose no teams if nobody got it.</p>}
         </section>
       </div>
