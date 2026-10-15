@@ -4,6 +4,7 @@ import TeamRegistration from './TeamRegistration.jsx';
 import GameBoard from './GameBoard.jsx';
 import QuestionModal from './QuestionModal.jsx';
 import Scoreboard from './Scoreboard.jsx';
+import FullScoreboard from './FullScoreboard.jsx';
 
 export default function App() {
   const [teams, setTeams] = useState([]); // { id, name, color, score }
@@ -11,6 +12,7 @@ export default function App() {
   // 'registration' | 'board' | 'question-active' | 'scoreboard'
   const [currentPhase, setCurrentPhase] = useState('registration');
   const [activeId, setActiveId] = useState(null);
+  const [showTally, setShowTally] = useState(false);
 
   const active = questions.find((q) => q.id === activeId);
   const category = active && CATEGORIES.find((c) => c.id === active.categoryId);
@@ -37,7 +39,7 @@ export default function App() {
       )}
 
       {currentPhase !== 'registration' && (
-        <GameBoard categories={CATEGORIES} questions={questions} teams={teams} onPick={openQuestion} />
+        <GameBoard categories={CATEGORIES} questions={questions} teams={teams} onPick={openQuestion} onShowTally={() => setShowTally(true)} />
       )}
 
       {currentPhase === 'question-active' && active && (
@@ -56,8 +58,11 @@ export default function App() {
           teams={teams}
           onAward={(ids) => awardPoints(ids, active.points)}
           onReturn={returnToBoard}
+          onShowTally={() => setShowTally(true)}
         />
       )}
+
+      {showTally && <FullScoreboard teams={teams} onClose={() => setShowTally(false)} />}
     </div>
   );
 }
