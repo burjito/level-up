@@ -4,7 +4,8 @@ export default {
   theme: {
     extend: {
       colors: { poster: { red: '#dd0000', blue: '#0040ff', violet: '#512dc3', green: '#0cb820', orange: '#ff8a00' }, ink: '#1c1650' },
-      fontFamily: { display: ['"Titan One"', 'Outfit', 'sans-serif'], sans: ['Outfit', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
+      // One family everywhere. To try another, change both lines (e.g. 'Fredoka') and the font import in index.css.
+      fontFamily: { display: ['Outfit', 'ui-sans-serif', 'system-ui', 'sans-serif'], sans: ['Outfit', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
       keyframes: {
         pop: { from: { opacity: 0, transform: 'scale(.94) translateY(16px)' }, to: { opacity: 1, transform: 'none' } },
         float: { '0%,100%': { transform: 'translateY(0) rotate(0deg)' }, '50%': { transform: 'translateY(-26px) rotate(18deg)' } },

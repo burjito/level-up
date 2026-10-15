@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Titan+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -14,6 +14,7 @@ body {
 }
 
 @layer components {
+  .font-display { @apply font-extrabold tracking-tight; }
   .glass { @apply bg-white/75 backdrop-blur-xl border-2 border-white shadow-[0_12px_40px_rgba(81,45,195,0.18)]; }
   .btn { @apply rounded-full px-7 py-3 font-display text-lg transition active:translate-y-[3px] disabled:pointer-events-none disabled:opacity-40 focus-visible:outline focus-visible:outline-4 focus-visible:outline-poster-orange; }
   .btn-primary { @apply btn bg-poster-blue text-white shadow-[0_5px_0_#00208f] hover:brightness-110 active:shadow-[0_2px_0_#00208f]; }
