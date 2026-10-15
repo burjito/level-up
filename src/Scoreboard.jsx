@@ -1,9 +1,5 @@
 import { useState } from 'react';
-
-const textOn = (hex) => {
-  const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
-  return 0.299 * r + 0.587 * g + 0.114 * b > 150 ? '#1c1650' : '#ffffff';
-};
+import TeamRank, { textOn } from './TeamRank.jsx';
 
 export default function Scoreboard({ question: q, teams, onAward, onReturn, onShowTally }) {
   const [picked, setPicked] = useState([]);
@@ -13,8 +9,9 @@ export default function Scoreboard({ question: q, teams, onAward, onReturn, onSh
 
   return (
     <div role="dialog" aria-modal="true" className="fixed inset-0 z-50 flex items-center justify-center bg-white/75 p-4 backdrop-blur-md">
-      <div className="glass grid max-h-[94vh] w-full max-w-5xl animate-pop gap-8 overflow-y-auto rounded-[2rem] p-6 motion-reduce:animate-none sm:p-9 md:grid-cols-[1.2fr_1fr]">
-        <section>
+      <div className="grid max-h-[94vh] w-full max-w-5xl animate-pop overflow-y-auto rounded-[2rem] shadow-[0_20px_60px_rgba(0,64,255,0.3)] motion-reduce:animate-none md:grid-cols-[1.2fr_1fr]">
+        {/* white half: scoring */}
+        <section className="bg-white p-6 sm:p-9">
           <h2 className="font-display text-3xl text-poster-blue">Who got it right?</h2>
           <p className="mt-1 text-ink/60">Each correct team earns {q.points} points.</p>
           <ul className="mt-4 grid max-h-[40vh] gap-2 overflow-y-auto p-1 sm:grid-cols-2">
@@ -37,22 +34,19 @@ export default function Scoreboard({ question: q, teams, onAward, onReturn, onSh
           </button>
         </section>
 
-        <section>
-          <h2 className="font-display text-3xl text-poster-orange">Top 3</h2>
-          <ol className="mt-4 space-y-2">
+        {/* blue half: top 3 */}
+        <section className="bg-poster-blue p-6 text-white sm:p-9">
+          <h2 className="font-display text-3xl">Top 3</h2>
+          <ol className="mt-5 space-y-3 p-1">
             {ranked.slice(0, 3).map((t, i) => (
-              <li key={t.id} className={`flex items-center justify-between rounded-2xl bg-white px-4 py-3 ${i === 0 ? 'ring-4 ring-poster-orange' : 'ring-1 ring-ink/10'}`}>
-                <span className="flex min-w-0 items-center gap-3 font-semibold">
-                  <span className="w-5 font-display text-poster-violet">{i + 1}</span>
-                  <span className="h-3 w-3 shrink-0 rounded-full" style={{ background: t.color }} /><span className="truncate">{t.name}</span>
-                </span>
-                <span className="font-display text-2xl tabular-nums text-poster-blue">{t.score}</span>
-              </li>
+              <li key={t.id}><TeamRank team={t} rank={i + 1} /></li>
             ))}
           </ol>
-          <button onClick={onShowTally} className="btn-ghost mt-4 w-full px-4 py-2 text-base">Full scoreboard{teams.length > 3 ? ` (${teams.length} teams)` : ''}</button>
-          <button onClick={onReturn} disabled={!awarded} className="btn-primary mt-3 w-full">Return to board</button>
-          {!awarded && <p className="mt-2 text-sm text-ink/55">Award points first. Choose no teams if nobody got it.</p>}
+          <button onClick={onShowTally} className="btn mt-5 w-full border-2 border-white px-4 py-2 text-base text-white shadow-[0_4px_0_rgba(255,255,255,0.35)] hover:bg-white/10">
+            Full scoreboard{teams.length > 3 ? ` (${teams.length} teams)` : ''}
+          </button>
+          <button onClick={onReturn} disabled={!awarded} className="btn mt-3 w-full bg-poster-orange text-white shadow-[0_5px_0_#a85b00] hover:brightness-110">Return to board</button>
+          {!awarded && <p className="mt-2 text-sm text-white/80">Award points first. Choose no teams if nobody got it.</p>}
         </section>
       </div>
     </div>
