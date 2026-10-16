@@ -47,6 +47,7 @@ export default function Scoreboard({ question: q, teams, onAward, onReturn, onSh
           </button>
           <button onClick={onReturn} disabled={!awarded} className="btn mt-3 w-full bg-poster-orange text-white shadow-[0_5px_0_#a85b00] hover:brightness-110 disabled:bg-white disabled:text-ink/40 disabled:opacity-100 disabled:shadow-[0_5px_0_rgba(255,255,255,0.35)]">Return to board</button>
           {!awarded && <p className="mt-2 text-sm text-white/80">Award points first. Choose no teams if nobody got it.</p>}
+          {awarded && <p className="mt-2 text-sm text-white/80">Wrong team? Fix it in Full scoreboard → Edit scores.</p>}
         </section>
       </div>
     </div>

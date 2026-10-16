@@ -25,6 +25,10 @@ export default function App() {
   const awardPoints = (teamIds, points) =>
     setTeams((ts) => ts.map((t) => (teamIds.includes(t.id) ? { ...t, score: t.score + points } : t)));
 
+  // manual fix from the Full scoreboard (delta can be negative)
+  const adjustScore = (teamId, delta) =>
+    setTeams((ts) => ts.map((t) => (t.id === teamId ? { ...t, score: t.score + delta } : t)));
+
   const returnToBoard = () => {
     setQuestions((qs) => qs.map((q) => (q.id === activeId ? { ...q, isAnswered: true } : q)));
     setActiveId(null);
@@ -62,7 +66,7 @@ export default function App() {
         />
       )}
 
-      {showTally && <FullScoreboard teams={teams} onClose={() => setShowTally(false)} />}
+      {showTally && <FullScoreboard teams={teams} onAdjust={adjustScore} onClose={() => setShowTally(false)} />}
     </div>
   );
 }
