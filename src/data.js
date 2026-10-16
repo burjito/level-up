@@ -1,4 +1,5 @@
 import { MEDIA } from './media.js';
+import { BONUS, bonusPoints } from './bonus.js';
 
 // Types: 'text' | 'photo' | 'truefalse' | 'video'
 // Media files go in /public/media/<categoryId>/<n>.jpg|mp4 (or set `media` to a URL).
@@ -43,7 +44,7 @@ const RAW = {
   ],
   sino: [
     ['video', 'Sino ang original na kumanta ng kantang ito? (audio)', 'Vhong Navarro'],
-    ['photo', 'Bonus Question: Sino ito? (zoomed-in picture)', 'Jemuel Ocampo / Kuya Jem'],
+    ['photo', 'Sino ito?', 'Jemuel Ocampo / Kuya Jem'],
     ['text', '"O... my... goodness! Ungkatan ng past! Kapag binalik ang past, magugulo ang present."', 'Toni Gonzaga / Teddy Salazar'],
     ['text', 'ActSong: Hulaan ang kanta! (ilagay dito ang lyrics mula sa sheet mo)', 'Cup of Joe'],
     ['photo', 'Sino ito?', 'Melai Cantiveros'],
@@ -62,37 +63,44 @@ const RAW = {
     ['truefalse', 'Sa Instagram, makikita ng isang tao kung ilang beses mong pinanood ang kanyang Story.', 'Charot', { choices: TC }],
     ['truefalse', 'Ang "Ctrl + F" ay shortcut para maghanap ng salita o phrase sa maraming computer applications at web browsers.', 'Trot', { choices: TC }],
     ['video', 'Ito ay totoong cabbage.', 'Trot', { choices: TC, note: 'Clip: 0:01 - 0:07' }],
-    ['video', 'Ang nag-cover ng kantang ito ay si Jared Lim Almendras, known professionally as Shoti', 'Charot', { choices: TC }],
+    ['video', 'Ang nag-cover ng kantang ito ay si Jared Lim Almendras, known professionally as... (kumpletuhin mula sa sheet)', 'Charot', { choices: TC }],
     ['video', 'Ito ay totoong sibuyas.', 'Charot', { choices: TC, note: 'Clip: 0:44 - 0:49' }],
   ],
   bible: [
     ['text', 'Ilang araw nasa loob ng tyan ng isda si Noah?', '0'],
     ['truefalse', '"When God closes a door, He opens a window."', 'CAP', { choices: ['Scripture', 'CAP'] }],
     ['text', 'Ano ang ika-anim na utos sa Ten Commandments?', '"Thou shalt not murder" / "Huwag kang papatay"'],
-    ['photo', 'Guess the phrase! (sheep puzzle)', 'Lost Sheep'],
+    ['photo', 'Guess the phrase!', 'Lost Sheep'],
     ['text', 'Gibberish: JAR USE SA LAMB', 'Jerusalem'],
     ['text', 'Unshuffle the words: SSOEM', 'Moses'],
     ['truefalse', '"Jesus wept"', 'Scripture — John 11:35', { choices: ['Scripture', 'CAP'] }],
     ['text', 'How many books are there in the Bible?', '66'],
     ['truefalse', 'True or False: David killed Goliath with a sword.', 'FALSE'],
-    ['photo', 'Guess the book in the Bible! (emoji puzzle)', 'Isaiah'],
+    ['photo', 'Guess the book in the Bible!', 'Isaiah'],
   ],
 };
 
 export const buildQuestions = () =>
   CATEGORIES.flatMap((c) =>
-    RAW[c.id].map(([type, questionText, answerText, o = {}], i) => ({
-      id: `${c.id}-${i + 1}`,
-      categoryId: c.id,
-      points: (i + 1) * 100,
-      type,
-      questionText,
-      answerText,
-      choices: o.choices ?? (type === 'truefalse' ? ['True', 'False'] : null),
-      note: o.note ?? null,
-      seconds: o.seconds ?? DEFAULT_SECONDS,
-      mediaPlaceholder: o.media ?? (type === 'photo' ? `/media/${c.id}/${i + 1}.jpg` : type === 'video' ? `/media/${c.id}/${i + 1}.mp4` : null),
-      ...MEDIA[`${c.id}-${i + 1}`],
-      isAnswered: false,
-    }))
+    RAW[c.id].map(([type, questionText, answerText, o = {}], i) => {
+      const id = `${c.id}-${i + 1}`;
+      const basePoints = (i + 1) * 100;
+      const bonus = BONUS[id] ?? null;
+      return {
+        id,
+        categoryId: c.id,
+        basePoints, // what the board shows
+        points: bonus ? bonusPoints(bonus, basePoints) : basePoints, // what winners actually get
+        bonus,
+        type,
+        questionText,
+        answerText,
+        choices: o.choices ?? (type === 'truefalse' ? ['True', 'False'] : null),
+        note: o.note ?? null,
+        seconds: o.seconds ?? DEFAULT_SECONDS,
+        mediaPlaceholder: o.media ?? (type === 'photo' ? `/media/${c.id}/${i + 1}.jpg` : type === 'video' ? `/media/${c.id}/${i + 1}.mp4` : null),
+        ...MEDIA[id],
+        isAnswered: false,
+      };
+    })
   );
