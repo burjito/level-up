@@ -45,7 +45,7 @@ export default function QuestionModal({ question: q, category: c, onProceed }) {
         <div key="intro" className="relative h-[min(78vh,640px)] w-full max-w-4xl animate-pop overflow-hidden rounded-[2rem] border-[6px] border-white shadow-2xl motion-reduce:animate-none" style={{ background: c.color }}>
           <img src={c.img} alt={c.name} className="h-full w-full object-contain" />
           <span className="absolute bottom-5 left-5 rounded-full bg-white px-5 py-2 font-display text-xl" style={{ color: c.color }}>{q.points} pts</span>
-          <button onClick={toQuestion} className="btn-ghost absolute bottom-5 right-5 px-5 py-2 text-base">Skip intro</button>
+          <button onClick={toQuestion} className="btn-ghost absolute bottom-5 right-5 px-5 py-2 text-base">Skip this intro</button>
         </div>
       ) : (
         <div key="question" className="glass flex max-h-[94vh] w-full max-w-5xl animate-pop flex-col gap-5 overflow-y-auto rounded-[2rem] border-t-[12px] p-6 motion-reduce:animate-none sm:p-9" style={{ borderTopColor: c.color }}>
