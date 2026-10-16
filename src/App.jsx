@@ -5,6 +5,7 @@ import GameBoard from './GameBoard.jsx';
 import QuestionModal from './QuestionModal.jsx';
 import Scoreboard from './Scoreboard.jsx';
 import FullScoreboard from './FullScoreboard.jsx';
+import DesktopOnly, { useIsSmallScreen } from './DesktopOnly.jsx';
 
 // Progress is saved in this browser, so a refresh doesn't restart the game.
 const SAVE_KEY = 'level-up-save-v1';
@@ -35,6 +36,7 @@ export default function App() {
   const [currentPhase, setCurrentPhase] = useState(startPhase);
   const [activeId, setActiveId] = useState(startActive);
   const [showTally, setShowTally] = useState(false);
+  const smallScreen = useIsSmallScreen();
 
   useEffect(() => {
     try {
@@ -76,6 +78,8 @@ export default function App() {
     setShowTally(false);
     setCurrentPhase('registration');
   };
+
+  if (smallScreen) return <DesktopOnly />; // the game state above is kept, so resizing back resumes it
 
   return (
     <div className="h-full">
