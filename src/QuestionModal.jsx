@@ -52,9 +52,15 @@ export default function QuestionModal({ question: q, category: c, onProceed }) {
       ) : (
         <div key="question" className="glass flex max-h-[94vh] w-full max-w-5xl animate-pop flex-col gap-5 overflow-y-auto rounded-[2rem] border-t-[12px] p-6 motion-reduce:animate-none sm:p-9" style={{ borderTopColor: c.color }}>
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3">
               <span className="h-16 w-[5.2rem] overflow-hidden rounded-xl" style={{ background: c.color }}><img src={c.img} alt="" className="h-full w-full object-contain" /></span>
               <span className="rounded-full px-4 py-1 font-display text-lg text-white" style={{ background: c.color }}>{q.points} pts</span>
+              {q.bonus && (
+                <span className="flex items-center gap-2 rounded-full bg-poster-orange py-1 pl-4 pr-1.5 font-display text-lg text-white">
+                  Bonus question
+                  <span className="rounded-full bg-white px-3 text-base text-poster-orange">{q.bonus.name}</span>
+                </span>
+              )}
             </div>
             <div className="flex items-center gap-3">
               <span role="timer" className={`min-w-[2.5ch] text-right font-display text-6xl tabular-nums ${left === 0 || urgent ? 'animate-pulse text-poster-red motion-reduce:animate-none' : ''}`} style={!urgent ? { color: c.color } : undefined}>{left}</span>

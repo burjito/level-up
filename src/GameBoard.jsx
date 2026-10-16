@@ -47,7 +47,7 @@ function Row({ c, find, onPick }) {
         return q.isAnswered ? (
           <div key={q.id} aria-hidden className="rounded-2xl border-2 border-dashed border-ink/15 bg-white/40" />
         ) : (
-          <button key={q.id} onClick={() => onPick(q)} aria-label={`${c.name}, question ${i + 1}, ${q.points} points`}
+          <button key={q.id} onClick={() => onPick(q)} aria-label={`${c.name}, question ${i + 1}, ${q.basePoints} points`}
             style={{ borderColor: c.color, color: c.color, boxShadow: `0 4px 0 ${c.color}` }}
             className="flex items-center justify-center rounded-2xl border-[3px] bg-white font-display text-[clamp(20px,5.5vh,60px)] leading-none transition hover:-translate-y-0.5 hover:scale-[1.05] active:translate-y-[3px] focus-visible:outline focus-visible:outline-4 focus-visible:outline-poster-orange">
             ?
