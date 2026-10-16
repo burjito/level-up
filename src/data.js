@@ -1,3 +1,5 @@
+import { MEDIA } from './media.js';
+
 // Types: 'text' | 'photo' | 'truefalse' | 'video'
 // Media files go in /public/media/<categoryId>/<n>.jpg|mp4 (or set `media` to a URL).
 export const CATEGORIES = [
@@ -90,6 +92,7 @@ export const buildQuestions = () =>
       note: o.note ?? null,
       seconds: o.seconds ?? DEFAULT_SECONDS,
       mediaPlaceholder: o.media ?? (type === 'photo' ? `/media/${c.id}/${i + 1}.jpg` : type === 'video' ? `/media/${c.id}/${i + 1}.mp4` : null),
+      ...MEDIA[`${c.id}-${i + 1}`],
       isAnswered: false,
     }))
   );

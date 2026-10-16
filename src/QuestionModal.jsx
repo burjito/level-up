@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { playIntro, playBuzzer } from './sfx.js';
+import QuestionMedia from './QuestionMedia.jsx';
 
 const FALLBACK_MS = 3000; // used when the voiceover can't play
 
@@ -35,7 +36,8 @@ export default function QuestionModal({ question: q, category: c, onProceed }) {
   useEffect(() => { if (step === 'question' && left === 0) playBuzzer(); }, [step, left]);
 
   const urgent = left <= 5;
-  const isUrl = q.mediaPlaceholder?.startsWith('http');
+  // question media first; if the question has an answer clip/photo, it replaces it on reveal
+  const shownMedia = reveal && q.answerMedia ? q.answerMedia : q.mediaPlaceholder;
   const len = q.questionText.length;
   const size = len > 90 ? 'text-2xl sm:text-4xl' : len > 50 ? 'text-3xl sm:text-5xl' : 'text-4xl sm:text-6xl';
 
@@ -65,12 +67,10 @@ export default function QuestionModal({ question: q, category: c, onProceed }) {
           </div>
           {left === 0 && <p className="font-display text-3xl text-poster-red">Time's up!</p>}
 
-          {(q.type === 'video' || q.type === 'photo') && (
-            <div className="flex aspect-video w-full items-center justify-center rounded-2xl border-2 border-dashed border-ink/25 bg-white/70">
-              {/* swap for <video src={q.mediaPlaceholder} controls /> or <img src={q.mediaPlaceholder} alt="" /> */}
-              {isUrl ? <a href={q.mediaPlaceholder} target="_blank" rel="noreferrer" className="btn-primary">Open clip</a>
-                : <span className="text-ink/50">{q.type === 'video' ? 'Video/audio' : 'Image'} placeholder: {q.mediaPlaceholder}</span>}
-              {q.note && <span className="ml-4 text-ink/60">{q.note}</span>}
+          {shownMedia && (
+            <div className="space-y-2">
+              <QuestionMedia key={shownMedia} src={shownMedia} />
+              {q.note && <p className="text-center text-sm text-ink/60">{q.note}</p>}
             </div>
           )}
 
