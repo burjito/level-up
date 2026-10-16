@@ -1,0 +1,34 @@
+import { useState } from 'react';
+
+const kindOf = (src) =>
+  /\.(mp4|webm|mov)$/i.test(src) ? 'video' : /\.(mp3|m4a|wav|ogg)$/i.test(src) ? 'audio' : 'image';
+
+// Renders a photo, video or audio file. Audio/video start playing right away (controls stay for replay).
+// Use key={src} so it resets when the source changes.
+export default function QuestionMedia({ src }) {
+  const [failed, setFailed] = useState(false);
+  const kind = kindOf(src);
+
+  if (src.startsWith('http')) {
+    return <div className="flex justify-center"><a href={src} target="_blank" rel="noreferrer" className="btn-primary">Open clip</a></div>;
+  }
+  if (failed) {
+    return (
+      <div className="flex min-h-[10rem] w-full items-center justify-center rounded-2xl border-2 border-dashed border-ink/25 bg-white/70 px-4 text-center text-ink/50">
+        File not found: {src}
+      </div>
+    );
+  }
+  if (kind === 'image') {
+    return <img src={src} alt="" onError={() => setFailed(true)} className="mx-auto max-h-[42vh] w-auto max-w-full rounded-2xl object-contain" />;
+  }
+  if (kind === 'video') {
+    return <video src={src} controls autoPlay playsInline onError={() => setFailed(true)} className="mx-auto max-h-[42vh] w-auto max-w-full rounded-2xl bg-black" />;
+  }
+  return (
+    <div className="rounded-2xl bg-white p-4 ring-1 ring-ink/10">
+      <p className="mb-2 text-sm font-semibold text-ink/60">Listen</p>
+      <audio src={src} controls autoPlay onError={() => setFailed(true)} className="w-full" />
+    </div>
+  );
+}
