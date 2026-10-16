@@ -62,7 +62,7 @@ const RAW = {
     ['truefalse', 'Sa Instagram, makikita ng isang tao kung ilang beses mong pinanood ang kanyang Story.', 'Charot', { choices: TC }],
     ['truefalse', 'Ang "Ctrl + F" ay shortcut para maghanap ng salita o phrase sa maraming computer applications at web browsers.', 'Trot', { choices: TC }],
     ['video', 'Ito ay totoong cabbage.', 'Trot', { choices: TC, note: 'Clip: 0:01 - 0:07' }],
-    ['video', 'Ang nag-cover ng kantang ito ay si Jared Lim Almendras, known professionally as... (kumpletuhin mula sa sheet)', 'Charot', { choices: TC }],
+    ['video', 'Ang nag-cover ng kantang ito ay si Jared Lim Almendras, known professionally as Shoti', 'Charot', { choices: TC }],
     ['video', 'Ito ay totoong sibuyas.', 'Charot', { choices: TC, note: 'Clip: 0:44 - 0:49' }],
   ],
   bible: [
