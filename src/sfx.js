@@ -160,3 +160,48 @@ export function playBonusReveal() {
     tone(2093, 0.4, 0.8, 'sine', 0.06);
   } catch {}
 }
+
+// Bonus question voiceover: public/vo/bonus.m4a ("Bonus question!"), then the bonus's own callout (bonus.vo, optional).
+// If bonus.m4a is missing, the browser's built-in voice says it instead. Returns { done, stop }.
+const BONUS_VO = '/vo/bonus.m4a';
+
+export function playBonusVoice(bonus) {
+  let stopped = false;
+  let current = null;
+  const playFile = (src) =>
+    new Promise((resolve) => {
+      const a = new Audio(src);
+      current = a;
+      a.addEventListener('ended', () => resolve(true));
+      a.addEventListener('error', () => resolve(false));
+      a.play().catch(() => resolve(false));
+    });
+  const speak = (text) =>
+    new Promise((resolve) => {
+      try {
+        const u = new SpeechSynthesisUtterance(text);
+        u.rate = 1.05;
+        u.pitch = 1.35;
+        u.onend = u.onerror = () => resolve();
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(u);
+      } catch { resolve(); }
+    });
+
+  const run = (async () => {
+    const ok = await playFile(BONUS_VO);
+    if (stopped) return;
+    if (!ok) return speak(`Bonus question! ${bonus.name.replace(/\(.*?\)/g, '')}`);
+    if (bonus.vo) await playFile(bonus.vo);
+  })();
+
+  return {
+    // resolves when the voice is finished (or after 6s at most, so the game never gets stuck)
+    done: Promise.race([run, new Promise((r) => setTimeout(r, 6000))]),
+    stop() {
+      stopped = true;
+      current?.pause();
+      try { window.speechSynthesis.cancel(); } catch {}
+    },
+  };
+}

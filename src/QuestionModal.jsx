@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { playIntro, playBuzzer, playBeep, createTimerMusic, playBonusAlert, playBonusReveal } from './sfx.js';
+import { playIntro, playBuzzer, playBeep, createTimerMusic, playBonusAlert, playBonusReveal, playBonusVoice } from './sfx.js';
 import QuestionMedia from './QuestionMedia.jsx';
 
 const FALLBACK_MS = 3000; // used when the voiceover can't play
@@ -54,13 +54,24 @@ export default function QuestionModal({ question: q, category: c, onProceed }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [c.vo]);
 
-  // Bonus reveal: screen blinks 3x with alert blips, then the "Bonus question" + name badge pops in, then flies to the card
+  // Bonus reveal: screen blinks 3x with alert blips, then the "Bonus question" + name badge pops in with a game-show voice,
+  // then (once the voice is done and the badge has been shown for a moment) it flies to the card
   useEffect(() => {
     if (step !== 'bonus') return;
+    let cancelled = false;
+    let stopVoice = () => {};
     playBonusAlert();
-    const t1 = setTimeout(() => { setBonusShown(true); playBonusReveal(); }, 1200);
-    const t2 = setTimeout(() => { setFlying(true); setStep('question'); }, 2900);
-    return () => { clearTimeout(t1); clearTimeout(t2); };
+    const t1 = setTimeout(() => {
+      setBonusShown(true);
+      playBonusReveal();
+      const voice = playBonusVoice(q.bonus);
+      stopVoice = voice.stop;
+      Promise.all([voice.done, new Promise((r) => setTimeout(r, 1700))]).then(() => {
+        if (!cancelled) { setFlying(true); setStep('question'); }
+      });
+    }, 1200);
+    return () => { cancelled = true; clearTimeout(t1); stopVoice(); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step]);
 
   // Fly the big badge to the badge slot in the question header (FLIP), then reveal the question and start the timer
