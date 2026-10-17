@@ -16,7 +16,7 @@ export const MEDIA = {
   'sino-1': { type: 'audio', mediaPlaceholder: f(1, S, 'mp3') },
   'sino-2': { type: 'photo', mediaPlaceholder: f(2, S), answerMedia: f(2, S, 'jpg', true) },
   'sino-4': { type: 'audio', mediaPlaceholder: f(4, S, 'mp3') },
-  'sino-5': { type: 'photo', mediaPlaceholder: f(5, S) }, // no file yet: add q5-sino-yarn.png
+  'sino-5': { type: 'photo', mediaPlaceholder: f(5, S) },
   // Trot o Charot
   'trot-8': { type: 'photo', mediaPlaceholder: f(8, T), answerMedia: f(8, T, 'mp4', true) },
   'trot-9': { type: 'video', mediaPlaceholder: f(9, T, 'mp4') },

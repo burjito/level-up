@@ -6,7 +6,7 @@ const CHIPS = [50, 100, 200, 500, 1000];
 // Full tally, ranked high to low (ties share a rank). "Edit scores" lets the host add or take off points per team.
 export default function FullScoreboard({ teams, onClose, onAdjust, onNewGame }) {
   const [editing, setEditing] = useState(false);
-  const [order, setOrder] = useState([]); // row order is frozen while editing so rows don't jump under your finger
+  const [order, setOrder] = useState([]); // row order is frozen while editing so rows don't jump under finger
   const [amount, setAmount] = useState(100);
   const [history, setHistory] = useState([]); // [{ id, name, delta }] for undo
   const [confirming, setConfirming] = useState(false); // new game confirmation

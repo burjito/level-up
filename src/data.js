@@ -11,7 +11,7 @@ export const CATEGORIES = [
   { id: 'bible', name: 'Bible Questions', color: '#ff8a00', img: '/bible.webp', vo: '/vo/bible.m4a' },
 ];
 
-export const DEFAULT_SECONDS = 20; // default timer per question; override with { seconds: 30 } in a question's options
+export const DEFAULT_SECONDS = 20; // default timer per question
 const TC = ['Trot', 'Charot'];
 const TT = (code) => ({ media: `https://vt.tiktok.com/${code}/` });
 const SET = 'Ilagay ang sagot';

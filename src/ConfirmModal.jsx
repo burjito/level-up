@@ -1,4 +1,4 @@
-// Branded confirmation dialog (replaces the browser's window.confirm).
+// Branded confirmation dialog 
 export default function ConfirmModal({ title, message, confirmLabel = 'Confirm', cancelLabel = 'Cancel', onConfirm, onCancel }) {
   return (
     <div role="alertdialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-message" onClick={onCancel}
