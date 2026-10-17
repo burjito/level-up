@@ -1,16 +1,32 @@
-import { useEffect, useRef, useState } from 'react';
-import { playIntro, playBuzzer, playBeep, createTimerMusic } from './sfx.js';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { playIntro, playBuzzer, playBeep, createTimerMusic, playBonusAlert, playBonusReveal } from './sfx.js';
 import QuestionMedia from './QuestionMedia.jsx';
 
 const FALLBACK_MS = 3000; // used when the voiceover can't play
 
+function BonusBadge({ name }) {
+  return (
+    <span className="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-poster-orange py-1 pl-4 pr-1.5 font-display text-lg text-white">
+      Bonus question
+      <span className="rounded-full bg-white px-3 text-base text-poster-orange">{name}</span>
+    </span>
+  );
+}
+
 export default function QuestionModal({ question: q, category: c, onProceed }) {
-  const [step, setStep] = useState('intro'); // 'intro' | 'question'
+  // 'intro' -> ('bonus' for bonus questions) -> 'question'
+  const [step, setStep] = useState('intro');
+  const afterIntro = q.bonus ? 'bonus' : 'question';
+  const [bonusShown, setBonusShown] = useState(false); // the big badge has popped in
+  const [flying, setFlying] = useState(false); // the badge is flying to the question card
+  const [landed, setLanded] = useState(!q.bonus); // question content + timer start once the badge has landed
   const [reveal, setReveal] = useState(false);
   const [left, setLeft] = useState(q.seconds);
   const [running, setRunning] = useState(true);
   const audio = useRef(null);
   const music = useRef(null);
+  const flyRef = useRef(null);
+  const badgeRef = useRef(null);
   const [soundOn, setSoundOn] = useState(() => {
     try { return localStorage.getItem('level-up-timer-sound') !== 'off'; } catch { return true; }
   });
@@ -20,7 +36,9 @@ export default function QuestionModal({ question: q, category: c, onProceed }) {
     try { localStorage.setItem('level-up-timer-sound', next ? 'on' : 'off'); } catch {}
   };
 
-  const toQuestion = () => { audio.current?.pause(); setStep('question'); };
+  const toNext = () => setStep((s) => (s === 'intro' ? afterIntro : s));
+  const skipIntro = () => { audio.current?.pause(); toNext(); };
+  const skipBonus = () => { setFlying(false); setLanded(true); setStep('question'); };
 
   // Step A: chime, then the category voiceover; moves on when it ends
   useEffect(() => {
@@ -28,21 +46,52 @@ export default function QuestionModal({ question: q, category: c, onProceed }) {
     const a = new Audio(c.vo);
     audio.current = a;
     let fb;
-    const next = () => setStep('question');
-    const fail = () => { fb = setTimeout(next, FALLBACK_MS); };
-    a.addEventListener('ended', next);
+    const fail = () => { fb = setTimeout(toNext, FALLBACK_MS); };
+    a.addEventListener('ended', toNext);
     a.addEventListener('error', fail);
     const start = setTimeout(() => a.play().catch(fail), 900);
-    return () => { clearTimeout(start); clearTimeout(fb); a.pause(); a.removeEventListener('ended', next); a.removeEventListener('error', fail); };
+    return () => { clearTimeout(start); clearTimeout(fb); a.pause(); a.removeEventListener('ended', toNext); a.removeEventListener('error', fail); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [c.vo]);
 
-  // Step B: countdown starts when the question appears
+  // Bonus reveal: screen blinks 3x with alert blips, then the "Bonus question" + name badge pops in, then flies to the card
   useEffect(() => {
-    if (step !== 'question' || !running || left <= 0) return;
+    if (step !== 'bonus') return;
+    playBonusAlert();
+    const t1 = setTimeout(() => { setBonusShown(true); playBonusReveal(); }, 1200);
+    const t2 = setTimeout(() => { setFlying(true); setStep('question'); }, 2900);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  }, [step]);
+
+  // Fly the big badge to the badge slot in the question header (FLIP), then reveal the question and start the timer
+  useLayoutEffect(() => {
+    if (!flying) return;
+    const el = flyRef.current;
+    const target = badgeRef.current;
+    const done = () => { setFlying(false); setLanded(true); };
+    if (!el || !target || window.matchMedia('(prefers-reduced-motion: reduce)').matches) { done(); return; }
+    const from = el.getBoundingClientRect();
+    const to = target.getBoundingClientRect();
+    const s0 = from.width / el.offsetWidth;
+    const s1 = to.width / el.offsetWidth;
+    const dx = to.left + to.width / 2 - (from.left + from.width / 2);
+    const dy = to.top + to.height / 2 - (from.top + from.height / 2);
+    const anim = el.animate(
+      [{ transform: `translate(0px, 0px) scale(${s0})` }, { transform: `translate(${dx}px, ${dy}px) scale(${s1})` }],
+      { duration: 800, easing: 'cubic-bezier(.3,.8,.2,1)', fill: 'forwards' }
+    );
+    anim.onfinish = done;
+    return () => anim.cancel();
+  }, [flying]);
+
+  // Step B: countdown starts when the question is fully shown
+  const live = step === 'question' && landed;
+  useEffect(() => {
+    if (!live || !running || left <= 0) return;
     const t = setTimeout(() => setLeft((s) => s - 1), 1000);
     return () => clearTimeout(t);
-  }, [step, running, left]);
-  useEffect(() => { if (step === 'question' && left === 0) playBuzzer(); }, [step, left]);
+  }, [live, running, left]);
+  useEffect(() => { if (live && left === 0) playBuzzer(); }, [live, left]);
 
   // Countdown music: runs while the timer runs, speeds up and brightens in the last 5 seconds.
   // Questions with their own audio/video clip stay quiet until the last 5 seconds so the clip can be heard.
@@ -54,13 +103,13 @@ export default function QuestionModal({ question: q, category: c, onProceed }) {
     const m = music.current;
     if (!m) return;
     const hasClip = /\.(mp3|m4a|wav|ogg|mp4|webm|mov)$/i.test(q.mediaPlaceholder ?? '');
-    const play = step === 'question' && running && left > 0 && soundOn && (!hasClip || left <= 5);
+    const play = live && running && left > 0 && soundOn && (!hasClip || left <= 5);
     try {
       m.setUrgent(left <= 5);
       if (play) m.start(); else m.stop();
       if (play && left <= 3) playBeep(left === 1 ? 1175 : 880);
     } catch {}
-  }, [step, running, left, soundOn, q]);
+  }, [live, running, left, soundOn, q]);
 
   const urgent = left <= 5;
   // question media first; if the question has an answer clip/photo, it replaces it on reveal
@@ -69,25 +118,31 @@ export default function QuestionModal({ question: q, category: c, onProceed }) {
   const size = len > 90 ? 'text-2xl sm:text-4xl' : len > 50 ? 'text-3xl sm:text-5xl' : 'text-4xl sm:text-6xl';
 
   return (
-    <div role="dialog" aria-modal="true" className="fixed inset-0 z-40 flex items-center justify-center bg-white/70 p-4 backdrop-blur-md">
-      {step === 'intro' ? (
+    <div role="dialog" aria-modal="true" className="fixed inset-0 z-40 flex items-center justify-center overflow-hidden bg-white/70 p-4 backdrop-blur-md">
+      {step === 'intro' && (
         <div key="intro" className="relative h-[min(78vh,640px)] w-full max-w-4xl animate-pop overflow-hidden rounded-[2rem] border-[6px] border-white shadow-2xl motion-reduce:animate-none" style={{ background: c.color }}>
           <img src={c.img} alt={c.name} className="h-full w-full object-contain" />
           <span className="absolute bottom-5 left-5 rounded-full bg-white px-5 py-2 font-display text-xl" style={{ color: c.color }}>{q.points} pts</span>
-          <button onClick={toQuestion} className="btn-ghost absolute bottom-5 right-5 px-5 py-2 text-base">Skip intro</button>
+          <button onClick={skipIntro} className="btn-ghost absolute bottom-5 right-5 px-5 py-2 text-base">Skip intro</button>
         </div>
-      ) : (
-        <div key="question" className="glass flex max-h-[94vh] w-full max-w-5xl animate-pop flex-col gap-5 overflow-y-auto rounded-[2rem] border-t-[12px] p-6 motion-reduce:animate-none sm:p-9" style={{ borderTopColor: c.color }}>
+      )}
+
+      {step === 'bonus' && (
+        <>
+          <p role="status" className="sr-only">Bonus question: {q.bonus.name}</p>
+          <div aria-hidden className="pointer-events-none absolute inset-0 animate-blink bg-poster-orange/35 motion-reduce:animate-none" />
+          {bonusShown && <span aria-hidden className="absolute h-56 w-56 animate-ping rounded-full border-8 border-poster-orange/60 motion-reduce:animate-none" />}
+          <button onClick={skipBonus} className="btn-ghost absolute bottom-5 right-5 z-20 px-5 py-2 text-base">Skip</button>
+        </>
+      )}
+
+      {step === 'question' && (
+        <div key="question" className={`glass flex max-h-[94vh] w-full max-w-5xl flex-col gap-5 overflow-y-auto rounded-[2rem] border-t-[12px] p-6 motion-reduce:animate-none sm:p-9 ${q.bonus ? 'animate-fade' : 'animate-pop'}`} style={{ borderTopColor: c.color }}>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex flex-wrap items-center gap-3">
               <span className="h-16 w-[5.2rem] overflow-hidden rounded-xl" style={{ background: c.color }}><img src={c.img} alt="" className="h-full w-full object-contain" /></span>
               <span className="rounded-full px-4 py-1 font-display text-lg text-white" style={{ background: c.color }}>{q.points} pts</span>
-              {q.bonus && (
-                <span className="flex items-center gap-2 rounded-full bg-poster-orange py-1 pl-4 pr-1.5 font-display text-lg text-white">
-                  Bonus question
-                  <span className="rounded-full bg-white px-3 text-base text-poster-orange">{q.bonus.name}</span>
-                </span>
-              )}
+              {q.bonus && <span ref={badgeRef} className={`inline-flex ${landed ? '' : 'invisible'}`}><BonusBadge name={q.bonus.name} /></span>}
             </div>
             <div className="flex items-center gap-3">
               <span role="timer" className={`min-w-[2.5ch] text-right font-display text-6xl tabular-nums ${left === 0 || urgent ? 'animate-pulse text-poster-red motion-reduce:animate-none' : ''}`} style={!urgent ? { color: c.color } : undefined}>{left}</span>
@@ -99,35 +154,48 @@ export default function QuestionModal({ question: q, category: c, onProceed }) {
           <div className="h-3 overflow-hidden rounded-full bg-ink/10">
             <div className="h-full rounded-full transition-[width] duration-1000 ease-linear" style={{ width: `${(left / q.seconds) * 100}%`, background: urgent ? '#dd0000' : c.color }} />
           </div>
-          {left === 0 && <p className="font-display text-3xl text-poster-red">Time's up!</p>}
 
-          {shownMedia && (
-            <div className="space-y-2">
-              <QuestionMedia key={shownMedia} src={shownMedia} />
-              {q.note && <p className="text-center text-sm text-ink/60">{q.note}</p>}
+          {/* hidden until the bonus badge has landed (the layout is already in place, so nothing jumps) */}
+          <div className={`contents ${landed ? '' : 'invisible'}`}>
+            {left === 0 && <p className="font-display text-3xl text-poster-red">Time's up!</p>}
+
+            {landed && shownMedia && (
+              <div className="space-y-2">
+                <QuestionMedia key={shownMedia} src={shownMedia} />
+                {q.note && <p className="text-center text-sm text-ink/60">{q.note}</p>}
+              </div>
+            )}
+
+            <h2 className={`font-display leading-tight ${size}`}>{q.questionText}</h2>
+
+            {q.choices && (
+              <div className="flex gap-4">
+                {q.choices.map((ch, i) => (
+                  <span key={ch} className={`flex-1 rounded-2xl py-4 text-center font-display text-2xl text-white ${i === 0 ? 'bg-poster-blue' : 'bg-poster-red'}`}>{ch}</span>
+                ))}
+              </div>
+            )}
+
+            {reveal && (
+              <div className="animate-pop rounded-2xl border-[3px] border-poster-green bg-poster-green/10 p-5 motion-reduce:animate-none">
+                <p className="text-sm font-semibold uppercase tracking-wide text-poster-green">Answer</p>
+                <p className="font-display text-3xl sm:text-4xl">{q.answerText}</p>
+              </div>
+            )}
+
+            <div className="mt-auto flex justify-end">
+              {!reveal ? <button onClick={() => { setReveal(true); setRunning(false); }} className="btn-primary">Show answer</button>
+                : <button onClick={onProceed} className="btn-primary">Proceed to scoring</button>}
             </div>
-          )}
+          </div>
+        </div>
+      )}
 
-          <h2 className={`font-display leading-tight ${size}`}>{q.questionText}</h2>
-
-          {q.choices && (
-            <div className="flex gap-4">
-              {q.choices.map((ch, i) => (
-                <span key={ch} className={`flex-1 rounded-2xl py-4 text-center font-display text-2xl text-white ${i === 0 ? 'bg-poster-blue' : 'bg-poster-red'}`}>{ch}</span>
-              ))}
-            </div>
-          )}
-
-          {reveal && (
-            <div className="animate-pop rounded-2xl border-[3px] border-poster-green bg-poster-green/10 p-5 motion-reduce:animate-none">
-              <p className="text-sm font-semibold uppercase tracking-wide text-poster-green">Answer</p>
-              <p className="font-display text-3xl sm:text-4xl">{q.answerText}</p>
-            </div>
-          )}
-
-          <div className="mt-auto flex justify-end">
-            {!reveal ? <button onClick={() => { setReveal(true); setRunning(false); }} className="btn-primary">Show answer</button>
-              : <button onClick={onProceed} className="btn-primary">Proceed to scoring</button>}
+      {/* the big bonus badge: pops in at the center, then flies to the question header */}
+      {q.bonus && (step === 'bonus' || flying) && (
+        <div aria-hidden className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
+          <div ref={flyRef} style={{ transform: 'scale(2.6)' }}>
+            {(bonusShown || flying) && <div className="animate-bonus-in motion-reduce:animate-none"><BonusBadge name={q.bonus.name} /></div>}
           </div>
         </div>
       )}
