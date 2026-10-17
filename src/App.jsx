@@ -6,6 +6,7 @@ import QuestionModal from './QuestionModal.jsx';
 import Scoreboard from './Scoreboard.jsx';
 import FullScoreboard from './FullScoreboard.jsx';
 import DesktopOnly, { useIsSmallScreen } from './DesktopOnly.jsx';
+import { enterFullscreen } from './Fullscreen.jsx';
 
 // Progress is saved in this browser, so a refresh doesn't restart the game.
 const SAVE_KEY = 'level-up-save-v1';
@@ -84,7 +85,7 @@ export default function App() {
   return (
     <div className="h-full">
       {currentPhase === 'registration' && (
-        <TeamRegistration teams={teams} setTeams={setTeams} onStart={() => setCurrentPhase('board')} />
+        <TeamRegistration teams={teams} setTeams={setTeams} onStart={() => { enterFullscreen(); setCurrentPhase('board'); }} />
       )}
 
       {currentPhase !== 'registration' && (

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Stars from './Stars.jsx';
+import FullscreenButton from './Fullscreen.jsx';
 
 export const SWATCHES = ['#dd0000', '#0040ff', '#512dc3', '#0cb820', '#ff8a00', '#ec4899', '#0d9488', '#eab308'];
 
@@ -19,6 +20,7 @@ export default function TeamRegistration({ teams, setTeams, onStart }) {
   return (
     <main className="relative flex min-h-full items-center overflow-hidden px-6 py-10">
       <Stars />
+      <div className="fixed right-4 top-4 z-20"><FullscreenButton /></div>
       <div className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-8 lg:grid-cols-[1.2fr_1fr]">
         <section>
           <h1 className="sr-only">Level Up! Youth Night, Oct 24, 3:30 PM</h1>
@@ -30,7 +32,7 @@ export default function TeamRegistration({ teams, setTeams, onStart }) {
           <form onSubmit={addTeam} className="mt-5 space-y-5">
             <div>
               <label htmlFor="team" className="mb-1.5 block text-sm font-semibold">Team name</label>
-              <input id="team" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Team Jemimi"
+              <input id="team" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Team Grace"
                 className="w-full rounded-2xl border-2 border-ink/15 bg-white px-4 py-3 text-lg outline-none placeholder:text-ink/35 focus:border-poster-blue" />
             </div>
             <div>
