@@ -149,3 +149,14 @@ export function createTimerMusic() {
     setUrgent(v) { urgent = v; },
   };
 }
+
+// Bonus question reveal: three alert blips while the screen blinks, then a bright sparkle when the name appears
+export function playBonusAlert() {
+  try { [0, 0.4, 0.8].forEach((t, i) => tone(660 + i * 110, t, 0.18, 'square', 0.1)); } catch {}
+}
+export function playBonusReveal() {
+  try {
+    [523.25, 659.25, 783.99, 1046.5, 1318.5].forEach((f, i) => tone(f, i * 0.07, 0.5, 'triangle', 0.14));
+    tone(2093, 0.4, 0.8, 'sine', 0.06);
+  } catch {}
+}
