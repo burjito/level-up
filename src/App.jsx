@@ -7,6 +7,7 @@ import Scoreboard from './Scoreboard.jsx';
 import FullScoreboard from './FullScoreboard.jsx';
 import DesktopOnly, { useIsSmallScreen } from './DesktopOnly.jsx';
 import { enterFullscreen } from './Fullscreen.jsx';
+import { setBedPhase } from './bedMusic.js';
 
 // Progress is saved in this browser, so a refresh doesn't restart the game.
 const SAVE_KEY = 'level-up-save-v1';
@@ -38,6 +39,9 @@ export default function App() {
   const [activeId, setActiveId] = useState(startActive);
   const [showTally, setShowTally] = useState(false);
   const smallScreen = useIsSmallScreen();
+
+  // background music plays on registration and the board, fades out while a question is open
+  useEffect(() => { setBedPhase(smallScreen ? 'off' : currentPhase); }, [currentPhase, smallScreen]);
 
   useEffect(() => {
     try {
