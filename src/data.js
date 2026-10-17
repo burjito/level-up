@@ -67,16 +67,16 @@ const RAW = {
     ['video', 'Ito ay totoong sibuyas.', 'Charot', { choices: TC, note: 'Clip: 0:44 - 0:49' }],
   ],
   bible: [
-    ['text', 'Ilang araw nasa loob ng tyan ng isda si Noah?', '0'],
     ['truefalse', '"When God closes a door, He opens a window."', 'CAP', { choices: ['Scripture', 'CAP'] }],
-    ['text', 'Ano ang ika-anim na utos sa Ten Commandments?', '"Thou shalt not murder" / "Huwag kang papatay"'],
+    ['photo', 'Guess the book in the Bible!', 'Isaiah'],
     ['photo', 'Guess the phrase!', 'Lost Sheep'],
     ['text', 'Gibberish: JAR USE SA LAMB', 'Jerusalem'],
     ['text', 'Unshuffle the words: SSOEM', 'Moses'],
+    ['text', 'Ilang araw nasa loob ng tyan ng isda si Noah?', '0'],
     ['truefalse', '"Jesus wept"', 'Scripture — John 11:35', { choices: ['Scripture', 'CAP'] }],
-    ['text', 'How many books are there in the Bible?', '66'],
     ['truefalse', 'True or False: David killed Goliath with a sword.', 'FALSE'],
-    ['photo', 'Guess the book in the Bible!', 'Isaiah'],
+    ['text', 'How many books are there in the Bible?', '66'],
+    ['text', 'Ano ang ika-anim na utos sa Ten Commandments?', '"Thou shalt not murder" / "Huwag kang papatay"'],
   ],
 };
 
