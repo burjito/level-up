@@ -28,13 +28,13 @@ const RAW = {
     ['text', 'Ano ang sinasagisag ng tatlong bituin sa watawat ng Pilipinas?', 'Luzon, Visayas, Mindanao'],
     ['text', 'Anong tawag sa hayop na kumakain lamang ng halaman?', 'Herbivore'],
     ['text', 'Anong proseso ang ginagawa ng halaman gamit ang sikat ng araw, tubig, at hangin para makagawa ng pagkain?', 'Photosynthesis'],
-    ['text', 'Ano ang 20% ng 250?', '50'],
+    ['text', 'Ano ang 20% ng 3500?', '700'],
   ],
   scroll: [
     ['video', 'Sa kanta ni Lyca, ano ang meron din naman palang ganda?', 'Buhay a.k.a Mariel', TT('ZSboMQskA')],
     ['text', 'Sa anong larangan sikat si Dwight Ramos?', 'Basketball'],
     ['text', 'Ilan ang miyembro ng Kpop group na Seventeen?', '13 members'],
-    ['text', 'Sino ang bida sa teleseryeng Agua Bendita?', 'Xyriel Manabat'],
+    ['text', 'Sino ang batang bida sa teleseryeng Agua Bendita?', 'Xyriel Manabat'],
     ['text', 'Kung ang bumida sa teleseryeng Annaliza ay si Andrea Brillantes, sino naman ang CEO ng Brillant Skin?', 'Glenda Dela Cruz / Ms. Glenda'],
     ['video', 'Sa FlordeLiza, ano ang dapat mahawakan ni Flor para maging mabait na sa kanya si Liza?', 'Magkabilang dulo ng rainbow', TT('ZSgJNbXt4')],
     ['text', "Ilang years na simula unang ma-ere ang noontime tv show na It's Showtime?", '17 years'],
@@ -43,7 +43,7 @@ const RAW = {
     ['text', 'Sa sikat na kanta ng BINI na Karera, ilang beses binanggit ng kanta ang salitang "karera"?', '15 times'],
   ],
   sino: [
-    ['video', 'Sino ang original na kumanta ng kantang ito? (audio)', 'Vhong Navarro'],
+    ['video', 'Sino ang original na kumanta ng kantang ito?', 'Vhong Navarro'],
     ['photo', 'Sino ito?', 'Jemuel Ocampo / Kuya Jem'],
     ['text', '"O... my... goodness! Ungkatan ng past! Kapag binalik ang past, magugulo ang present."', 'Toni Gonzaga / Teddy Salazar'],
     ['text', 'ActSong: Hulaan ang kanta! (ilagay dito ang lyrics mula sa sheet mo)', 'Cup of Joe'],
@@ -63,7 +63,7 @@ const RAW = {
     ['truefalse', 'Sa Instagram, makikita ng isang tao kung ilang beses mong pinanood ang kanyang Story.', 'Charot', { choices: TC }],
     ['truefalse', 'Ang "Ctrl + F" ay shortcut para maghanap ng salita o phrase sa maraming computer applications at web browsers.', 'Trot', { choices: TC }],
     ['video', 'Ito ay totoong cabbage.', 'Trot', { choices: TC, note: 'Clip: 0:01 - 0:07' }],
-    ['video', 'Ang nag-cover ng kantang ito ay si Jared Lim Almendras, known professionally as... (kumpletuhin mula sa sheet)', 'Charot', { choices: TC }],
+    ['video', 'Ang nag-cover ng kantang ito ay si Jared Lim Almendras, known professionally as Shoti', 'Charot', { choices: TC }],
     ['video', 'Ito ay totoong sibuyas.', 'Charot', { choices: TC, note: 'Clip: 0:44 - 0:49' }],
   ],
   bible: [
