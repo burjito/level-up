@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { playIntro, playBuzzer } from './sfx.js';
+import { playIntro, playBuzzer, playBeep, createTimerMusic } from './sfx.js';
 import QuestionMedia from './QuestionMedia.jsx';
 
 const FALLBACK_MS = 3000; // used when the voiceover can't play
@@ -10,6 +10,15 @@ export default function QuestionModal({ question: q, category: c, onProceed }) {
   const [left, setLeft] = useState(q.seconds);
   const [running, setRunning] = useState(true);
   const audio = useRef(null);
+  const music = useRef(null);
+  const [soundOn, setSoundOn] = useState(() => {
+    try { return localStorage.getItem('level-up-timer-sound') !== 'off'; } catch { return true; }
+  });
+  const toggleSound = () => {
+    const next = !soundOn;
+    setSoundOn(next);
+    try { localStorage.setItem('level-up-timer-sound', next ? 'on' : 'off'); } catch {}
+  };
 
   const toQuestion = () => { audio.current?.pause(); setStep('question'); };
 
@@ -34,6 +43,24 @@ export default function QuestionModal({ question: q, category: c, onProceed }) {
     return () => clearTimeout(t);
   }, [step, running, left]);
   useEffect(() => { if (step === 'question' && left === 0) playBuzzer(); }, [step, left]);
+
+  // Countdown music: runs while the timer runs, speeds up and brightens in the last 5 seconds.
+  // Questions with their own audio/video clip stay quiet until the last 5 seconds so the clip can be heard.
+  useEffect(() => {
+    music.current = createTimerMusic();
+    return () => music.current.stop();
+  }, []);
+  useEffect(() => {
+    const m = music.current;
+    if (!m) return;
+    const hasClip = /\.(mp3|m4a|wav|ogg|mp4|webm|mov)$/i.test(q.mediaPlaceholder ?? '');
+    const play = step === 'question' && running && left > 0 && soundOn && (!hasClip || left <= 5);
+    try {
+      m.setUrgent(left <= 5);
+      if (play) m.start(); else m.stop();
+      if (play && left <= 3) playBeep(left === 1 ? 1175 : 880);
+    } catch {}
+  }, [step, running, left, soundOn, q]);
 
   const urgent = left <= 5;
   // question media first; if the question has an answer clip/photo, it replaces it on reveal
@@ -66,6 +93,7 @@ export default function QuestionModal({ question: q, category: c, onProceed }) {
               <span role="timer" className={`min-w-[2.5ch] text-right font-display text-6xl tabular-nums ${left === 0 || urgent ? 'animate-pulse text-poster-red motion-reduce:animate-none' : ''}`} style={!urgent ? { color: c.color } : undefined}>{left}</span>
               <button onClick={() => setRunning((r) => !r)} disabled={left === 0} className="btn-ghost px-4 py-1.5 text-sm">{running ? 'Pause' : 'Resume'}</button>
               <button onClick={() => { setLeft(q.seconds); setRunning(true); }} className="btn-ghost px-4 py-1.5 text-sm">Reset</button>
+              <button onClick={toggleSound} aria-pressed={soundOn} className="btn-ghost px-4 py-1.5 text-sm">{soundOn ? 'Sound on' : 'Sound off'}</button>
             </div>
           </div>
           <div className="h-3 overflow-hidden rounded-full bg-ink/10">
