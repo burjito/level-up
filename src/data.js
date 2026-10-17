@@ -46,7 +46,7 @@ const RAW = {
     ['video', 'Sino ang original na kumanta ng kantang ito?', 'Vhong Navarro'],
     ['photo', 'Sino ito?', 'Jemuel Ocampo / Kuya Jem'],
     ['text', '"O... my... goodness! Ungkatan ng past! Kapag binalik ang past, magugulo ang present."', 'Toni Gonzaga / Teddy Salazar'],
-    ['text', 'ActSong: Hulaan ang kanta! (ilagay dito ang lyrics mula sa sheet mo)', 'Cup of Joe'],
+    ['text', 'ActSong: Hulaan ang kanta!', 'Cup of Joe'],
     ['photo', 'Sino ito?', 'Melai Cantiveros'],
     ['text', 'Sinong mga tao ang nasa lumang 500 Peso bill?', 'Corazon Aquino & Ninoy Aquino'],
     ['text', 'Sino ang babae sa septic tank?', 'Eugene Domingo'],
