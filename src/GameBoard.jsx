@@ -1,6 +1,5 @@
 import TeamRank from './TeamRank.jsx';
-import FullscreenButton from './Fullscreen.jsx';
-import MusicButton from './MusicButton.jsx';
+import SettingsMenu from './SettingsMenu.jsx';
 
 // Fits the viewport exactly: no scrolling. Sizes come from the grid tracks.
 export default function GameBoard({ categories, questions, teams, onPick, onShowTally }) {
@@ -18,8 +17,7 @@ export default function GameBoard({ categories, questions, teams, onPick, onShow
           ))}
         </ul>
         )}
-        <MusicButton className="shrink-0" />
-        <FullscreenButton className="shrink-0" />
+        <div className="shrink-0"><SettingsMenu /></div>
         <button onClick={onShowTally} className="btn-ghost shrink-0 px-4 py-1 text-sm">Scoreboard</button>
       </header>
 
