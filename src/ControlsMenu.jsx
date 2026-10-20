@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 // "Controls" dropdown that keeps the question header uncluttered.
 // items: [{ label, onSelect, toggle?: true, on?: boolean, hidden?: boolean }]
-export default function ControlsMenu({ items, label = 'Controls' }) {
+export default function ControlsMenu({ items, label = 'Controls', buttonClassName = 'px-4 py-1.5 text-sm' }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
@@ -22,7 +22,7 @@ export default function ControlsMenu({ items, label = 'Controls' }) {
 
   return (
     <div ref={ref} className="relative">
-      <button onClick={() => setOpen((o) => !o)} aria-haspopup="menu" aria-expanded={open} className="btn-ghost flex items-center gap-2 px-4 py-1.5 text-sm">
+      <button onClick={() => setOpen((o) => !o)} aria-haspopup="menu" aria-expanded={open} className={`btn-ghost flex items-center gap-2 ${buttonClassName}`}>
         {label}
         <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden className={`transition ${open ? 'rotate-180' : ''}`}>
           <path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />

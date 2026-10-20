@@ -17,8 +17,8 @@ export default function GameBoard({ categories, questions, teams, onPick, onShow
           ))}
         </ul>
         )}
+        <button onClick={onShowTally} className="btn-ghost flex h-9 shrink-0 items-center justify-center px-4 py-0 text-sm">Scoreboard</button>
         <div className="shrink-0"><SettingsMenu /></div>
-        <button onClick={onShowTally} className="btn-ghost shrink-0 px-4 py-1 text-sm">Scoreboard</button>
       </header>
 
       <div className="grid min-h-0 flex-1 gap-1.5 sm:gap-2"

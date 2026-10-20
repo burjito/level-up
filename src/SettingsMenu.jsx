@@ -9,6 +9,7 @@ export default function SettingsMenu() {
   return (
     <ControlsMenu
       label="Settings"
+      buttonClassName="h-9 justify-center px-4 py-0 text-sm"
       items={[
         { label: 'Background music', onSelect: toggleBedMusic, toggle: true, on: enabled, hidden: missing },
         { label: 'Full screen', onSelect: fs.toggle, toggle: true, on: fs.on, hidden: !fs.supported },
