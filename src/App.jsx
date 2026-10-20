@@ -89,11 +89,11 @@ export default function App() {
   return (
     <div className="h-full">
       {currentPhase === 'registration' && (
-        <TeamRegistration teams={teams} setTeams={setTeams} onStart={() => { enterFullscreen(); setCurrentPhase('board'); }} />
+        <TeamRegistration teams={teams} setTeams={setTeams} onStart={() => { enterFullscreen(); setCurrentPhase('board'); }} onNewGame={newGame} />
       )}
 
       {currentPhase !== 'registration' && (
-        <GameBoard categories={CATEGORIES} questions={questions} teams={teams} onPick={openQuestion} onShowTally={() => setShowTally(true)} />
+        <GameBoard categories={CATEGORIES} questions={questions} teams={teams} onPick={openQuestion} onShowTally={() => setShowTally(true)} onNewGame={newGame} />
       )}
 
       {currentPhase === 'question-active' && active && (
@@ -117,7 +117,7 @@ export default function App() {
         />
       )}
 
-      {showTally && <FullScoreboard teams={teams} onAdjust={adjustScore} onNewGame={newGame} onClose={() => setShowTally(false)} />}
+      {showTally && <FullScoreboard teams={teams} onAdjust={adjustScore} onClose={() => setShowTally(false)} />}
     </div>
   );
 }

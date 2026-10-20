@@ -4,7 +4,7 @@ import SettingsMenu from './SettingsMenu.jsx';
 
 export const SWATCHES = ['#dd0000', '#0040ff', '#512dc3', '#0cb820', '#ff8a00', '#ec4899', '#0d9488', '#eab308'];
 
-export default function TeamRegistration({ teams, setTeams, onStart }) {
+export default function TeamRegistration({ teams, setTeams, onStart, onNewGame }) {
   const [name, setName] = useState('');
   const [color, setColor] = useState(SWATCHES[0]);
 
@@ -20,7 +20,7 @@ export default function TeamRegistration({ teams, setTeams, onStart }) {
   return (
     <main className="relative flex min-h-full items-center overflow-hidden px-6 py-10">
       <Stars />
-      <div className="fixed right-4 top-4 z-20"><SettingsMenu /></div>
+      <div className="fixed right-4 top-4 z-20"><SettingsMenu onNewGame={teams.length ? onNewGame : undefined} /></div>
       <div className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-8 lg:grid-cols-[1.2fr_1fr]">
         <section>
           <h1 className="sr-only">Level Up! Youth Night, Oct 24, 3:30 PM</h1>

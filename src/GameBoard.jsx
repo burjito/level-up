@@ -2,7 +2,7 @@ import TeamRank from './TeamRank.jsx';
 import SettingsMenu from './SettingsMenu.jsx';
 
 // Fits the viewport exactly: no scrolling. Sizes come from the grid tracks.
-export default function GameBoard({ categories, questions, teams, onPick, onShowTally }) {
+export default function GameBoard({ categories, questions, teams, onPick, onShowTally, onNewGame }) {
   const find = (catId, n) => questions.find((q) => q.id === `${catId}-${n}`);
   const top3 = [...teams].sort((a, b) => b.score - a.score).slice(0, 3);
   const started = teams.some((t) => t.score > 0); // no top 3 until the first points are awarded
@@ -18,7 +18,7 @@ export default function GameBoard({ categories, questions, teams, onPick, onShow
         </ul>
         )}
         <button onClick={onShowTally} className="btn-ghost flex h-9 shrink-0 items-center justify-center px-4 py-0 text-sm">Scoreboard</button>
-        <div className="shrink-0"><SettingsMenu /></div>
+        <div className="shrink-0"><SettingsMenu onNewGame={onNewGame} /></div>
       </header>
 
       <div className="grid min-h-0 flex-1 gap-1.5 sm:gap-2"
