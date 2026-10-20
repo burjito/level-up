@@ -1,15 +1,13 @@
 import { useEffect, useState } from 'react';
-import ConfirmModal from './ConfirmModal.jsx';
 
 const CHIPS = [50, 100, 200, 500, 1000];
 
 // Full tally, ranked high to low (ties share a rank). "Edit scores" lets the host add or take off points per team.
-export default function FullScoreboard({ teams, onClose, onAdjust, onNewGame }) {
+export default function FullScoreboard({ teams, onClose, onAdjust }) {
   const [editing, setEditing] = useState(false);
-  const [order, setOrder] = useState([]); // row order is frozen while editing so rows don't jump under finger
+  const [order, setOrder] = useState([]); // row order is frozen while editing so rows don't jump under your finger
   const [amount, setAmount] = useState(100);
   const [history, setHistory] = useState([]); // [{ id, name, delta }] for undo
-  const [confirming, setConfirming] = useState(false); // new game confirmation
 
   const byScore = [...teams].sort((a, b) => b.score - a.score);
   const rows = editing ? order.map((id) => teams.find((t) => t.id === id)).filter(Boolean) : byScore;
@@ -17,10 +15,10 @@ export default function FullScoreboard({ teams, onClose, onAdjust, onNewGame }) 
   const last = history[history.length - 1];
 
   useEffect(() => {
-    const onKey = (e) => e.key === 'Escape' && (confirming ? setConfirming(false) : onClose());
+    const onKey = (e) => e.key === 'Escape' && onClose();
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [onClose, confirming]);
+  }, [onClose]);
 
   const startEdit = () => { setOrder(byScore.map((t) => t.id)); setEditing(true); };
   const change = (t, sign) => {
@@ -35,7 +33,6 @@ export default function FullScoreboard({ teams, onClose, onAdjust, onNewGame }) 
   };
 
   return (
-    <>
     <div role="dialog" aria-modal="true" aria-label="Scoreboard" onClick={onClose} className="fixed inset-0 z-[60] flex items-center justify-center bg-white/80 p-4 backdrop-blur-md">
       <div onClick={(e) => e.stopPropagation()} className="glass flex max-h-[90vh] w-full max-w-xl animate-pop flex-col rounded-[2rem] p-6 motion-reduce:animate-none sm:p-8">
         <div className="flex items-center justify-between gap-3">
@@ -81,25 +78,8 @@ export default function FullScoreboard({ teams, onClose, onAdjust, onNewGame }) 
             );
           })}
         </ol>
-        <div className="mt-5 flex items-center justify-between gap-3">
-          <button
-            onClick={() => setConfirming(true)}
-            className="text-sm font-semibold text-poster-red underline-offset-2 hover:underline">
-            New game
-          </button>
-          <button onClick={onClose} className="btn-primary">Close</button>
-        </div>
+        <button onClick={onClose} className="btn-primary mt-5">Close</button>
       </div>
     </div>
-    {confirming && (
-      <ConfirmModal
-        title="Start a new game?"
-        message="This clears all teams, scores and answered questions. This can't be undone."
-        confirmLabel="Yes, start new game"
-        onConfirm={() => { setConfirming(false); onNewGame(); }}
-        onCancel={() => setConfirming(false)}
-      />
-    )}
-    </>
   );
 }

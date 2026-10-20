@@ -1,5 +1,13 @@
-// Branded confirmation dialog 
+import { useEffect } from 'react';
+
+// Branded confirmation dialog (replaces the browser's window.confirm). Esc or a click outside cancels.
 export default function ConfirmModal({ title, message, confirmLabel = 'Confirm', cancelLabel = 'Cancel', onConfirm, onCancel }) {
+  useEffect(() => {
+    const onKey = (e) => e.key === 'Escape' && onCancel();
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onCancel]);
+
   return (
     <div role="alertdialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-message" onClick={onCancel}
       className="fixed inset-0 z-[70] flex items-center justify-center bg-white/80 p-4 backdrop-blur-md">
