@@ -1,9 +1,7 @@
 import { useSyncExternalStore } from 'react';
 
 // Background "bed" music for the waiting time (registration + board).
-// Put your track at public/music/bed.mp3. It loops. (Add more paths here and they play one after another.)
 const TRACKS = ['/music/bed.mp3'];
-// Volume per phase (0 to 1). Any other phase (a question is open, small screen) is silent.
 const LEVEL = { registration: 0.5, board: 0.45, scoreboard: 0.18 };
 const KEY = 'level-up-music';
 
