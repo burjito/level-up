@@ -15,8 +15,9 @@ export const MEDIA = {
   // Sino Yarn?
   'sino-1': { type: 'audio', mediaPlaceholder: f(1, S, 'mp3') },
   'sino-2': { type: 'photo', mediaPlaceholder: f(2, S), answerMedia: f(2, S, 'jpg', true) },
-  'sino-4': { type: 'audio', mediaPlaceholder: f(4, S, 'mp3') },
-  'sino-5': { type: 'photo', mediaPlaceholder: f(5, S) },
+  'sino-3': { answerMedia: f(3, S, 'mp4', true) }, // text question, the video plays when the answer is shown
+  'sino-4': { type: 'audio', mediaPlaceholder: f(4, S, 'mp3'), answerMedia: f(4, S, 'mp4', true) },
+  'sino-5': { type: 'photo', mediaPlaceholder: f(5, S), answerMedia: f(5, S, 'mp4', true) },
   // Trot o Charot
   'trot-8': { type: 'photo', mediaPlaceholder: f(8, T), answerMedia: f(8, T, 'mp4', true) },
   'trot-9': { type: 'video', mediaPlaceholder: f(9, T, 'mp4') },
