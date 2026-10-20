@@ -3,6 +3,7 @@ import { playIntro, playBuzzer, playBeep, createTimerMusic, playBonusAlert, play
 import QuestionMedia from './QuestionMedia.jsx';
 
 const FALLBACK_MS = 3000; // used when the voiceover can't play
+const isClip = (src) => /\.(mp3|m4a|wav|ogg|mp4|webm|mov)$/i.test(src);
 
 function BonusBadge({ name }) {
   return (
@@ -23,6 +24,14 @@ export default function QuestionModal({ question: q, category: c, onProceed }) {
   const [reveal, setReveal] = useState(false);
   const [left, setLeft] = useState(q.seconds);
   const [running, setRunning] = useState(true);
+  // Question voiceover (public/vo-questions): the timer and any audio/video clip wait until it has finished
+  const [voReady, setVoReady] = useState(false);
+  const [voPlaying, setVoPlaying] = useState(false);
+  const [voMissing, setVoMissing] = useState(false);
+  const [voiceOn, setVoiceOn] = useState(() => {
+    try { return localStorage.getItem('level-up-question-voice') !== 'off'; } catch { return true; }
+  });
+  const voiceRef = useRef(null);
   const audio = useRef(null);
   const music = useRef(null);
   const flyRef = useRef(null);
@@ -34,6 +43,19 @@ export default function QuestionModal({ question: q, category: c, onProceed }) {
     const next = !soundOn;
     setSoundOn(next);
     try { localStorage.setItem('level-up-timer-sound', next ? 'on' : 'off'); } catch {}
+  };
+
+  const toggleVoice = () => {
+    const next = !voiceOn;
+    setVoiceOn(next); // applies from the next question on
+    try { localStorage.setItem('level-up-question-voice', next ? 'on' : 'off'); } catch {}
+  };
+  const skipVoice = () => { voiceRef.current?.pause(); setVoPlaying(false); setVoReady(true); };
+  const replayVoice = () => {
+    if (!q.questionVo) return;
+    const a = voiceRef.current ?? (voiceRef.current = new Audio(q.questionVo));
+    a.currentTime = 0;
+    a.play().catch(() => setVoMissing(true));
   };
 
   const toNext = () => setStep((s) => (s === 'intro' ? afterIntro : s));
@@ -95,8 +117,25 @@ export default function QuestionModal({ question: q, category: c, onProceed }) {
     return () => anim.cancel();
   }, [flying]);
 
-  // Step B: countdown starts when the question is fully shown
-  const live = step === 'question' && landed;
+  // Question voiceover: starts when the question is shown. A missing file or a blocked autoplay never holds up the game.
+  useEffect(() => {
+    if (!(step === 'question' && landed)) return;
+    if (!voiceOn || !q.questionVo) { setVoReady(true); return; }
+    const a = new Audio(q.questionVo);
+    voiceRef.current = a;
+    const open = () => { setVoPlaying(false); setVoReady(true); };
+    a.addEventListener('playing', () => setVoPlaying(true));
+    a.addEventListener('pause', () => setVoPlaying(false));
+    a.addEventListener('ended', open);
+    a.addEventListener('error', () => { setVoMissing(true); open(); });
+    a.play().catch(open);
+    const cap = setTimeout(open, 30000);
+    return () => { clearTimeout(cap); a.pause(); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step, landed]);
+
+  // Step B: countdown starts when the question is fully shown and its voiceover has finished
+  const live = step === 'question' && landed && voReady;
   useEffect(() => {
     if (!live || !running || left <= 0) return;
     const t = setTimeout(() => setLeft((s) => s - 1), 1000);
@@ -155,22 +194,28 @@ export default function QuestionModal({ question: q, category: c, onProceed }) {
               <span className="rounded-full px-4 py-1 font-display text-lg text-white" style={{ background: c.color }}>{q.points} pts</span>
               {q.bonus && <span ref={badgeRef} className={`inline-flex ${landed ? '' : 'invisible'}`}><BonusBadge name={q.bonus.name} /></span>}
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center justify-end gap-3">
               <span role="timer" className={`min-w-[2.5ch] text-right font-display text-6xl tabular-nums ${left === 0 || urgent ? 'animate-pulse text-poster-red motion-reduce:animate-none' : ''}`} style={!urgent ? { color: c.color } : undefined}>{left}</span>
               <button onClick={() => setRunning((r) => !r)} disabled={left === 0} className="btn-ghost px-4 py-1.5 text-sm">{running ? 'Pause' : 'Resume'}</button>
               <button onClick={() => { setLeft(q.seconds); setRunning(true); }} className="btn-ghost px-4 py-1.5 text-sm">Reset</button>
               <button onClick={toggleSound} aria-pressed={soundOn} className="btn-ghost px-4 py-1.5 text-sm">{soundOn ? 'Sound on' : 'Sound off'}</button>
+              <button onClick={toggleVoice} aria-pressed={voiceOn} className="btn-ghost px-4 py-1.5 text-sm">{voiceOn ? 'Voice on' : 'Voice off'}</button>
+              {voPlaying
+                ? <button onClick={skipVoice} className="btn-ghost px-4 py-1.5 text-sm">Skip voice</button>
+                : !voMissing && voReady && <button onClick={replayVoice} className="btn-ghost px-4 py-1.5 text-sm">Replay voice</button>}
             </div>
           </div>
           <div className="h-3 overflow-hidden rounded-full bg-ink/10">
             <div className="h-full rounded-full transition-[width] duration-1000 ease-linear" style={{ width: `${(left / q.seconds) * 100}%`, background: urgent ? '#dd0000' : c.color }} />
           </div>
 
+          {landed && !voReady && <p className="text-sm font-semibold text-ink/60">Listen to the question…</p>}
+
           {/* hidden until the bonus badge has landed (the layout is already in place, so nothing jumps) */}
           <div className={`contents ${landed ? '' : 'invisible'}`}>
             {left === 0 && <p className="font-display text-3xl text-poster-red">Time's up!</p>}
 
-            {landed && shownMedia && (
+            {landed && shownMedia && (!isClip(shownMedia) || voReady || reveal) && (
               <div className="space-y-2">
                 <QuestionMedia key={shownMedia} src={shownMedia} />
                 {q.note && <p className="text-center text-sm text-ink/60">{q.note}</p>}
@@ -195,7 +240,7 @@ export default function QuestionModal({ question: q, category: c, onProceed }) {
             )}
 
             <div className="mt-auto flex justify-end">
-              {!reveal ? <button onClick={() => { setReveal(true); setRunning(false); }} className="btn-primary">Show answer</button>
+              {!reveal ? <button onClick={() => { voiceRef.current?.pause(); setVoReady(true); setReveal(true); setRunning(false); }} className="btn-primary">Show answer</button>
                 : <button onClick={onProceed} className="btn-primary">Proceed to scoring</button>}
             </div>
           </div>

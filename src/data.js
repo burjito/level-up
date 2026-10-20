@@ -3,15 +3,22 @@ import { BONUS, bonusPoints } from './bonus.js';
 
 // Types: 'text' | 'photo' | 'truefalse' | 'video'
 // Media files go in /public/media/<categoryId>/<n>.jpg|mp4 (or set `media` to a URL).
+// slug = category name used in the question voiceover file names (see QUESTION_VO below).
 export const CATEGORIES = [
-  { id: 'grade5', name: 'Kakasa Ka Ba Sa Grade 5?', color: '#dd0000', img: '/grade5.webp', vo: '/vo/grade-5.m4a' },
-  { id: 'scroll', name: 'Kaka-scroll Mo Yan!', color: '#512dc3', img: '/scroll.webp', vo: '/vo/scroll.m4a' },
-  { id: 'sino', name: 'Sino Yarn?', color: '#0cb820', img: '/sino.webp', vo: '/vo/sino-yarn.m4a' },
-  { id: 'trot', name: 'Trot o Charot', color: '#0040ff', img: '/trot.webp', vo: '/vo/trotcharot.m4a' },
-  { id: 'bible', name: 'Bible Questions', color: '#ff8a00', img: '/bible.webp', vo: '/vo/bible.m4a' },
+  { id: 'grade5', slug: 'grade-5', name: 'Kakasa Ka Ba Sa Grade 5?', color: '#dd0000', img: '/grade5.webp', vo: '/vo/grade-5.m4a' },
+  { id: 'scroll', slug: 'kakascroll-mo-yan', name: 'Kaka-scroll Mo Yan!', color: '#512dc3', img: '/scroll.webp', vo: '/vo/scroll.m4a' },
+  { id: 'sino', slug: 'sino-yarn', name: 'Sino Yarn?', color: '#0cb820', img: '/sino.webp', vo: '/vo/sino-yarn.m4a' },
+  { id: 'trot', slug: 'trot-o-charot', name: 'Trot o Charot', color: '#0040ff', img: '/trot.webp', vo: '/vo/trotcharot.m4a' },
+  { id: 'bible', slug: 'bible', name: 'Bible Questions', color: '#ff8a00', img: '/bible.webp', vo: '/vo/bible.m4a' },
 ];
 
 export const DEFAULT_SECONDS = 20; // default timer per question
+
+// Voiceover that reads each question aloud. One file per question, in public/vo-questions/:
+//   q<question number>-<category slug>.m4a   e.g. q1-grade-5.m4a, q5-kakascroll-mo-yan.m4a, q10-bible.m4a
+// Missing files are skipped (the timer just starts). Override one with { vo: '/vo-questions/other.m4a' } in its options.
+const QUESTION_VO_DIR = '/vo-questions/';
+
 const TC = ['Trot', 'Charot'];
 const TT = (code) => ({ media: `https://vt.tiktok.com/${code}/` });
 const SET = 'Ilagay ang sagot';
@@ -95,6 +102,7 @@ export const buildQuestions = () =>
         type,
         questionText,
         answerText,
+        questionVo: o.vo ?? `${QUESTION_VO_DIR}q${i + 1}-${c.slug}.m4a`, // voiceover that reads the question
         choices: o.choices ?? (type === 'truefalse' ? ['True', 'False'] : null),
         note: o.note ?? null,
         seconds: o.seconds ?? DEFAULT_SECONDS,
