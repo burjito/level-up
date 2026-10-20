@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { playIntro, playBuzzer, playBeep, createTimerMusic, playBonusAlert, playBonusReveal, playBonusVoice } from './sfx.js';
 import QuestionMedia from './QuestionMedia.jsx';
+import ControlsMenu from './ControlsMenu.jsx';
 
 const FALLBACK_MS = 3000; // used when the voiceover can't play
 const isClip = (src) => /\.(mp3|m4a|wav|ogg|mp4|webm|mov)$/i.test(src);
@@ -197,19 +198,26 @@ export default function QuestionModal({ question: q, category: c, onProceed }) {
             <div className="flex flex-wrap items-center justify-end gap-3">
               <span role="timer" className={`min-w-[2.5ch] text-right font-display text-6xl tabular-nums ${left === 0 || urgent ? 'animate-pulse text-poster-red motion-reduce:animate-none' : ''}`} style={!urgent ? { color: c.color } : undefined}>{left}</span>
               <button onClick={() => setRunning((r) => !r)} disabled={left === 0} className="btn-ghost px-4 py-1.5 text-sm">{running ? 'Pause' : 'Resume'}</button>
-              <button onClick={() => { setLeft(q.seconds); setRunning(true); }} className="btn-ghost px-4 py-1.5 text-sm">Reset</button>
-              <button onClick={toggleSound} aria-pressed={soundOn} className="btn-ghost px-4 py-1.5 text-sm">{soundOn ? 'Sound on' : 'Sound off'}</button>
-              <button onClick={toggleVoice} aria-pressed={voiceOn} className="btn-ghost px-4 py-1.5 text-sm">{voiceOn ? 'Voice on' : 'Voice off'}</button>
-              {voPlaying
-                ? <button onClick={skipVoice} className="btn-ghost px-4 py-1.5 text-sm">Skip voice</button>
-                : !voMissing && voReady && <button onClick={replayVoice} className="btn-ghost px-4 py-1.5 text-sm">Replay voice</button>}
+              <ControlsMenu
+                items={[
+                  { label: 'Reset timer', onSelect: () => { setLeft(q.seconds); setRunning(true); } },
+                  { label: 'Replay voice', onSelect: replayVoice, hidden: voMissing || !voReady || voPlaying },
+                  { label: 'Countdown sound', onSelect: toggleSound, toggle: true, on: soundOn },
+                  { label: 'Question voice', onSelect: toggleVoice, toggle: true, on: voiceOn },
+                ]}
+              />
             </div>
           </div>
           <div className="h-3 overflow-hidden rounded-full bg-ink/10">
             <div className="h-full rounded-full transition-[width] duration-1000 ease-linear" style={{ width: `${(left / q.seconds) * 100}%`, background: urgent ? '#dd0000' : c.color }} />
           </div>
 
-          {landed && !voReady && <p className="text-sm font-semibold text-ink/60">Listen to the question…</p>}
+          {landed && !voReady && (
+            <div className="flex items-center gap-3 text-sm font-semibold text-ink/60">
+              Listen to the question…
+              {voPlaying && <button onClick={skipVoice} className="rounded-full px-3 py-0.5 text-poster-violet ring-1 ring-poster-violet/40 hover:bg-poster-violet/10">Skip</button>}
+            </div>
+          )}
 
           {/* hidden until the bonus badge has landed (the layout is already in place, so nothing jumps) */}
           <div className={`contents ${landed ? '' : 'invisible'}`}>
