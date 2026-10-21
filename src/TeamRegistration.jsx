@@ -32,7 +32,7 @@ export default function TeamRegistration({ teams, setTeams, onStart, onNewGame }
           <form onSubmit={addTeam} className="mt-5 space-y-5">
             <div>
               <label htmlFor="team" className="mb-1.5 block text-sm font-semibold">Team name</label>
-              <input id="team" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Team Grace"
+              <input id="team" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Jesus' Flock"
                 className="w-full rounded-2xl border-2 border-ink/15 bg-white px-4 py-3 text-lg outline-none placeholder:text-ink/35 focus:border-poster-blue" />
             </div>
             <div>
