@@ -71,7 +71,7 @@ export function SurpriseBoard({ answered, playerName, onPick, onFinalResults, on
         <header className="flex shrink-0 items-center justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[.22em] text-poster-orange">Happy Pastor's Appreciation Month!</p>
-            <h1 className="font-display text-2xl text-poster-blue sm:text-4xl">Thank you, Kuya / Ptr. Jem!</h1>
+            <h1 className="font-display text-2xl text-poster-blue sm:text-4xl">Thank you, Kuya Jem!</h1>
             <p className="mt-1 text-sm font-semibold text-ink/55">Player: {playerName}</p>
           </div>
           <div className="flex items-center gap-2">
@@ -168,6 +168,12 @@ export function SurpriseQuestion({ question: q, playerName, onProceed, onShowTal
             <button onClick={onShowTally} className="btn-ghost px-3 py-1.5 text-sm">Scoreboard</button>
             <SettingsMenu onNewGame={onNewGame} hideRanking={hideRanking} onToggleHide={onToggleHide} />
           </div>
+        </div>
+        <div className="h-3 overflow-hidden rounded-full bg-ink/10">
+          <div
+            className="h-full rounded-full transition-[width] duration-1000 ease-linear"
+            style={{ width: `${(left / SURPRISE_SECONDS) * 100}%`, background: left <= 5 ? '#dd0000' : '#0040ff' }}
+          />
         </div>
         {!introReady && (
           <div className="space-y-2">
