@@ -6,6 +6,7 @@ import SettingsMenu from './SettingsMenu.jsx';
 import { SURPRISE_PASSCODE, SURPRISE_QUESTIONS, SURPRISE_SECONDS } from './surpriseData.js';
 
 const CARD_COLORS = ['#dd0000', '#512dc3', '#0cb820', '#0040ff'];
+const getCardColor = (questionNumber) => CARD_COLORS[Math.floor((questionNumber - 1) / 3)];
 
 export function PasscodeModal({ onUnlock, onClose }) {
   const [code, setCode] = useState('');
@@ -87,7 +88,7 @@ export function SurpriseBoard({ answered, playerName, onPick, onFinalResults, on
           </div>
           <div className="grid min-h-0 grid-cols-3 grid-rows-4 gap-2 sm:gap-3">
             {SURPRISE_QUESTIONS.map((q) => {
-              const color = CARD_COLORS[Math.floor((q.number - 1) / 3)];
+              const color = getCardColor(q.number);
               return answered.includes(q.id) ? (
               <div key={q.id} aria-label={`Question ${q.number}, answered`} className="flex items-center justify-center rounded-2xl border-2 border-dashed border-ink/15 bg-ink/5 font-display text-3xl text-ink/25">{q.number}</div>
             ) : (
@@ -120,6 +121,7 @@ export function SurpriseFinalResults({ onClose }) {
 }
 
 export function SurpriseQuestion({ question: q, playerName, onProceed, onShowTally, onNewGame, hideRanking, onToggleHide }) {
+  const color = getCardColor(q.number);
   const [left, setLeft] = useState(SURPRISE_SECONDS);
   const [running, setRunning] = useState(true);
   const [introReady, setIntroReady] = useState(!q.introMedia);
@@ -159,11 +161,11 @@ export function SurpriseQuestion({ question: q, playerName, onProceed, onShowTal
   const showAnswer = () => { setReveal(true); setRunning(false); playAnswerReveal(); };
   return (
     <div role="dialog" aria-modal="true" className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-white/75 p-4 backdrop-blur-md">
-      <div className="glass flex max-h-[94vh] w-full max-w-5xl flex-col gap-5 overflow-y-auto rounded-[2rem] border-t-[12px] border-poster-orange p-6 animate-pop motion-reduce:animate-none sm:p-9">
+      <div className="glass flex max-h-[94vh] w-full max-w-5xl flex-col gap-5 overflow-y-auto rounded-[2rem] border-t-[12px] p-6 animate-pop motion-reduce:animate-none sm:p-9" style={{ borderTopColor: color }}>
         <div className="flex items-center justify-between gap-3">
-          <div><p className="text-sm font-semibold uppercase tracking-[.16em] text-poster-orange">HIDDEN JEM</p><h2 className="font-display text-2xl text-poster-violet">Question #{q.number}</h2><p className="text-sm font-semibold text-ink/55">Player: {playerName}</p></div>
+          <div><p className="text-sm font-semibold uppercase tracking-[.16em]" style={{ color }}>HIDDEN JEM</p><h2 className="font-display text-2xl" style={{ color }}>Question #{q.number}</h2><p className="text-sm font-semibold text-ink/55">Player: {playerName}</p></div>
           <div className="flex items-center gap-2">
-            <span role="timer" className={`font-display text-6xl tabular-nums ${left <= 5 ? 'text-poster-red' : 'text-poster-blue'}`}>{left}</span>
+            <span role="timer" className={`font-display text-6xl tabular-nums ${left <= 5 ? 'animate-pulse text-poster-red motion-reduce:animate-none' : ''}`} style={left > 5 ? { color } : undefined}>{left}</span>
             <button onClick={() => setRunning((value) => !value)} disabled={!voReady || left === 0} className="btn-ghost px-3 py-1.5 text-sm">{running ? 'Pause' : 'Resume'}</button>
             <button onClick={onShowTally} className="btn-ghost px-3 py-1.5 text-sm">Scoreboard</button>
             <SettingsMenu onNewGame={onNewGame} hideRanking={hideRanking} onToggleHide={onToggleHide} />
@@ -172,7 +174,7 @@ export function SurpriseQuestion({ question: q, playerName, onProceed, onShowTal
         <div className="h-3 overflow-hidden rounded-full bg-ink/10">
           <div
             className="h-full rounded-full transition-[width] duration-1000 ease-linear"
-            style={{ width: `${(left / SURPRISE_SECONDS) * 100}%`, background: left <= 5 ? '#dd0000' : '#0040ff' }}
+            style={{ width: `${(left / SURPRISE_SECONDS) * 100}%`, background: left <= 5 ? '#dd0000' : color }}
           />
         </div>
         {!introReady && (
@@ -193,7 +195,7 @@ export function SurpriseQuestion({ question: q, playerName, onProceed, onShowTal
         <p className="font-display text-3xl leading-tight sm:text-5xl">{q.questionText}</p>
         {!reveal ? <button onClick={showAnswer} disabled={!voReady} className="btn-primary mt-auto self-end">Show answer</button> : (
           <>
-            {q.answerMedia && <div><p className="mb-2 text-xs font-semibold uppercase tracking-wider text-poster-orange">Answer reveal</p><QuestionMedia key={q.answerMedia} src={q.answerMedia} /></div>}
+            {q.answerMedia && <div><p className="mb-2 text-xs font-semibold uppercase tracking-wider" style={{ color }}>Answer reveal</p><QuestionMedia key={q.answerMedia} src={q.answerMedia} /></div>}
             <div className="rounded-2xl border-[4px] border-poster-green bg-poster-green/10 p-6 shadow-[0_6px_0_rgba(12,184,32,.2)]"><p className="text-sm font-semibold uppercase tracking-wide text-poster-green">Correct answer</p><p className="mt-1 font-display text-4xl text-ink sm:text-6xl">{q.answerText}</p></div>
             <button onClick={onProceed} className="btn-primary self-end">Proceed to scoring</button>
           </>
