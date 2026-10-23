@@ -4,7 +4,7 @@ export const SURPRISE_SECONDS = 10;
 const ROOT = '/kuya-jem';
 
 const QUESTIONS = [
-  ['Anong Thai fashion staple na kilala sa bold block-letter branding at minimalist design ni?', 'Gentle Woman'],
+  ['Anong Thai fashion staple na kilala sa bold block-letter branding at minimalist design nito ang naging massively popular across Asia??', 'Gentle Woman'],
   ['Saan sumakay si Yeng nang bigla siyang may nakatabi?', 'Jeepney'],
   ['Ano ang sinusoot ng tao na delikado kapag naputagal at nakatulugan?', 'Contact Lens'],
   ['Bukod sa UP at QC, saang kalsada pa baka biglang may makita si Maki?', 'BGC'],
