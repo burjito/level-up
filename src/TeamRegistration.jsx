@@ -18,16 +18,16 @@ export default function TeamRegistration({ teams, setTeams, onStart, onNewGame, 
   };
 
   return (
-    <main role={isAdding ? 'dialog' : undefined} aria-modal={isAdding || undefined} className={`relative flex min-h-full items-center overflow-hidden px-6 py-10 ${isAdding ? 'fixed inset-0 z-[70] h-screen w-screen justify-center overflow-y-auto bg-white/75 p-4 backdrop-blur-md sm:p-6' : ''}`}>
+    <main role={isAdding ? 'dialog' : undefined} aria-modal={isAdding || undefined} className={`relative flex min-h-full items-center overflow-hidden px-6 py-10 ${isAdding ? 'fixed inset-0 z-[999] h-screen w-screen justify-center overflow-y-auto bg-white/75 p-4 backdrop-blur-md sm:p-6' : ''}`}>
       {!isAdding && <Stars />}
       {!isAdding && <div className="fixed right-4 top-4 z-20"><SettingsMenu onNewGame={teams.length ? onNewGame : undefined} onRegisterTeam={onRegisterTeam} registrationLabel={registrationLabel} /></div>}
-      <div className={`relative z-10 mx-auto grid w-full items-center gap-8 ${showForm ? 'max-w-6xl lg:grid-cols-[1.2fr_1fr]' : 'max-w-2xl'}`}>
-        <section className={showForm ? '' : 'flex items-center justify-center'}>
+      <div className={`relative z-10 mx-auto grid w-full items-center gap-8 ${isAdding ? 'max-w-xl' : showForm ? 'max-w-6xl lg:grid-cols-[1.2fr_1fr]' : 'max-w-2xl'}`}>
+        {!isAdding && <section className={showForm ? '' : 'flex items-center justify-center'}>
           <h1 className="sr-only">Level Up! Youth Night, Oct 24, 3:30 PM</h1>
           <div className="p-3 sm:p-5">
             <img src="/elements/logo.webp" alt="Level Up!" className="mx-auto w-full max-w-2xl animate-heartbeat motion-reduce:animate-none" />
           </div>
-        </section>
+        </section>}
 
         {showForm && <section className="glass rounded-[2rem] p-6 sm:p-8">
           {isAdding && <button type="button" onClick={onClose} className="btn-ghost float-right px-3 py-1 text-sm">Close</button>}
