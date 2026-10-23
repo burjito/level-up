@@ -53,6 +53,7 @@ export default function App() {
   const [surpriseAnswered, setSurpriseAnswered] = useState([]);
   const [surprisePlayerName, setSurprisePlayerName] = useState('');
   const [surpriseScore, setSurpriseScore] = useState(0);
+  const [showRegistration, setShowRegistration] = useState(false);
   const smallScreen = useIsSmallScreen();
 
   // background music plays on registration and the board, fades out while a question is open
@@ -127,6 +128,7 @@ export default function App() {
     setSurpriseAnswered([]);
     setSurprisePlayerName('');
     setSurpriseScore(0);
+    setShowRegistration(false);
     setCurrentPhase('registration');
   };
 
@@ -135,13 +137,16 @@ export default function App() {
   return (
     <div className="h-full">
       {currentPhase === 'registration' && (
-        <TeamRegistration teams={teams} setTeams={setTeams} onStart={() => { enterFullscreen(); setCurrentPhase('board'); }} onNewGame={newGame} />
+        <TeamRegistration teams={teams} setTeams={setTeams} onStart={() => { enterFullscreen(); setCurrentPhase('board'); }} onNewGame={newGame} onRegisterTeam={() => setShowRegistration(true)} showForm={showRegistration} />
       )}
 
       {currentPhase !== 'registration' && (
-        <GameBoard categories={CATEGORIES} questions={questions} teams={teams} onPick={openQuestion} onShowTally={() => setShowTally(true)} onNewGame={newGame} hideRanking={hideRanking} onToggleHide={() => setHideRanking((h) => !h)} onFinalResults={() => setShowPodium(true)} onSurprise={() => setShowPasscode(true)} />
+        <GameBoard categories={CATEGORIES} questions={questions} teams={teams} onPick={openQuestion} onShowTally={() => setShowTally(true)} onNewGame={newGame} onRegisterTeam={() => setShowRegistration(true)} hideRanking={hideRanking} onToggleHide={() => setHideRanking((h) => !h)} onFinalResults={() => setShowPodium(true)} onSurprise={() => setShowPasscode(true)} />
       )}
 
+      {currentPhase !== 'registration' && showRegistration && (
+        <TeamRegistration teams={teams} setTeams={setTeams} onNewGame={newGame} onClose={() => setShowRegistration(false)} isAdding />
+      )}
       {currentPhase === 'question-active' && active && (
         <QuestionModal
           key={active.id}

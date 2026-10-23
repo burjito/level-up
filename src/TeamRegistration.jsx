@@ -4,7 +4,7 @@ import SettingsMenu from './SettingsMenu.jsx';
 
 export const SWATCHES = ['#dd0000', '#0040ff', '#512dc3', '#0cb820', '#ff8a00', '#ec4899', '#0d9488', '#eab308'];
 
-export default function TeamRegistration({ teams, setTeams, onStart, onNewGame }) {
+export default function TeamRegistration({ teams, setTeams, onStart, onNewGame, onRegisterTeam, onClose, isAdding = false, showForm = true }) {
   const [name, setName] = useState('');
   const [color, setColor] = useState(SWATCHES[0]);
 
@@ -18,18 +18,19 @@ export default function TeamRegistration({ teams, setTeams, onStart, onNewGame }
   };
 
   return (
-    <main className="relative flex min-h-full items-center overflow-hidden px-6 py-10">
+    <main className={`relative flex min-h-full items-center overflow-hidden px-6 py-10 ${isAdding ? 'fixed inset-0 z-50 bg-white/75 backdrop-blur-md' : ''}`}>
       <Stars />
-      <div className="fixed right-4 top-4 z-20"><SettingsMenu onNewGame={teams.length ? onNewGame : undefined} /></div>
-      <div className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-8 lg:grid-cols-[1.2fr_1fr]">
-        <section>
+      <div className="fixed right-4 top-4 z-20"><SettingsMenu onNewGame={teams.length ? onNewGame : undefined} onRegisterTeam={!showForm ? onRegisterTeam : undefined} /></div>
+      <div className={`relative z-10 mx-auto grid w-full items-center gap-8 ${showForm ? 'max-w-6xl lg:grid-cols-[1.2fr_1fr]' : 'max-w-2xl'}`}>
+        <section className={showForm ? '' : 'flex items-center justify-center'}>
           <h1 className="sr-only">Level Up! Youth Night, Oct 24, 3:30 PM</h1>
           <div className="p-3 sm:p-5">
-            <img src="/elements/logo.webp" alt="" className="mx-auto w-full max-w-2xl animate-heartbeat motion-reduce:animate-none" />
+            <img src="/elements/logo.webp" alt="Level Up!" className="mx-auto w-full max-w-2xl animate-heartbeat motion-reduce:animate-none" />
           </div>
         </section>
 
-        <section className="glass rounded-[2rem] p-6 sm:p-8">
+        {showForm && <section className="glass rounded-[2rem] p-6 sm:p-8">
+          {isAdding && <button type="button" onClick={onClose} className="btn-ghost float-right px-3 py-1 text-sm">Close</button>}
           <h2 className="font-display text-3xl text-poster-blue">Register your teams</h2>
           <form onSubmit={addTeam} className="mt-5 space-y-5">
             <div>
@@ -62,8 +63,8 @@ export default function TeamRegistration({ teams, setTeams, onStart, onNewGame }
               </li>
             ))}
           </ul>
-          <button onClick={onStart} disabled={teams.length === 0} className="btn-primary mt-5 w-full text-xl">Start game</button>
-        </section>
+          {!isAdding && <button onClick={onStart} disabled={teams.length === 0} className="btn-primary mt-5 w-full text-xl">Start game</button>}
+        </section>}
       </div>
     </main>
   );
