@@ -93,6 +93,10 @@ export default function App() {
   const adjustScore = (teamId, delta) =>
     setTeams((ts) => ts.map((t) => (t.id === teamId ? { ...t, score: t.score + delta } : t)));
 
+  const adjustSurpriseScore = (playerId, delta) => {
+    if (playerId === 'surprise-player') setSurpriseScore((score) => score + delta);
+  };
+
   const returnToBoard = () => {
     markAnswered(activeId);
     setActiveId(null);
@@ -162,8 +166,10 @@ export default function App() {
 
       {showTally && (
         <FullScoreboard
-          teams={teams}
-          onAdjust={adjustScore}
+          teams={surpriseOpen
+            ? [{ id: 'surprise-player', name: surprisePlayerName, color: '#ff8a00', score: surpriseScore }]
+            : teams}
+          onAdjust={surpriseOpen ? adjustSurpriseScore : adjustScore}
           onClose={() => setShowTally(false)}
         />
       )}
