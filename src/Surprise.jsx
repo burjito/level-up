@@ -16,7 +16,7 @@ export function PasscodeModal({ onUnlock, onClose }) {
   };
 
   return (
-    <div role="dialog" aria-modal="true" className="fixed inset-0 z-50 flex items-center justify-center bg-poster-violet/25 p-4 backdrop-blur-md">
+    <div role="dialog" aria-modal="true" className="fixed inset-0 z-50 flex items-center justify-center bg-white/75 p-4 backdrop-blur-md">
       <form onSubmit={submit} className="glass w-full max-w-md animate-pop rounded-[2rem] p-8 text-center motion-reduce:animate-none">
         <p className="text-sm font-semibold uppercase tracking-[.2em] text-poster-orange">Oops! Forbidden Area</p>
         <h2 className="mt-2 font-display text-3xl text-poster-violet">Authorized personnel only</h2>
