@@ -15,7 +15,7 @@ const QUESTIONS = [
   ['Ano ang trabaho ni kuya na nasa video?', 'Grab Driver'],
   ['Ano ang sikat na pagkain sa Japan ang may Chinese origin?', 'Ramen'],
   ['Kung ang Tagalog ng alive ay "may buhay" at ang English naman ng kanan ay "right", ano ang English ng "Buhay Gitna"?', 'Life Center'],
-  ['Anong taon na-realease ang iPhone?', '2007'],
+  ['Anong taon na-release ang iPhone?', '2007'],
 ];
 
 const VO_FILES = [
