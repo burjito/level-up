@@ -9,7 +9,7 @@ import Podium from './Podium.jsx';
 import DesktopOnly, { useIsSmallScreen } from './DesktopOnly.jsx';
 import { enterFullscreen } from './Fullscreen.jsx';
 import { setBedPhase } from './bedMusic.js';
-import { NameModal, PasscodeModal, SurpriseBoard, SurpriseQuestion } from './Surprise.jsx';
+import { NameModal, PasscodeModal, SurpriseBoard, SurpriseFinalResults, SurpriseQuestion } from './Surprise.jsx';
 import { SURPRISE_QUESTIONS } from './surpriseData.js';
 
 // Progress is saved in this browser, so a refresh doesn't restart the game.
@@ -63,7 +63,7 @@ export default function App() {
     return () => clearTimeout(t);
   }, [showPodium, podiumDone]);
   useEffect(() => {
-    const phase = surpriseOpen ? (surprisePhase === 'board' ? 'board' : surprisePhase === 'scoreboard' ? 'scoreboard' : 'question-active') : currentPhase;
+    const phase = surpriseOpen ? (surprisePhase === 'board' ? 'board' : surprisePhase === 'scoreboard' ? 'scoreboard' : surprisePhase === 'final-results' ? 'question-active' : 'question-active') : currentPhase;
     setBedPhase(smallScreen ? 'off' : showPodium ? (podiumMusic ? 'podium' : 'off') : phase);
   }, [currentPhase, smallScreen, showPodium, podiumMusic, surpriseOpen, surprisePhase]);
 
@@ -177,12 +177,16 @@ export default function App() {
           answered={surpriseAnswered}
           playerName={surprisePlayerName}
           onPick={openSurpriseQuestion}
+          onFinalResults={() => setSurprisePhase('final-results')}
           onClose={() => { setSurpriseOpen(false); setSurpriseId(null); }}
           onShowTally={() => setShowTally(true)}
           onNewGame={newGame}
           hideRanking={hideRanking}
           onToggleHide={() => setHideRanking((h) => !h)}
         />
+      )}
+      {surpriseOpen && surprisePhase === 'final-results' && (
+        <SurpriseFinalResults onClose={() => setSurprisePhase('board')} />
       )}
       {surpriseOpen && surprisePhase === 'question-active' && surpriseId && (
         <SurpriseQuestion
