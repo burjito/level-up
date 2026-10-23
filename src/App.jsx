@@ -40,11 +40,21 @@ export default function App() {
   const [activeId, setActiveId] = useState(startActive);
   const [showTally, setShowTally] = useState(false);
   const [showPodium, setShowPodium] = useState(false);
+  const [podiumDone, setPodiumDone] = useState(false); // all three places have been revealed
+  const [podiumMusic, setPodiumMusic] = useState(false);
   const [hideRanking, setHideRanking] = useState(!!saved?.hideRanking); // hides the top 3 on the board and while scoring
   const smallScreen = useIsSmallScreen();
 
   // background music plays on registration and the board, fades out while a question is open
-  useEffect(() => { setBedPhase(smallScreen || showPodium ? 'off' : currentPhase); }, [currentPhase, smallScreen, showPodium]);
+  // on the podium the music stays off during the reveal and fanfare, then comes back a few seconds after the winner is shown
+  useEffect(() => {
+    if (!showPodium || !podiumDone) { setPodiumMusic(false); return; }
+    const t = setTimeout(() => setPodiumMusic(true), 2500);
+    return () => clearTimeout(t);
+  }, [showPodium, podiumDone]);
+  useEffect(() => {
+    setBedPhase(smallScreen ? 'off' : showPodium ? (podiumMusic ? 'podium' : 'off') : currentPhase);
+  }, [currentPhase, smallScreen, showPodium, podiumMusic]);
 
   useEffect(() => {
     try {
@@ -85,6 +95,7 @@ export default function App() {
     setActiveId(null);
     setShowTally(false);
     setShowPodium(false);
+    setPodiumDone(false);
     setHideRanking(false);
     setCurrentPhase('registration');
   };
@@ -98,7 +109,7 @@ export default function App() {
       )}
 
       {currentPhase !== 'registration' && (
-        <GameBoard categories={CATEGORIES} questions={questions} teams={teams} onPick={openQuestion} onShowTally={() => setShowTally(true)} onNewGame={newGame} hideRanking={hideRanking} />
+        <GameBoard categories={CATEGORIES} questions={questions} teams={teams} onPick={openQuestion} onShowTally={() => setShowTally(true)} onNewGame={newGame} hideRanking={hideRanking} onFinalResults={() => setShowPodium(true)} />
       )}
 
       {currentPhase === 'question-active' && active && (
@@ -129,12 +140,11 @@ export default function App() {
           onAdjust={adjustScore}
           hideRanking={hideRanking}
           onToggleHide={() => setHideRanking((h) => !h)}
-          onFinalResults={() => { setShowTally(false); setShowPodium(true); }}
           onClose={() => setShowTally(false)}
         />
       )}
 
-      {showPodium && <Podium teams={teams} onClose={() => setShowPodium(false)} />}
+      {showPodium && <Podium teams={teams} onRevealed={setPodiumDone} onClose={() => { setShowPodium(false); setPodiumDone(false); }} />}
     </div>
   );
 }

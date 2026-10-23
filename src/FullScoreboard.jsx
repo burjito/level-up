@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 const CHIPS = [50, 100, 200, 500, 1000];
 
 // Full tally, ranked high to low (ties share a rank). "Edit scores" lets the host add or take off points per team.
-export default function FullScoreboard({ teams, onClose, onAdjust, hideRanking, onToggleHide, onFinalResults }) {
+export default function FullScoreboard({ teams, onClose, onAdjust, hideRanking, onToggleHide }) {
   const [editing, setEditing] = useState(false);
   const [order, setOrder] = useState([]); // row order is frozen while editing so rows don't jump under your finger
   const [amount, setAmount] = useState(100);
@@ -82,10 +82,7 @@ export default function FullScoreboard({ teams, onClose, onAdjust, hideRanking, 
             );
           })}
         </ol>
-        <div className="mt-5 flex gap-3">
-          <button onClick={onFinalResults} className="btn flex-1 bg-poster-orange text-white shadow-[0_5px_0_#a85b00] hover:brightness-110">Final results</button>
-          <button onClick={onClose} className="btn-primary flex-1">Close</button>
-        </div>
+        <button onClick={onClose} className="btn-primary mt-5">Close</button>
       </div>
     </div>
   );
