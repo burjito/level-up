@@ -145,7 +145,7 @@ export default function App() {
       )}
 
       {currentPhase !== 'registration' && showRegistration && (
-        <TeamRegistration teams={teams} setTeams={setTeams} onNewGame={newGame} onClose={() => setShowRegistration(false)} isAdding />
+        <TeamRegistration teams={teams} setTeams={setTeams} onNewGame={newGame} onClose={() => setShowRegistration(false)} isAdding showForm />
       )}
       {currentPhase === 'question-active' && active && (
         <QuestionModal
