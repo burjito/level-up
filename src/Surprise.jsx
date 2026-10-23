@@ -22,7 +22,7 @@ export function PasscodeModal({ onUnlock, onClose }) {
         <p className="text-sm font-semibold uppercase tracking-[.2em] text-poster-orange">Oops! Forbidden Area</p>
         <h2 className="mt-2 font-display text-3xl text-poster-violet">Authorized personnel only</h2>
         <p className="mt-2 text-ink/65">Enter the access code if you know what you’re doing.</p>
-        <input autoFocus inputMode="numeric" pattern="[0-9]{6}" maxLength={6} value={code}
+        <input type="password" autoFocus inputMode="numeric" pattern="[0-9]{6}" maxLength={6} value={code}
           onChange={(event) => { setCode(event.target.value.replace(/\D/g, '')); setError(false); }}
           aria-label="6-digit passcode" className="mt-6 w-full rounded-2xl border-2 border-poster-violet/30 px-4 py-3 text-center font-display text-3xl tracking-[.5em] outline-none focus:border-poster-orange" />
         {error && <p role="alert" className="mt-2 text-sm font-semibold text-poster-red">Wrong passcode. Try again.</p>}
@@ -35,7 +35,34 @@ export function PasscodeModal({ onUnlock, onClose }) {
   );
 }
 
-export function SurpriseBoard({ answered, onPick, onClose, onShowTally, onNewGame, hideRanking, onToggleHide }) {
+export function NameModal({ onConfirm, onClose }) {
+  const [name, setName] = useState('');
+  const [error, setError] = useState(false);
+  const submit = (event) => {
+    event.preventDefault();
+    if (name.trim().toLowerCase() === 'jemuel') onConfirm('Jemuel');
+    else { setError(true); setName(''); }
+  };
+
+  return (
+    <div role="dialog" aria-modal="true" className="fixed inset-0 z-50 flex items-center justify-center bg-white/75 p-4 backdrop-blur-md">
+      <form onSubmit={submit} className="glass w-full max-w-md animate-pop rounded-[2rem] p-8 text-center motion-reduce:animate-none">
+        <p className="text-sm font-semibold uppercase tracking-[.2em] text-poster-orange">One last check</p>
+        <h2 className="mt-2 font-display text-3xl text-poster-violet">Who is playing?</h2>
+        <p className="mt-2 text-ink/65">Enter the player name to continue.</p>
+        <input autoFocus value={name} onChange={(event) => { setName(event.target.value); setError(false); }}
+          aria-label="Player name" className="mt-6 w-full rounded-2xl border-2 border-poster-violet/30 px-4 py-3 text-center font-display text-2xl outline-none focus:border-poster-orange" />
+        {error && <p role="alert" className="mt-2 text-sm font-semibold text-poster-red">That name is not authorized.</p>}
+        <div className="mt-6 flex gap-3">
+          <button type="button" onClick={onClose} className="btn-ghost flex-1">Cancel</button>
+          <button type="submit" disabled={!name.trim()} className="btn-primary flex-1">Continue</button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+export function SurpriseBoard({ answered, playerName, onPick, onClose, onShowTally, onNewGame, hideRanking, onToggleHide }) {
   return (
     <div className="fixed inset-0 z-40 overflow-hidden bg-white p-3 sm:p-5"
       style={{ backgroundImage: 'linear-gradient(#e4e4ea 1px, transparent 1px), linear-gradient(90deg, #e4e4ea 1px, transparent 1px)', backgroundSize: '28px 28px' }}>
@@ -45,6 +72,7 @@ export function SurpriseBoard({ answered, onPick, onClose, onShowTally, onNewGam
           <div>
             <p className="text-xs font-semibold uppercase tracking-[.22em] text-poster-orange">Happy Pastor's Appreciation Month!</p>
             <h1 className="font-display text-2xl text-poster-blue sm:text-4xl">Kuya / Ptr. Jem!</h1>
+            <p className="mt-1 text-sm font-semibold text-ink/55">Player: {playerName}</p>
           </div>
           <div className="flex items-center gap-2">
             <button onClick={onShowTally} className="btn-ghost px-4 py-1.5 text-sm">Scoreboard</button>
@@ -74,7 +102,7 @@ export function SurpriseBoard({ answered, onPick, onClose, onShowTally, onNewGam
   );
 }
 
-export function SurpriseQuestion({ question: q, onProceed, onShowTally, onNewGame, hideRanking, onToggleHide }) {
+export function SurpriseQuestion({ question: q, playerName, onProceed, onShowTally, onNewGame, hideRanking, onToggleHide }) {
   const [left, setLeft] = useState(SURPRISE_SECONDS);
   const [running, setRunning] = useState(true);
   const [introReady, setIntroReady] = useState(!q.introMedia);
@@ -116,7 +144,7 @@ export function SurpriseQuestion({ question: q, onProceed, onShowTally, onNewGam
     <div role="dialog" aria-modal="true" className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-white/75 p-4 backdrop-blur-md">
       <div className="glass flex max-h-[94vh] w-full max-w-5xl flex-col gap-5 overflow-y-auto rounded-[2rem] border-t-[12px] border-poster-orange p-6 animate-pop motion-reduce:animate-none sm:p-9">
         <div className="flex items-center justify-between gap-3">
-          <div><p className="text-sm font-semibold uppercase tracking-[.16em] text-poster-orange">HIDDEN JEM</p><h2 className="font-display text-2xl text-poster-violet">Question #{q.number}</h2></div>
+          <div><p className="text-sm font-semibold uppercase tracking-[.16em] text-poster-orange">HIDDEN JEM</p><h2 className="font-display text-2xl text-poster-violet">Question #{q.number}</h2><p className="text-sm font-semibold text-ink/55">Player: {playerName}</p></div>
           <div className="flex items-center gap-2">
             <span role="timer" className={`font-display text-6xl tabular-nums ${left <= 5 ? 'text-poster-red' : 'text-poster-blue'}`}>{left}</span>
             <button onClick={() => setRunning((value) => !value)} disabled={!voReady || left === 0} className="btn-ghost px-3 py-1.5 text-sm">{running ? 'Pause' : 'Resume'}</button>
