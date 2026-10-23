@@ -4,6 +4,8 @@ import QuestionMedia from './QuestionMedia.jsx';
 import Confetti from './Confetti.jsx';
 import { SURPRISE_PASSCODE, SURPRISE_QUESTIONS, SURPRISE_SECONDS } from './surpriseData.js';
 
+const CARD_COLORS = ['#dd0000', '#512dc3', '#0cb820', '#0040ff'];
+
 export function PasscodeModal({ onUnlock, onClose }) {
   const [code, setCode] = useState('');
   const [error, setError] = useState(false);
@@ -40,7 +42,7 @@ export function SurpriseBoard({ answered, onPick, onClose }) {
       <div className="mx-auto flex h-full max-w-[1400px] flex-col gap-3">
         <header className="flex shrink-0 items-center justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[.22em] text-poster-orange">Classified: good vibes</p>
+            <p className="text-xs font-semibold uppercase tracking-[.22em] text-poster-orange">Happy Pastor's Appreciation Month!</p>
             <h1 className="font-display text-2xl text-poster-blue sm:text-4xl">Operation: Big Smile</h1>
           </div>
           <button onClick={onClose} className="btn-ghost px-4 py-1.5 text-sm">Back to Level Up</button>
@@ -48,16 +50,18 @@ export function SurpriseBoard({ answered, onPick, onClose }) {
         <div className="grid min-h-0 flex-1 gap-3 lg:grid-cols-[minmax(260px,.9fr)_2fr]">
           <div className="relative hidden overflow-hidden rounded-[2rem] bg-poster-orange shadow-[0_8px_0_#a85b00] lg:block">
             <img src="/kuya-jem/kuya-jem-photo.png" alt="Kuya Jem" className="h-full w-full object-contain animate-float motion-reduce:animate-none" />
-            <span className="absolute bottom-4 left-4 rounded-full bg-white/90 px-4 py-1.5 text-sm font-semibold text-poster-orange">Handle with joy</span>
           </div>
           <div className="grid min-h-0 grid-cols-3 grid-rows-4 gap-2 sm:gap-3">
-            {SURPRISE_QUESTIONS.map((q) => answered.includes(q.id) ? (
+            {SURPRISE_QUESTIONS.map((q) => {
+              const color = CARD_COLORS[Math.floor((q.number - 1) / 3)];
+              return answered.includes(q.id) ? (
               <div key={q.id} aria-label={`Question ${q.number}, answered`} className="flex items-center justify-center rounded-2xl border-2 border-dashed border-ink/15 bg-ink/5 font-display text-3xl text-ink/25">{q.number}</div>
             ) : (
-              <button key={q.id} onClick={() => onPick(q)} className="rounded-2xl border-[3px] border-poster-blue bg-white font-display text-[clamp(24px,5vw,62px)] text-poster-blue shadow-[0_5px_0_#00208f] transition hover:-translate-y-0.5 hover:scale-[1.02] active:translate-y-[3px]">
+              <button key={q.id} onClick={() => onPick(q)} style={{ borderColor: color, color, boxShadow: `0 5px 0 ${color}` }} className="rounded-2xl border-[3px] bg-white font-display text-[clamp(24px,5vw,62px)] transition hover:-translate-y-0.5 hover:scale-[1.02] active:translate-y-[3px]">
                 <span className="block">{q.number}</span><span className="block text-[clamp(11px,1.5vw,18px)] text-ink/50">{q.points} pts</span>
               </button>
-            ))}
+            );
+            })}
           </div>
         </div>
       </div>
@@ -112,8 +116,8 @@ export function SurpriseQuestion({ question: q, onProceed }) {
         <p className="font-display text-3xl leading-tight sm:text-5xl">{q.questionText}</p>
         {!reveal ? <button onClick={showAnswer} disabled={!voReady} className="btn-primary mt-auto self-end">Show answer</button> : (
           <>
-            <div className="rounded-2xl border-[3px] border-poster-green bg-poster-green/10 p-5 shadow-[0_5px_0_rgba(12,184,32,.18)]"><p className="text-sm font-semibold uppercase tracking-wide text-poster-green">Answer</p><p className="font-display text-3xl sm:text-4xl">{q.answerText}</p></div>
-            {q.answerMedia && <QuestionMedia key={q.answerMedia} src={q.answerMedia} />}
+            <div className="rounded-2xl border-[4px] border-poster-green bg-poster-green/10 p-6 shadow-[0_6px_0_rgba(12,184,32,.2)]"><p className="text-sm font-semibold uppercase tracking-wide text-poster-green">Correct answer</p><p className="mt-1 font-display text-4xl text-ink sm:text-6xl">{q.answerText}</p></div>
+            {q.answerMedia && <div className="opacity-70"><p className="mb-2 text-xs font-semibold uppercase tracking-wider text-ink/45">Answer media</p><QuestionMedia key={q.answerMedia} src={q.answerMedia} /></div>}
             <button onClick={onProceed} className="btn-primary self-end">Proceed to scoring</button>
           </>
         )}
