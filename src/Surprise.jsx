@@ -77,12 +77,14 @@ export function SurpriseBoard({ answered, onPick, onClose, onShowTally, onNewGam
 export function SurpriseQuestion({ question: q, onProceed, onShowTally, onNewGame, hideRanking, onToggleHide }) {
   const [left, setLeft] = useState(SURPRISE_SECONDS);
   const [running, setRunning] = useState(true);
+  const [introReady, setIntroReady] = useState(!q.introMedia);
   const [voReady, setVoReady] = useState(false);
   const [voPlaying, setVoPlaying] = useState(false);
   const [reveal, setReveal] = useState(false);
   const [music] = useState(() => createTimerMusic());
 
   useEffect(() => {
+    if (!introReady) return undefined;
     const a = new Audio(q.questionVo);
     const done = () => { setVoPlaying(false); setVoReady(true); };
     a.addEventListener('playing', () => setVoPlaying(true));
@@ -92,7 +94,7 @@ export function SurpriseQuestion({ question: q, onProceed, onShowTally, onNewGam
     a.play().catch(done);
     const cap = setTimeout(done, 30000);
     return () => { clearTimeout(cap); a.pause(); };
-  }, [q.questionVo]);
+  }, [q.questionVo, introReady]);
 
   const live = voReady;
   useEffect(() => {
@@ -122,7 +124,21 @@ export function SurpriseQuestion({ question: q, onProceed, onShowTally, onNewGam
             <SettingsMenu onNewGame={onNewGame} hideRanking={hideRanking} onToggleHide={onToggleHide} />
           </div>
         </div>
-        {!voReady && <p className="text-sm font-semibold text-ink/60">{voPlaying ? 'Listen to the question…' : 'Loading question…'}</p>}
+        {!introReady && (
+          <div className="space-y-2">
+            <p className="text-sm font-semibold text-ink/60">Watch the clip first…</p>
+            <video
+              src={q.introMedia}
+              autoPlay
+              controls
+              playsInline
+              onEnded={() => setIntroReady(true)}
+              onError={() => setIntroReady(true)}
+              className="mx-auto max-h-[42vh] w-auto max-w-full rounded-2xl bg-black"
+            />
+          </div>
+        )}
+        {!introReady && !voReady ? null : !voReady && <p className="text-sm font-semibold text-ink/60">{voPlaying ? 'Listen to the question…' : 'Loading question…'}</p>}
         <p className="font-display text-3xl leading-tight sm:text-5xl">{q.questionText}</p>
         {!reveal ? <button onClick={showAnswer} disabled={!voReady} className="btn-primary mt-auto self-end">Show answer</button> : (
           <>
