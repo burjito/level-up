@@ -116,8 +116,8 @@ export function SurpriseQuestion({ question: q, onProceed }) {
         <p className="font-display text-3xl leading-tight sm:text-5xl">{q.questionText}</p>
         {!reveal ? <button onClick={showAnswer} disabled={!voReady} className="btn-primary mt-auto self-end">Show answer</button> : (
           <>
+            {q.answerMedia && <div><p className="mb-2 text-xs font-semibold uppercase tracking-wider text-poster-orange">Answer reveal</p><QuestionMedia key={q.answerMedia} src={q.answerMedia} /></div>}
             <div className="rounded-2xl border-[4px] border-poster-green bg-poster-green/10 p-6 shadow-[0_6px_0_rgba(12,184,32,.2)]"><p className="text-sm font-semibold uppercase tracking-wide text-poster-green">Correct answer</p><p className="mt-1 font-display text-4xl text-ink sm:text-6xl">{q.answerText}</p></div>
-            {q.answerMedia && <div className="opacity-70"><p className="mb-2 text-xs font-semibold uppercase tracking-wider text-ink/45">Answer media</p><QuestionMedia key={q.answerMedia} src={q.answerMedia} /></div>}
             <button onClick={onProceed} className="btn-primary self-end">Proceed to scoring</button>
           </>
         )}

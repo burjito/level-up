@@ -1,9 +1,7 @@
 export const SURPRISE_PASSCODE = '111791';
 export const SURPRISE_SECONDS = 10;
 
-// Vercel can serve regular public assets directly, but its static path may return
-// Git LFS pointer files for these larger surprise media files.
-const ROOT = 'https://media.githubusercontent.com/media/burjito/level-up/main/public/kuya-jem';
+const ROOT = '/kuya-jem';
 
 const QUESTIONS = [
   ['Anong Thai fashion staple na kilala sa bold block-letter branding at minimalist design nito ang naging massively popular across Asia??', 'Gentle Woman'],
@@ -28,13 +26,13 @@ const VO_FILES = [
 const answerFiles = [
   'card-1-answer-gentle-woman.m4a',
   'card-2-answer-jeepney.mp4',
-  'card-3-answer-placeholder.m4a',
+  'card-3-answer-contact-lens.m4a',
   'card-4-answer-placeholder.m4a',
   'card-5-answer-ppt.mp3',
   'card-6-answer-drive.m4a',
   'card-7-answer-placeholder.m4a',
   'card-8-answer-papel.m4a',
-  'card-9-answer-grab-driver.mov',
+  'card-9-answer-grab-driver.mp4',
   'card-10-answer-ramen.mp4',
   'card-11-answer-life-center.mp4',
   'card-12-answer-2007.mp4',
