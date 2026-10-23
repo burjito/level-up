@@ -137,7 +137,7 @@ export default function App() {
   return (
     <div className="h-full">
       {currentPhase === 'registration' && (
-        <TeamRegistration teams={teams} setTeams={setTeams} onStart={() => { enterFullscreen(); setCurrentPhase('board'); }} onNewGame={newGame} onRegisterTeam={() => setShowRegistration(true)} showForm={showRegistration} />
+        <TeamRegistration teams={teams} setTeams={setTeams} onStart={() => { enterFullscreen(); setCurrentPhase('board'); }} onNewGame={newGame} onRegisterTeam={() => setShowRegistration((visible) => !visible)} registrationLabel={showRegistration ? 'Hide registration' : 'Register a team'} showForm={showRegistration} />
       )}
 
       {currentPhase !== 'registration' && (

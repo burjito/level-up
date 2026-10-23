@@ -7,7 +7,7 @@ import { useFullscreen } from './Fullscreen.jsx';
 // One "Settings" button for the page-level options (background music, full screen, new game).
 // onNewGame: pass it to show "New game" (it asks for confirmation first).
 // onToggleHide + hideRanking: pass them to show "Hide ranking" (hides the top 3 on the board and while scoring).
-export default function SettingsMenu({ onNewGame, onRegisterTeam, hideRanking, onToggleHide }) {
+export default function SettingsMenu({ onNewGame, onRegisterTeam, registrationLabel = 'Register a team', hideRanking, onToggleHide }) {
   const { enabled, missing } = useBedMusic();
   const fs = useFullscreen();
   const [confirming, setConfirming] = useState(false);
@@ -21,7 +21,7 @@ export default function SettingsMenu({ onNewGame, onRegisterTeam, hideRanking, o
           { label: 'Background music', onSelect: toggleBedMusic, toggle: true, on: enabled, hidden: missing },
           { label: 'Full screen', onSelect: fs.toggle, toggle: true, on: fs.on, hidden: !fs.supported },
           { label: 'Hide ranking', onSelect: onToggleHide, toggle: true, on: !!hideRanking, hidden: !onToggleHide },
-          { label: 'Register a team', onSelect: onRegisterTeam, hidden: !onRegisterTeam },
+          { label: registrationLabel, onSelect: onRegisterTeam, hidden: !onRegisterTeam },
           { label: 'New game', onSelect: () => setConfirming(true), hidden: !onNewGame },
         ]}
       />

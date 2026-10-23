@@ -4,7 +4,7 @@ import SettingsMenu from './SettingsMenu.jsx';
 
 export const SWATCHES = ['#dd0000', '#0040ff', '#512dc3', '#0cb820', '#ff8a00', '#ec4899', '#0d9488', '#eab308'];
 
-export default function TeamRegistration({ teams, setTeams, onStart, onNewGame, onRegisterTeam, onClose, isAdding = false, showForm = true }) {
+export default function TeamRegistration({ teams, setTeams, onStart, onNewGame, onRegisterTeam, registrationLabel, onClose, isAdding = false, showForm = true }) {
   const [name, setName] = useState('');
   const [color, setColor] = useState(SWATCHES[0]);
 
@@ -20,7 +20,7 @@ export default function TeamRegistration({ teams, setTeams, onStart, onNewGame, 
   return (
     <main className={`relative flex min-h-full items-center overflow-hidden px-6 py-10 ${isAdding ? 'fixed inset-0 z-50 bg-white/75 backdrop-blur-md' : ''}`}>
       <Stars />
-      <div className="fixed right-4 top-4 z-20"><SettingsMenu onNewGame={teams.length ? onNewGame : undefined} onRegisterTeam={!showForm ? onRegisterTeam : undefined} /></div>
+      <div className="fixed right-4 top-4 z-20"><SettingsMenu onNewGame={teams.length ? onNewGame : undefined} onRegisterTeam={onRegisterTeam} registrationLabel={registrationLabel} /></div>
       <div className={`relative z-10 mx-auto grid w-full items-center gap-8 ${showForm ? 'max-w-6xl lg:grid-cols-[1.2fr_1fr]' : 'max-w-2xl'}`}>
         <section className={showForm ? '' : 'flex items-center justify-center'}>
           <h1 className="sr-only">Level Up! Youth Night, Oct 24, 3:30 PM</h1>
