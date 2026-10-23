@@ -141,11 +141,7 @@ export default function App() {
       )}
 
       {currentPhase !== 'registration' && (
-        <GameBoard categories={CATEGORIES} questions={questions} teams={teams} onPick={openQuestion} onShowTally={() => setShowTally(true)} onNewGame={newGame} onRegisterTeam={() => setShowRegistration(true)} hideRanking={hideRanking} onToggleHide={() => setHideRanking((h) => !h)} onFinalResults={() => setShowPodium(true)} onSurprise={() => setShowPasscode(true)} />
-      )}
-
-      {currentPhase !== 'registration' && showRegistration && (
-        <TeamRegistration teams={teams} setTeams={setTeams} onNewGame={newGame} onClose={() => setShowRegistration(false)} isAdding showForm />
+        <GameBoard categories={CATEGORIES} questions={questions} teams={teams} onPick={openQuestion} onShowTally={() => setShowTally(true)} onNewGame={newGame} hideRanking={hideRanking} onToggleHide={() => setHideRanking((h) => !h)} onFinalResults={() => setShowPodium(true)} onSurprise={() => setShowPasscode(true)} />
       )}
       {currentPhase === 'question-active' && active && (
         <QuestionModal
