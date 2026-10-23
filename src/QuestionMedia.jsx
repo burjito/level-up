@@ -15,8 +15,9 @@ export default function QuestionMedia({ src, onPlaybackComplete }) {
   }
   if (failed) {
     return (
-      <div className="flex min-h-[10rem] w-full items-center justify-center rounded-2xl border-2 border-dashed border-ink/25 bg-white/70 px-4 text-center text-ink/50">
-        File not found: {src}
+      <div className="flex min-h-[8rem] w-full flex-col items-center justify-center rounded-2xl border-2 border-dashed border-ink/20 bg-ink/5 px-4 text-center text-ink/50">
+        <span className="font-semibold">Answer clip unavailable</span>
+        <span className="mt-1 text-sm">The answer above is still valid.</span>
       </div>
     );
   }
