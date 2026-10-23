@@ -119,7 +119,7 @@ export function SurpriseFinalResults({ onClose }) {
       <div className="relative z-10 flex h-full w-full max-w-6xl flex-col items-center justify-center gap-5">
         <div className="text-center">
           <p className="text-sm font-semibold uppercase tracking-[.2em] text-poster-orange">Happy Pastor's Appreciation Month!</p>
-          <h2 className="font-display text-4xl text-poster-blue sm:text-6xl">Thank you, Kuya  Ptr. Jem!</h2>
+          <h2 className="font-display text-4xl text-poster-blue sm:text-6xl">Thank you, Kuya / Ptr. Jem!</h2>
         </div>
         <video src="/kuya-jem/grand-prize-compressed.mp4" controls autoPlay playsInline className="max-h-[72vh] w-full rounded-[2rem] bg-black object-contain shadow-[0_12px_40px_rgba(81,45,195,.25)]" />
       </div>
