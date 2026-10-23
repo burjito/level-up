@@ -25,10 +25,11 @@ export default function QuestionModal({ question: q, category: c, onProceed }) {
   const [reveal, setReveal] = useState(false);
   const [left, setLeft] = useState(q.seconds);
   const [running, setRunning] = useState(true);
-  // Question voiceover (public/vo-questions): the timer and any audio/video clip wait until it has finished
+  // Question voiceover (public/vo-questions): the timer and any initial audio/video clip wait until playback has finished
   const [voReady, setVoReady] = useState(false);
   const [voPlaying, setVoPlaying] = useState(false);
   const [voMissing, setVoMissing] = useState(false);
+  const [mediaReady, setMediaReady] = useState(() => !isClip(q.mediaPlaceholder));
   const [voiceOn, setVoiceOn] = useState(() => {
     try { return localStorage.getItem('level-up-question-voice') !== 'off'; } catch { return true; }
   });
@@ -145,8 +146,8 @@ export default function QuestionModal({ question: q, category: c, onProceed }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step, landed]);
 
-  // Step B: countdown starts when the question is fully shown and its voiceover has finished
-  const live = step === 'question' && landed && voReady;
+  // Step B: countdown starts when the question is fully shown and its initial voiceover/clip has finished
+  const live = step === 'question' && landed && voReady && mediaReady;
   useEffect(() => {
     if (!live || !running || left <= 0) return;
     const t = setTimeout(() => setLeft((s) => s - 1), 1000);
@@ -235,7 +236,11 @@ export default function QuestionModal({ question: q, category: c, onProceed }) {
 
             {landed && shownMedia && (!isClip(shownMedia) || (reveal && q.answerMedia ? answerReady : voReady)) && (
               <div className="space-y-2">
-                <QuestionMedia key={shownMedia} src={shownMedia} />
+                <QuestionMedia
+                  key={shownMedia}
+                  src={shownMedia}
+                  onPlaybackComplete={!reveal && isClip(shownMedia) ? () => setMediaReady(true) : undefined}
+                />
                 {q.note && <p className="text-center text-sm text-ink/60">{q.note}</p>}
               </div>
             )}
