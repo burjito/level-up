@@ -24,7 +24,9 @@ export default function TeamRegistration({ teams, setTeams, onStart, onNewGame }
       <div className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-8 lg:grid-cols-[1.2fr_1fr]">
         <section>
           <h1 className="sr-only">Level Up! Youth Night, Oct 24, 3:30 PM</h1>
-          <img src="/elements/logo.webp" alt="" className="mx-auto w-full max-w-2xl" />
+          <div className="p-3 sm:p-5">
+            <img src="/elements/logo.webp" alt="" className="mx-auto w-full max-w-2xl animate-heartbeat motion-reduce:animate-none" />
+          </div>
         </section>
 
         <section className="glass rounded-[2rem] p-6 sm:p-8">
