@@ -167,9 +167,26 @@ export default function App() {
       {showPodium && <Podium teams={teams} onRevealed={setPodiumDone} onClose={() => { setShowPodium(false); setPodiumDone(false); }} />}
 
       {showPasscode && <PasscodeModal onUnlock={() => { setShowPasscode(false); setSurpriseOpen(true); setSurprisePhase('board'); }} onClose={() => setShowPasscode(false)} />}
-      {surpriseOpen && surprisePhase === 'board' && <SurpriseBoard answered={surpriseAnswered} onPick={openSurpriseQuestion} onClose={() => { setSurpriseOpen(false); setSurpriseId(null); }} />}
+      {surpriseOpen && surprisePhase === 'board' && (
+        <SurpriseBoard
+          answered={surpriseAnswered}
+          onPick={openSurpriseQuestion}
+          onClose={() => { setSurpriseOpen(false); setSurpriseId(null); }}
+          onShowTally={() => setShowTally(true)}
+          onNewGame={newGame}
+          hideRanking={hideRanking}
+          onToggleHide={() => setHideRanking((h) => !h)}
+        />
+      )}
       {surpriseOpen && surprisePhase === 'question-active' && surpriseId && (
-        <SurpriseQuestion question={SURPRISE_QUESTIONS.find((q) => q.id === surpriseId)} onProceed={() => setSurprisePhase('scoreboard')} />
+        <SurpriseQuestion
+          question={SURPRISE_QUESTIONS.find((q) => q.id === surpriseId)}
+          onProceed={() => setSurprisePhase('scoreboard')}
+          onShowTally={() => setShowTally(true)}
+          onNewGame={newGame}
+          hideRanking={hideRanking}
+          onToggleHide={() => setHideRanking((h) => !h)}
+        />
       )}
       {surpriseOpen && surprisePhase === 'scoreboard' && surpriseId && (
         <Scoreboard
