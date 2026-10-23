@@ -37,7 +37,7 @@ function Trophy({ className }) {
 
 // Final results. You control the reveal: click the glowing place (or the button, Space or the right arrow)
 // to show 3rd, then 2nd, then a drum roll and the winner with confetti and a fanfare.
-export default function Podium({ teams, onClose }) {
+export default function Podium({ teams, onClose, onRevealed }) {
   const ranked = [...teams].sort((a, b) => b.score - a.score);
   const top = ranked.slice(0, 3);
   const n = top.length;
@@ -74,6 +74,9 @@ export default function Podium({ teams, onClose }) {
     setCelebrate(false);
     setStage(0);
   };
+
+  // tell the app when all places are showing, so it can bring the background music back
+  useEffect(() => { onRevealed?.(done); }, [done]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const nextRef = useRef(next);
   nextRef.current = next;
