@@ -214,3 +214,65 @@ export function playAnswerReveal() {
     tone(2093, 0.32, 0.6, 'sine', 0.05);
   } catch {}
 }
+
+// ---- Final results podium ----
+const snareHit = (t, peak) => {
+  const a = ac();
+  const s = a.createBufferSource();
+  const f = a.createBiquadFilter();
+  const g = a.createGain();
+  s.buffer = noiseBuffer();
+  f.type = 'bandpass';
+  f.frequency.value = 1800;
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(peak, t + 0.005);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + 0.06);
+  s.connect(f).connect(g).connect(a.destination);
+  s.start(t);
+  s.stop(t + 0.08);
+};
+
+// A bright "ding" as 3rd / 2nd place appears
+export function playPodiumStep(place) {
+  try {
+    const base = place === 3 ? 523.25 : 659.25;
+    tone(base, 0, 0.5, 'triangle', 0.16);
+    tone(base * 1.5, 0.1, 0.6, 'triangle', 0.12);
+    tone(base * 2, 0.2, 0.7, 'sine', 0.06);
+  } catch {}
+}
+
+// Drum roll that builds up before the winner is shown
+export function playDrumRoll(seconds = 1.3) {
+  try {
+    const a = ac();
+    const hits = Math.floor(seconds * 24);
+    for (let i = 0; i < hits; i++) snareHit(a.currentTime + (i / hits) * seconds, 0.05 + 0.25 * (i / hits));
+  } catch {}
+}
+
+// Winner fanfare: rising brass-like arpeggio, a big chord, bass and a cymbal crash
+export function playFanfare() {
+  try {
+    [[523.25, 0], [659.25, 0.12], [783.99, 0.24], [1046.5, 0.36]].forEach(([f, t]) => tone(f, t, 0.25, 'sawtooth', 0.07));
+    [523.25, 659.25, 783.99, 1046.5].forEach((f) => {
+      tone(f, 0.55, 1.6, 'sawtooth', 0.06);
+      tone(f * 2, 0.55, 1.2, 'triangle', 0.05);
+    });
+    tone(130.81, 0.55, 1.6, 'sawtooth', 0.12);
+    const a = ac();
+    const s = a.createBufferSource();
+    const f = a.createBiquadFilter();
+    const g = a.createGain();
+    const t = a.currentTime + 0.55;
+    s.buffer = noiseBuffer();
+    f.type = 'highpass';
+    f.frequency.value = 6000;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(0.25, t + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 1.4);
+    s.connect(f).connect(g).connect(a.destination);
+    s.start(t);
+    s.stop(t + 1.5);
+  } catch {}
+}
