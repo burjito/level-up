@@ -71,7 +71,7 @@ export function SurpriseBoard({ answered, playerName, onPick, onFinalResults, on
         <header className="flex shrink-0 items-center justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[.22em] text-poster-orange">Happy Pastor's Appreciation Month!</p>
-            <h1 className="font-display text-2xl text-poster-blue sm:text-4xl">Kuya / Ptr. Jem!</h1>
+            <h1 className="font-display text-2xl text-poster-blue sm:text-4xl">Thank you, Kuya / Ptr. Jem!</h1>
             <p className="mt-1 text-sm font-semibold text-ink/55">Player: {playerName}</p>
           </div>
           <div className="flex items-center gap-2">
@@ -107,13 +107,13 @@ export function SurpriseFinalResults({ onClose }) {
   return (
     <div role="dialog" aria-modal="true" aria-label="Surprise final results" className="fixed inset-0 z-[80] flex flex-col items-center justify-center overflow-hidden bg-white/90 p-5 backdrop-blur-md sm:p-8">
       <Confetti run />
+      <button onClick={onClose} className="btn-primary absolute right-5 top-5 z-20 sm:right-8 sm:top-8">Back to surprise board</button>
       <div className="relative z-10 flex h-full w-full max-w-6xl flex-col items-center justify-center gap-5">
         <div className="text-center">
           <p className="text-sm font-semibold uppercase tracking-[.2em] text-poster-orange">Happy Pastor's Appreciation Month!</p>
-          <h2 className="font-display text-4xl text-poster-blue sm:text-6xl">A special message for Jemuel</h2>
+          <h2 className="font-display text-4xl text-poster-blue sm:text-6xl">Thank you, Kuya  Ptr. Jem!</h2>
         </div>
         <video src="/kuya-jem/grand-prize-compressed.mp4" controls autoPlay playsInline className="max-h-[72vh] w-full rounded-[2rem] bg-black object-contain shadow-[0_12px_40px_rgba(81,45,195,.25)]" />
-        <button onClick={onClose} className="btn-primary">Back to surprise board</button>
       </div>
     </div>
   );
