@@ -43,7 +43,7 @@ export function SurpriseBoard({ answered, onPick, onClose }) {
         <header className="flex shrink-0 items-center justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[.22em] text-poster-orange">Happy Pastor's Appreciation Month!</p>
-            <h1 className="font-display text-2xl text-poster-blue sm:text-4xl">Operation: Big Smile</h1>
+            <h1 className="font-display text-2xl text-poster-blue sm:text-4xl">Kuya / Ptr. Jem!</h1>
           </div>
           <button onClick={onClose} className="btn-ghost px-4 py-1.5 text-sm">Back to Level Up</button>
         </header>
@@ -109,7 +109,7 @@ export function SurpriseQuestion({ question: q, onProceed }) {
     <div role="dialog" aria-modal="true" className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-white/75 p-4 backdrop-blur-md">
       <div className="glass flex max-h-[94vh] w-full max-w-5xl flex-col gap-5 overflow-y-auto rounded-[2rem] border-t-[12px] border-poster-orange p-6 animate-pop motion-reduce:animate-none sm:p-9">
         <div className="flex items-center justify-between gap-3">
-          <div><p className="text-sm font-semibold uppercase tracking-[.16em] text-poster-orange">Operation: Big Smile</p><h2 className="font-display text-2xl text-poster-violet">Dossier #{q.number}</h2></div>
+          <div><p className="text-sm font-semibold uppercase tracking-[.16em] text-poster-orange">HIDDEN JEM</p><h2 className="font-display text-2xl text-poster-violet">Question #{q.number}</h2></div>
           <div className="flex items-center gap-3"><span role="timer" className={`font-display text-6xl tabular-nums ${left <= 5 ? 'text-poster-red' : 'text-poster-blue'}`}>{left}</span><button onClick={() => setRunning((value) => !value)} disabled={!voReady || left === 0} className="btn-ghost px-3 py-1.5 text-sm">{running ? 'Pause' : 'Resume'}</button></div>
         </div>
         {!voReady && <p className="text-sm font-semibold text-ink/60">{voPlaying ? 'Listen to the question…' : 'Loading question…'}</p>}
