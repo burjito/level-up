@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import Stars from './Stars.jsx';
 import SettingsMenu from './SettingsMenu.jsx';
 
@@ -17,7 +18,7 @@ export default function TeamRegistration({ teams, setTeams, onStart, onNewGame, 
     setColor(SWATCHES[(teams.length + 1) % SWATCHES.length]);
   };
 
-  return (
+  const content = (
     <main role={isAdding ? 'dialog' : undefined} aria-modal={isAdding || undefined} className={`relative flex min-h-full items-center overflow-hidden px-6 py-10 ${isAdding ? 'fixed inset-0 z-[999] h-screen w-screen justify-center overflow-y-auto bg-white/75 p-4 backdrop-blur-md sm:p-6' : ''}`}>
       {!isAdding && <Stars />}
       {!isAdding && <div className="fixed right-4 top-4 z-20"><SettingsMenu onNewGame={teams.length ? onNewGame : undefined} onRegisterTeam={onRegisterTeam} registrationLabel={registrationLabel} /></div>}
@@ -68,4 +69,6 @@ export default function TeamRegistration({ teams, setTeams, onStart, onNewGame, 
       </div>
     </main>
   );
+
+  return isAdding ? createPortal(content, document.body) : content;
 }
