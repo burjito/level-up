@@ -2,7 +2,7 @@ import TeamRank from './TeamRank.jsx';
 import SettingsMenu from './SettingsMenu.jsx';
 
 // Fits the viewport exactly: no scrolling. Sizes come from the grid tracks.
-export default function GameBoard({ categories, questions, teams, onPick, onShowTally, onNewGame, hideRanking, onToggleHide, onFinalResults }) {
+export default function GameBoard({ categories, questions, teams, onPick, onShowTally, onNewGame, hideRanking, onToggleHide, onFinalResults, onSurprise }) {
   const find = (catId, n) => questions.find((q) => q.id === `${catId}-${n}`);
   const top3 = [...teams].sort((a, b) => b.score - a.score).slice(0, 3);
   const started = teams.some((t) => t.score > 0); // no top 3 until the first points are awarded
@@ -26,7 +26,11 @@ export default function GameBoard({ categories, questions, teams, onPick, onShow
 
       <div className="grid min-h-0 flex-1 gap-1.5 sm:gap-2"
         style={{ gridTemplateColumns: 'minmax(0,1.5fr) repeat(10,minmax(0,1fr))', gridTemplateRows: 'minmax(0,.8fr) repeat(5,minmax(0,1fr))' }}>
-        <div className="flex items-center justify-center"><img src="/elements/logo-wide.webp" alt="Level Up!" className="h-[72%] w-[84%] object-contain" /></div>
+        <div className="flex items-center justify-center">
+          <button onClick={onSurprise} aria-label="Open secret surprise" className="h-[72%] w-[84%] rounded-xl transition hover:scale-105 focus-visible:outline focus-visible:outline-4 focus-visible:outline-poster-orange">
+            <img src="/elements/logo-wide.webp" alt="Level Up!" className="h-full w-full object-contain" />
+          </button>
+        </div>
         {Array.from({ length: 10 }, (_, i) => (
           <div key={i} className="flex flex-col items-center justify-center rounded-2xl border-2 border-poster-violet/20 bg-white leading-none shadow-[0_3px_0_rgba(81,45,195,.18)]">
             <span className="font-display text-[clamp(22px,5vh,52px)] text-poster-violet">{i + 1}</span>
