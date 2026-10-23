@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { createTimerMusic, playAnswerReveal, playBeep, playBuzzer } from './sfx.js';
 import QuestionMedia from './QuestionMedia.jsx';
 import Confetti from './Confetti.jsx';
+import SettingsMenu from './SettingsMenu.jsx';
 import { SURPRISE_PASSCODE, SURPRISE_QUESTIONS, SURPRISE_SECONDS } from './surpriseData.js';
 
 const CARD_COLORS = ['#dd0000', '#512dc3', '#0cb820', '#0040ff'];
@@ -34,7 +35,7 @@ export function PasscodeModal({ onUnlock, onClose }) {
   );
 }
 
-export function SurpriseBoard({ answered, onPick, onClose }) {
+export function SurpriseBoard({ answered, onPick, onClose, onShowTally, onNewGame, hideRanking, onToggleHide }) {
   return (
     <div className="fixed inset-0 z-40 overflow-hidden bg-white p-3 sm:p-5"
       style={{ backgroundImage: 'linear-gradient(#e4e4ea 1px, transparent 1px), linear-gradient(90deg, #e4e4ea 1px, transparent 1px)', backgroundSize: '28px 28px' }}>
@@ -45,7 +46,11 @@ export function SurpriseBoard({ answered, onPick, onClose }) {
             <p className="text-xs font-semibold uppercase tracking-[.22em] text-poster-orange">Happy Pastor's Appreciation Month!</p>
             <h1 className="font-display text-2xl text-poster-blue sm:text-4xl">Kuya / Ptr. Jem!</h1>
           </div>
-          <button onClick={onClose} className="btn-ghost px-4 py-1.5 text-sm">Back to Level Up</button>
+          <div className="flex items-center gap-2">
+            <button onClick={onShowTally} className="btn-ghost px-4 py-1.5 text-sm">Scoreboard</button>
+            <SettingsMenu onNewGame={onNewGame} hideRanking={hideRanking} onToggleHide={onToggleHide} />
+            <button onClick={onClose} className="btn-ghost px-4 py-1.5 text-sm">Back to Level Up</button>
+          </div>
         </header>
         <div className="grid min-h-0 flex-1 gap-3 lg:grid-cols-[minmax(260px,.9fr)_2fr]">
           <div className="relative hidden overflow-hidden rounded-[2rem] bg-poster-orange shadow-[0_8px_0_#a85b00] lg:block">
@@ -69,7 +74,7 @@ export function SurpriseBoard({ answered, onPick, onClose }) {
   );
 }
 
-export function SurpriseQuestion({ question: q, onProceed }) {
+export function SurpriseQuestion({ question: q, onProceed, onShowTally, onNewGame, hideRanking, onToggleHide }) {
   const [left, setLeft] = useState(SURPRISE_SECONDS);
   const [running, setRunning] = useState(true);
   const [voReady, setVoReady] = useState(false);
@@ -110,7 +115,12 @@ export function SurpriseQuestion({ question: q, onProceed }) {
       <div className="glass flex max-h-[94vh] w-full max-w-5xl flex-col gap-5 overflow-y-auto rounded-[2rem] border-t-[12px] border-poster-orange p-6 animate-pop motion-reduce:animate-none sm:p-9">
         <div className="flex items-center justify-between gap-3">
           <div><p className="text-sm font-semibold uppercase tracking-[.16em] text-poster-orange">HIDDEN JEM</p><h2 className="font-display text-2xl text-poster-violet">Question #{q.number}</h2></div>
-          <div className="flex items-center gap-3"><span role="timer" className={`font-display text-6xl tabular-nums ${left <= 5 ? 'text-poster-red' : 'text-poster-blue'}`}>{left}</span><button onClick={() => setRunning((value) => !value)} disabled={!voReady || left === 0} className="btn-ghost px-3 py-1.5 text-sm">{running ? 'Pause' : 'Resume'}</button></div>
+          <div className="flex items-center gap-2">
+            <span role="timer" className={`font-display text-6xl tabular-nums ${left <= 5 ? 'text-poster-red' : 'text-poster-blue'}`}>{left}</span>
+            <button onClick={() => setRunning((value) => !value)} disabled={!voReady || left === 0} className="btn-ghost px-3 py-1.5 text-sm">{running ? 'Pause' : 'Resume'}</button>
+            <button onClick={onShowTally} className="btn-ghost px-3 py-1.5 text-sm">Scoreboard</button>
+            <SettingsMenu onNewGame={onNewGame} hideRanking={hideRanking} onToggleHide={onToggleHide} />
+          </div>
         </div>
         {!voReady && <p className="text-sm font-semibold text-ink/60">{voPlaying ? 'Listen to the question…' : 'Loading question…'}</p>}
         <p className="font-display text-3xl leading-tight sm:text-5xl">{q.questionText}</p>
