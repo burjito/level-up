@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { playIntro, playBuzzer, playBeep, createTimerMusic, playBonusAlert, playBonusReveal, playBonusVoice } from './sfx.js';
+import { playIntro, playBuzzer, playBeep, createTimerMusic, playBonusAlert, playBonusReveal, playBonusVoice, playAnswerReveal } from './sfx.js';
 import QuestionMedia from './QuestionMedia.jsx';
 import ControlsMenu from './ControlsMenu.jsx';
 
@@ -33,6 +33,7 @@ export default function QuestionModal({ question: q, category: c, onProceed }) {
     try { return localStorage.getItem('level-up-question-voice') !== 'off'; } catch { return true; }
   });
   const voiceRef = useRef(null);
+  const [answerReady, setAnswerReady] = useState(false); // an answer audio/video clip waits a moment for the reveal sound
   const audio = useRef(null);
   const music = useRef(null);
   const flyRef = useRef(null);
@@ -57,6 +58,15 @@ export default function QuestionModal({ question: q, category: c, onProceed }) {
     const a = voiceRef.current ?? (voiceRef.current = new Audio(q.questionVo));
     a.currentTime = 0;
     a.play().catch(() => setVoMissing(true));
+  };
+
+  const showAnswer = () => {
+    voiceRef.current?.pause();
+    setVoReady(true);
+    setReveal(true);
+    setRunning(false);
+    playAnswerReveal();
+    if (q.answerMedia && isClip(q.answerMedia)) setTimeout(() => setAnswerReady(true), 1000);
   };
 
   const toNext = () => setStep((s) => (s === 'intro' ? afterIntro : s));
@@ -223,7 +233,7 @@ export default function QuestionModal({ question: q, category: c, onProceed }) {
           <div className={`contents ${landed ? '' : 'invisible'}`}>
             {left === 0 && <p className="font-display text-3xl text-poster-red">Time's up!</p>}
 
-            {landed && shownMedia && (!isClip(shownMedia) || voReady || reveal) && (
+            {landed && shownMedia && (!isClip(shownMedia) || (reveal && q.answerMedia ? answerReady : voReady)) && (
               <div className="space-y-2">
                 <QuestionMedia key={shownMedia} src={shownMedia} />
                 {q.note && <p className="text-center text-sm text-ink/60">{q.note}</p>}
@@ -248,7 +258,7 @@ export default function QuestionModal({ question: q, category: c, onProceed }) {
             )}
 
             <div className="mt-auto flex justify-end">
-              {!reveal ? <button onClick={() => { voiceRef.current?.pause(); setVoReady(true); setReveal(true); setRunning(false); }} className="btn-primary">Show answer</button>
+              {!reveal ? <button onClick={showAnswer} className="btn-primary">Show answer</button>
                 : <button onClick={onProceed} className="btn-primary">Proceed to scoring</button>}
             </div>
           </div>

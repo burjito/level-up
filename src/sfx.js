@@ -205,3 +205,12 @@ export function playBonusVoice(bonus) {
     },
   };
 }
+
+// "Ta-da": rising pickup, then a bright chord with a sparkle, when the answer is revealed
+export function playAnswerReveal() {
+  try {
+    [392, 523.25, 659.25].forEach((f, i) => tone(f, i * 0.09, 0.18, 'triangle', 0.14));
+    [523.25, 659.25, 783.99, 1046.5].forEach((f) => tone(f, 0.3, 0.7, 'triangle', 0.1));
+    tone(2093, 0.32, 0.6, 'sine', 0.05);
+  } catch {}
+}
