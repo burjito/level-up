@@ -16,8 +16,9 @@ export function PasscodeModal({ onUnlock, onClose }) {
   return (
     <div role="dialog" aria-modal="true" className="fixed inset-0 z-50 flex items-center justify-center bg-poster-violet/25 p-4 backdrop-blur-md">
       <form onSubmit={submit} className="glass w-full max-w-md animate-pop rounded-[2rem] p-8 text-center motion-reduce:animate-none">
-        <h2 className="font-display text-3xl text-poster-violet">Secret surprise</h2>
-        <p className="mt-2 text-ink/65">Enter the 6-digit passcode to unlock the surprise.</p>
+        <p className="text-sm font-semibold uppercase tracking-[.2em] text-poster-orange">Oops! Forbidden Area</p>
+        <h2 className="mt-2 font-display text-3xl text-poster-violet">Authorized personnel only</h2>
+        <p className="mt-2 text-ink/65">Enter the access code if you know what you’re doing.</p>
         <input autoFocus inputMode="numeric" pattern="[0-9]{6}" maxLength={6} value={code}
           onChange={(event) => { setCode(event.target.value.replace(/\D/g, '')); setError(false); }}
           aria-label="6-digit passcode" className="mt-6 w-full rounded-2xl border-2 border-poster-violet/30 px-4 py-3 text-center font-display text-3xl tracking-[.5em] outline-none focus:border-poster-orange" />
@@ -33,16 +34,21 @@ export function PasscodeModal({ onUnlock, onClose }) {
 
 export function SurpriseBoard({ answered, onPick, onClose }) {
   return (
-    <div className="fixed inset-0 z-40 overflow-hidden bg-white p-3 sm:p-5">
+    <div className="fixed inset-0 z-40 overflow-hidden bg-white p-3 sm:p-5"
+      style={{ backgroundImage: 'linear-gradient(#e4e4ea 1px, transparent 1px), linear-gradient(90deg, #e4e4ea 1px, transparent 1px)', backgroundSize: '28px 28px' }}>
       <Confetti run />
       <div className="mx-auto flex h-full max-w-[1400px] flex-col gap-3">
         <header className="flex shrink-0 items-center justify-between">
-          <h1 className="font-display text-2xl text-poster-blue sm:text-4xl">Kuya Jem's Surprise</h1>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[.22em] text-poster-orange">Classified: good vibes</p>
+            <h1 className="font-display text-2xl text-poster-blue sm:text-4xl">Operation: Big Smile</h1>
+          </div>
           <button onClick={onClose} className="btn-ghost px-4 py-1.5 text-sm">Back to Level Up</button>
         </header>
         <div className="grid min-h-0 flex-1 gap-3 lg:grid-cols-[minmax(260px,.9fr)_2fr]">
-          <div className="relative hidden overflow-hidden rounded-[2rem] bg-poster-blue lg:block">
+          <div className="relative hidden overflow-hidden rounded-[2rem] bg-poster-orange shadow-[0_8px_0_#a85b00] lg:block">
             <img src="/kuya-jem/kuya-jem-photo.png" alt="Kuya Jem" className="h-full w-full object-contain animate-float motion-reduce:animate-none" />
+            <span className="absolute bottom-4 left-4 rounded-full bg-white/90 px-4 py-1.5 text-sm font-semibold text-poster-orange">Handle with joy</span>
           </div>
           <div className="grid min-h-0 grid-cols-3 grid-rows-4 gap-2 sm:gap-3">
             {SURPRISE_QUESTIONS.map((q) => answered.includes(q.id) ? (
@@ -97,16 +103,16 @@ export function SurpriseQuestion({ question: q, onProceed }) {
   const showAnswer = () => { setReveal(true); setRunning(false); playAnswerReveal(); };
   return (
     <div role="dialog" aria-modal="true" className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-white/75 p-4 backdrop-blur-md">
-      <div className="glass flex max-h-[94vh] w-full max-w-5xl flex-col gap-5 overflow-y-auto rounded-[2rem] border-t-[12px] border-poster-blue p-6 animate-pop motion-reduce:animate-none sm:p-9">
+      <div className="glass flex max-h-[94vh] w-full max-w-5xl flex-col gap-5 overflow-y-auto rounded-[2rem] border-t-[12px] border-poster-orange p-6 animate-pop motion-reduce:animate-none sm:p-9">
         <div className="flex items-center justify-between gap-3">
-          <div><p className="text-sm font-semibold uppercase tracking-wide text-poster-blue">Kuya Jem's Surprise</p><h2 className="font-display text-2xl text-poster-violet">Question {q.number}</h2></div>
+          <div><p className="text-sm font-semibold uppercase tracking-[.16em] text-poster-orange">Operation: Big Smile</p><h2 className="font-display text-2xl text-poster-violet">Dossier #{q.number}</h2></div>
           <div className="flex items-center gap-3"><span role="timer" className={`font-display text-6xl tabular-nums ${left <= 5 ? 'text-poster-red' : 'text-poster-blue'}`}>{left}</span><button onClick={() => setRunning((value) => !value)} disabled={!voReady || left === 0} className="btn-ghost px-3 py-1.5 text-sm">{running ? 'Pause' : 'Resume'}</button></div>
         </div>
         {!voReady && <p className="text-sm font-semibold text-ink/60">{voPlaying ? 'Listen to the question…' : 'Loading question…'}</p>}
         <p className="font-display text-3xl leading-tight sm:text-5xl">{q.questionText}</p>
         {!reveal ? <button onClick={showAnswer} disabled={!voReady} className="btn-primary mt-auto self-end">Show answer</button> : (
           <>
-            <div className="rounded-2xl border-[3px] border-poster-green bg-poster-green/10 p-5"><p className="text-sm font-semibold uppercase tracking-wide text-poster-green">Answer</p><p className="font-display text-3xl sm:text-4xl">{q.answerText}</p></div>
+            <div className="rounded-2xl border-[3px] border-poster-green bg-poster-green/10 p-5 shadow-[0_5px_0_rgba(12,184,32,.18)]"><p className="text-sm font-semibold uppercase tracking-wide text-poster-green">Answer</p><p className="font-display text-3xl sm:text-4xl">{q.answerText}</p></div>
             {q.answerMedia && <QuestionMedia key={q.answerMedia} src={q.answerMedia} />}
             <button onClick={onProceed} className="btn-primary self-end">Proceed to scoring</button>
           </>
