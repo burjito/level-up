@@ -27,7 +27,7 @@ const answerFiles = [
   'card-1-answer-gentle-woman.m4a',
   'card-2-answer-jeepney.mp4',
   'card-3-answer-contact-lens.m4a',
-  'card-4-answer-placeholder.m4a',
+  'card-4-answer-bgc.aac',
   'card-5-answer-ppt.mp3',
   'card-6-answer-drive.m4a',
   'card-7-answer-bali-oasis.m4a',
