@@ -1,7 +1,9 @@
 export const SURPRISE_PASSCODE = '111791';
 export const SURPRISE_SECONDS = 10;
 
-const ROOT = '/kuya-jem';
+// Vercel can serve regular public assets directly, but its static path may return
+// Git LFS pointer files for these larger surprise media files.
+const ROOT = 'https://media.githubusercontent.com/media/burjito/level-up/main/public/kuya-jem';
 
 const QUESTIONS = [
   ['Anong Thai fashion staple na kilala sa bold block-letter branding at minimalist design nito ang naging massively popular across Asia??', 'Gentle Woman'],
