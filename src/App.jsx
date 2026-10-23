@@ -9,6 +9,8 @@ import Podium from './Podium.jsx';
 import DesktopOnly, { useIsSmallScreen } from './DesktopOnly.jsx';
 import { enterFullscreen } from './Fullscreen.jsx';
 import { setBedPhase } from './bedMusic.js';
+import { PasscodeModal, SurpriseBoard, SurpriseQuestion } from './Surprise.jsx';
+import { SURPRISE_QUESTIONS } from './surpriseData.js';
 
 // Progress is saved in this browser, so a refresh doesn't restart the game.
 const SAVE_KEY = 'level-up-save-v1';
@@ -43,6 +45,11 @@ export default function App() {
   const [podiumDone, setPodiumDone] = useState(false); // all three places have been revealed
   const [podiumMusic, setPodiumMusic] = useState(false);
   const [hideRanking, setHideRanking] = useState(!!saved?.hideRanking); // hides the top 3 on the board and while scoring
+  const [showPasscode, setShowPasscode] = useState(false);
+  const [surpriseOpen, setSurpriseOpen] = useState(false);
+  const [surprisePhase, setSurprisePhase] = useState('board');
+  const [surpriseId, setSurpriseId] = useState(null);
+  const [surpriseAnswered, setSurpriseAnswered] = useState([]);
   const smallScreen = useIsSmallScreen();
 
   // background music plays on registration and the board, fades out while a question is open
@@ -53,8 +60,9 @@ export default function App() {
     return () => clearTimeout(t);
   }, [showPodium, podiumDone]);
   useEffect(() => {
-    setBedPhase(smallScreen ? 'off' : showPodium ? (podiumMusic ? 'podium' : 'off') : currentPhase);
-  }, [currentPhase, smallScreen, showPodium, podiumMusic]);
+    const phase = surpriseOpen ? (surprisePhase === 'board' ? 'board' : surprisePhase === 'scoreboard' ? 'scoreboard' : 'question-active') : currentPhase;
+    setBedPhase(smallScreen ? 'off' : showPodium ? (podiumMusic ? 'podium' : 'off') : phase);
+  }, [currentPhase, smallScreen, showPodium, podiumMusic, surpriseOpen, surprisePhase]);
 
   useEffect(() => {
     try {
@@ -88,6 +96,15 @@ export default function App() {
     setCurrentPhase('board');
   };
 
+  const openSurpriseQuestion = (q) => { setSurpriseId(q.id); setSurprisePhase('question-active'); };
+  const awardSurprisePoints = (teamIds, points) =>
+    setTeams((ts) => ts.map((t) => (teamIds.includes(t.id) ? { ...t, score: t.score + points } : t)));
+  const returnFromSurpriseScoreboard = () => {
+    setSurpriseAnswered((ids) => [...ids, surpriseId]);
+    setSurpriseId(null);
+    setSurprisePhase('board');
+  };
+
   const newGame = () => {
     try { localStorage.removeItem(SAVE_KEY); } catch {}
     setTeams([]);
@@ -97,6 +114,11 @@ export default function App() {
     setShowPodium(false);
     setPodiumDone(false);
     setHideRanking(false);
+    setShowPasscode(false);
+    setSurpriseOpen(false);
+    setSurprisePhase('board');
+    setSurpriseId(null);
+    setSurpriseAnswered([]);
     setCurrentPhase('registration');
   };
 
@@ -109,7 +131,7 @@ export default function App() {
       )}
 
       {currentPhase !== 'registration' && (
-        <GameBoard categories={CATEGORIES} questions={questions} teams={teams} onPick={openQuestion} onShowTally={() => setShowTally(true)} onNewGame={newGame} hideRanking={hideRanking} onToggleHide={() => setHideRanking((h) => !h)} onFinalResults={() => setShowPodium(true)} />
+        <GameBoard categories={CATEGORIES} questions={questions} teams={teams} onPick={openQuestion} onShowTally={() => setShowTally(true)} onNewGame={newGame} hideRanking={hideRanking} onToggleHide={() => setHideRanking((h) => !h)} onFinalResults={() => setShowPodium(true)} onSurprise={() => setShowPasscode(true)} />
       )}
 
       {currentPhase === 'question-active' && active && (
@@ -143,6 +165,23 @@ export default function App() {
       )}
 
       {showPodium && <Podium teams={teams} onRevealed={setPodiumDone} onClose={() => { setShowPodium(false); setPodiumDone(false); }} />}
+
+      {showPasscode && <PasscodeModal onUnlock={() => { setShowPasscode(false); setSurpriseOpen(true); setSurprisePhase('board'); }} onClose={() => setShowPasscode(false)} />}
+      {surpriseOpen && surprisePhase === 'board' && <SurpriseBoard answered={surpriseAnswered} onPick={openSurpriseQuestion} onClose={() => { setSurpriseOpen(false); setSurpriseId(null); }} />}
+      {surpriseOpen && surprisePhase === 'question-active' && surpriseId && (
+        <SurpriseQuestion question={SURPRISE_QUESTIONS.find((q) => q.id === surpriseId)} onProceed={() => setSurprisePhase('scoreboard')} />
+      )}
+      {surpriseOpen && surprisePhase === 'scoreboard' && surpriseId && (
+        <Scoreboard
+          key={`surprise-${surpriseId}`}
+          question={SURPRISE_QUESTIONS.find((q) => q.id === surpriseId)}
+          teams={teams}
+          onAward={(ids) => awardSurprisePoints(ids, SURPRISE_QUESTIONS.find((q) => q.id === surpriseId).points)}
+          onReturn={returnFromSurpriseScoreboard}
+          onShowTally={() => setShowTally(true)}
+          hideRanking={hideRanking}
+        />
+      )}
     </div>
   );
 }
