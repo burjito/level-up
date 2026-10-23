@@ -5,6 +5,7 @@ import GameBoard from './GameBoard.jsx';
 import QuestionModal from './QuestionModal.jsx';
 import Scoreboard from './Scoreboard.jsx';
 import FullScoreboard from './FullScoreboard.jsx';
+import Podium from './Podium.jsx';
 import DesktopOnly, { useIsSmallScreen } from './DesktopOnly.jsx';
 import { enterFullscreen } from './Fullscreen.jsx';
 import { setBedPhase } from './bedMusic.js';
@@ -38,19 +39,21 @@ export default function App() {
   const [currentPhase, setCurrentPhase] = useState(startPhase);
   const [activeId, setActiveId] = useState(startActive);
   const [showTally, setShowTally] = useState(false);
+  const [showPodium, setShowPodium] = useState(false);
+  const [hideRanking, setHideRanking] = useState(!!saved?.hideRanking); // hides the top 3 on the board and while scoring
   const smallScreen = useIsSmallScreen();
 
   // background music plays on registration and the board, fades out while a question is open
-  useEffect(() => { setBedPhase(smallScreen ? 'off' : currentPhase); }, [currentPhase, smallScreen]);
+  useEffect(() => { setBedPhase(smallScreen || showPodium ? 'off' : currentPhase); }, [currentPhase, smallScreen, showPodium]);
 
   useEffect(() => {
     try {
       localStorage.setItem(
         SAVE_KEY,
-        JSON.stringify({ teams, answered: questions.filter((q) => q.isAnswered).map((q) => q.id), phase: currentPhase, activeId })
+        JSON.stringify({ teams, answered: questions.filter((q) => q.isAnswered).map((q) => q.id), phase: currentPhase, activeId, hideRanking })
       );
     } catch {}
-  }, [teams, questions, currentPhase, activeId]);
+  }, [teams, questions, currentPhase, activeId, hideRanking]);
 
   const active = questions.find((q) => q.id === activeId);
   const category = active && CATEGORIES.find((c) => c.id === active.categoryId);
@@ -81,6 +84,8 @@ export default function App() {
     setQuestions(buildQuestions());
     setActiveId(null);
     setShowTally(false);
+    setShowPodium(false);
+    setHideRanking(false);
     setCurrentPhase('registration');
   };
 
@@ -93,7 +98,7 @@ export default function App() {
       )}
 
       {currentPhase !== 'registration' && (
-        <GameBoard categories={CATEGORIES} questions={questions} teams={teams} onPick={openQuestion} onShowTally={() => setShowTally(true)} onNewGame={newGame} />
+        <GameBoard categories={CATEGORIES} questions={questions} teams={teams} onPick={openQuestion} onShowTally={() => setShowTally(true)} onNewGame={newGame} hideRanking={hideRanking} />
       )}
 
       {currentPhase === 'question-active' && active && (
@@ -114,10 +119,22 @@ export default function App() {
           onAward={(ids) => { awardPoints(ids, active.points); markAnswered(active.id); }}
           onReturn={returnToBoard}
           onShowTally={() => setShowTally(true)}
+          hideRanking={hideRanking}
         />
       )}
 
-      {showTally && <FullScoreboard teams={teams} onAdjust={adjustScore} onClose={() => setShowTally(false)} />}
+      {showTally && (
+        <FullScoreboard
+          teams={teams}
+          onAdjust={adjustScore}
+          hideRanking={hideRanking}
+          onToggleHide={() => setHideRanking((h) => !h)}
+          onFinalResults={() => { setShowTally(false); setShowPodium(true); }}
+          onClose={() => setShowTally(false)}
+        />
+      )}
+
+      {showPodium && <Podium teams={teams} onClose={() => setShowPodium(false)} />}
     </div>
   );
 }

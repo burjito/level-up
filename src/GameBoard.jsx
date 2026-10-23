@@ -2,7 +2,7 @@ import TeamRank from './TeamRank.jsx';
 import SettingsMenu from './SettingsMenu.jsx';
 
 // Fits the viewport exactly: no scrolling. Sizes come from the grid tracks.
-export default function GameBoard({ categories, questions, teams, onPick, onShowTally, onNewGame }) {
+export default function GameBoard({ categories, questions, teams, onPick, onShowTally, onNewGame, hideRanking }) {
   const find = (catId, n) => questions.find((q) => q.id === `${catId}-${n}`);
   const top3 = [...teams].sort((a, b) => b.score - a.score).slice(0, 3);
   const started = teams.some((t) => t.score > 0); // no top 3 until the first points are awarded
@@ -10,7 +10,7 @@ export default function GameBoard({ categories, questions, teams, onPick, onShow
   return (
     <main className="flex h-full flex-col gap-2 overflow-hidden p-3 sm:p-4">
       <header className="flex shrink-0 items-center justify-end gap-2">
-        {started && (
+        {started && !hideRanking && (
           <ul className="flex min-w-0 gap-2 overflow-hidden">
           {top3.map((t, i) => (
             <li key={t.id} className="shrink-0"><TeamRank team={t} rank={i + 1} size="sm" /></li>

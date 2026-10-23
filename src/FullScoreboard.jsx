@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 const CHIPS = [50, 100, 200, 500, 1000];
 
 // Full tally, ranked high to low (ties share a rank). "Edit scores" lets the host add or take off points per team.
-export default function FullScoreboard({ teams, onClose, onAdjust }) {
+export default function FullScoreboard({ teams, onClose, onAdjust, hideRanking, onToggleHide, onFinalResults }) {
   const [editing, setEditing] = useState(false);
   const [order, setOrder] = useState([]); // row order is frozen while editing so rows don't jump under your finger
   const [amount, setAmount] = useState(100);
@@ -35,12 +35,16 @@ export default function FullScoreboard({ teams, onClose, onAdjust }) {
   return (
     <div role="dialog" aria-modal="true" aria-label="Scoreboard" onClick={onClose} className="fixed inset-0 z-[60] flex items-center justify-center bg-white/80 p-4 backdrop-blur-md">
       <div onClick={(e) => e.stopPropagation()} className="glass flex max-h-[90vh] w-full max-w-xl animate-pop flex-col rounded-[2rem] p-6 motion-reduce:animate-none sm:p-8">
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="font-display text-3xl text-poster-orange">Scoreboard</h2>
-          {editing
-            ? <button onClick={() => setEditing(false)} className="btn-primary px-5 py-1.5 text-base">Done</button>
-            : <button onClick={startEdit} className="btn-ghost px-5 py-1.5 text-base">Edit scores</button>}
+          <div className="flex items-center gap-2">
+            <button onClick={onToggleHide} aria-pressed={hideRanking} className="btn-ghost px-4 py-1.5 text-base">{hideRanking ? 'Show ranking' : 'Hide ranking'}</button>
+            {editing
+              ? <button onClick={() => setEditing(false)} className="btn-primary px-5 py-1.5 text-base">Done</button>
+              : <button onClick={startEdit} className="btn-ghost px-5 py-1.5 text-base">Edit scores</button>}
+          </div>
         </div>
+        {hideRanking && <p className="mt-2 text-sm text-ink/60">The top 3 is hidden on the board and while scoring. Scores are only visible here.</p>}
 
         {editing && (
           <div className="mt-4 rounded-2xl bg-poster-violet/10 p-3">
@@ -78,7 +82,10 @@ export default function FullScoreboard({ teams, onClose, onAdjust }) {
             );
           })}
         </ol>
-        <button onClick={onClose} className="btn-primary mt-5">Close</button>
+        <div className="mt-5 flex gap-3">
+          <button onClick={onFinalResults} className="btn flex-1 bg-poster-orange text-white shadow-[0_5px_0_#a85b00] hover:brightness-110">Final results</button>
+          <button onClick={onClose} className="btn-primary flex-1">Close</button>
+        </div>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import TeamRank, { textOn } from './TeamRank.jsx';
 
-export default function Scoreboard({ question: q, teams, onAward, onReturn, onShowTally }) {
+export default function Scoreboard({ question: q, teams, onAward, onReturn, onShowTally, hideRanking }) {
   const [picked, setPicked] = useState([]);
   const [awarded, setAwarded] = useState(false);
   const toggle = (id) => setPicked((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
@@ -36,12 +36,21 @@ export default function Scoreboard({ question: q, teams, onAward, onReturn, onSh
 
         {/* blue half: top 3 */}
         <section className="bg-poster-blue p-6 text-white sm:p-9">
-          <h2 className="font-display text-3xl">Top 3</h2>
-          <ol className="mt-5 space-y-3 p-1">
-            {ranked.slice(0, 3).map((t, i) => (
-              <li key={t.id}><TeamRank team={t} rank={i + 1} /></li>
-            ))}
-          </ol>
+          {hideRanking ? (
+            <>
+              <h2 className="font-display text-3xl">Ranking hidden</h2>
+              <p className="mt-3 text-white/85">The top 3 is hidden for now. Open the full scoreboard to see the scores.</p>
+            </>
+          ) : (
+            <>
+              <h2 className="font-display text-3xl">Top 3</h2>
+              <ol className="mt-5 space-y-3 p-1">
+                {ranked.slice(0, 3).map((t, i) => (
+                  <li key={t.id}><TeamRank team={t} rank={i + 1} /></li>
+                ))}
+              </ol>
+            </>
+          )}
           <button onClick={onShowTally} className="btn mt-5 w-full border-2 border-white px-4 py-2 text-base text-white shadow-[0_4px_0_rgba(255,255,255,0.35)] hover:bg-white/10">
             Full scoreboard{teams.length > 3 ? ` (${teams.length} teams)` : ''}
           </button>
