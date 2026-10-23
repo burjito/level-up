@@ -4,13 +4,13 @@ export const SURPRISE_SECONDS = 10;
 const ROOT = '/kuya-jem';
 
 const QUESTIONS = [
-  ['Anong Thai fashion staple na kilala sa bold block-letter branding at minimalist design nito ang naging massively popular across Asia??', 'Gentle Woman'],
+  ['Anong Thai fashion staple na kilala sa bold block-letter branding at minimalist design nito ang naging massively popular across Asia?', 'Gentle Woman'],
   ['Saan sumakay si Yeng nang bigla siyang may nakatabi?', 'Jeepney'],
-  ['Ano ang sinusoot ng tao na delikado kapag naputagal at nakatulugan?', 'Contact Lens'],
+  ['Ano ang sinusuot ng tao na delikado kapag napatagal at nakatulugan?', 'Contact Lens'],
   ['Bukod sa UP at QC, saang kalsada pa baka biglang may makita si Maki?', 'BGC'],
   ['Anong Microsoft Office ang explicitly na biniblamе ng investigators dahil sa NASA Disaster noong 2003 sa Columbia Space Shuttle?', 'PPT'],
   ['Ano ang ginagawa ni Nadine Lustre sa ending ng pelikulang "Never Not Love You"?', 'Drive'],
-  ['Guess the word! 🐑 + 😊 - CK   😮 + 🌌 + 🕺', 'Bali Oasis'],
+  ['Guess the word! 🐑+😋-CK   😯+🛣️+👯‍♀️', 'Bali Oasis'],
   ['Around 4 billion na puno kada taon ang pinuputol at ito ay umaaccount sa halos 35% ng deforestation annually para makagawa ng ano?', 'Papel'],
   ['Ano ang trabaho ni kuya na nasa video?', 'Grab Driver'],
   ['Ano ang sikat na pagkain sa Japan ang may Chinese origin?', 'Ramen'],
