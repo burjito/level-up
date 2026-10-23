@@ -47,6 +47,7 @@ export const SURPRISE_QUESTIONS = QUESTIONS.map(([questionText, answerText], ind
     answerText,
     points: number * 100,
     questionVo: `${ROOT}/questions-audio/card-${number}-vo-${VO_FILES[index]}.m4a`,
+    introMedia: number === 9 ? `${ROOT}/stop-the-car.mp4` : null,
     answerMedia: `${ROOT}/answers-media/${answerFiles[index]}`,
   };
 });
