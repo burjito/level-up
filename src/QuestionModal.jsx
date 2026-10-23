@@ -155,8 +155,7 @@ export default function QuestionModal({ question: q, category: c, onProceed }) {
   }, [live, running, left]);
   useEffect(() => { if (live && left === 0) playBuzzer(); }, [live, left]);
 
-  // Countdown music: runs while the timer runs, speeds up and brightens in the last 5 seconds.
-  // Questions with their own audio/video clip stay quiet until the last 5 seconds so the clip can be heard.
+  // Countdown music starts after the initial voiceover/media gate and speeds up in the last 5 seconds.
   useEffect(() => {
     music.current = createTimerMusic();
     return () => music.current.stop();
@@ -164,8 +163,7 @@ export default function QuestionModal({ question: q, category: c, onProceed }) {
   useEffect(() => {
     const m = music.current;
     if (!m) return;
-    const hasClip = /\.(mp3|m4a|wav|ogg|mp4|webm|mov)$/i.test(q.mediaPlaceholder ?? '');
-    const play = live && running && left > 0 && soundOn && (!hasClip || left <= 5);
+    const play = live && running && left > 0 && soundOn;
     try {
       m.setUrgent(left <= 5);
       if (play) m.start(); else m.stop();
