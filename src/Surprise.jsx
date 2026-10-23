@@ -62,7 +62,7 @@ export function NameModal({ onConfirm, onClose }) {
   );
 }
 
-export function SurpriseBoard({ answered, playerName, onPick, onClose, onShowTally, onNewGame, hideRanking, onToggleHide }) {
+export function SurpriseBoard({ answered, playerName, onPick, onFinalResults, onClose, onShowTally, onNewGame, hideRanking, onToggleHide }) {
   return (
     <div className="fixed inset-0 z-40 overflow-hidden bg-white p-3 sm:p-5"
       style={{ backgroundImage: 'linear-gradient(#e4e4ea 1px, transparent 1px), linear-gradient(90deg, #e4e4ea 1px, transparent 1px)', backgroundSize: '28px 28px' }}>
@@ -75,6 +75,7 @@ export function SurpriseBoard({ answered, playerName, onPick, onClose, onShowTal
             <p className="mt-1 text-sm font-semibold text-ink/55">Player: {playerName}</p>
           </div>
           <div className="flex items-center gap-2">
+            <button onClick={onFinalResults} className="btn flex h-9 shrink-0 items-center justify-center bg-poster-orange px-4 py-0 text-sm text-white shadow-[0_4px_0_#a85b00] hover:brightness-110">Final results</button>
             <button onClick={onShowTally} className="btn-ghost px-4 py-1.5 text-sm">Scoreboard</button>
             <SettingsMenu onNewGame={onNewGame} hideRanking={hideRanking} onToggleHide={onToggleHide} />
             <button onClick={onClose} className="btn-ghost px-4 py-1.5 text-sm">Back to Level Up</button>
@@ -97,6 +98,22 @@ export function SurpriseBoard({ answered, playerName, onPick, onClose, onShowTal
             })}
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+export function SurpriseFinalResults({ onClose }) {
+  return (
+    <div role="dialog" aria-modal="true" aria-label="Surprise final results" className="fixed inset-0 z-[80] flex flex-col items-center justify-center overflow-hidden bg-white/90 p-5 backdrop-blur-md sm:p-8">
+      <Confetti run />
+      <div className="relative z-10 flex h-full w-full max-w-6xl flex-col items-center justify-center gap-5">
+        <div className="text-center">
+          <p className="text-sm font-semibold uppercase tracking-[.2em] text-poster-orange">Happy Pastor's Appreciation Month!</p>
+          <h2 className="font-display text-4xl text-poster-blue sm:text-6xl">A special message for Jemuel</h2>
+        </div>
+        <video src="/kuya-jem/grand-prize-compressed.mp4" controls autoPlay playsInline className="max-h-[72vh] w-full rounded-[2rem] bg-black object-contain shadow-[0_12px_40px_rgba(81,45,195,.25)]" />
+        <button onClick={onClose} className="btn-primary">Back to surprise board</button>
       </div>
     </div>
   );
