@@ -109,7 +109,7 @@ export default function App() {
       )}
 
       {currentPhase !== 'registration' && (
-        <GameBoard categories={CATEGORIES} questions={questions} teams={teams} onPick={openQuestion} onShowTally={() => setShowTally(true)} onNewGame={newGame} hideRanking={hideRanking} onFinalResults={() => setShowPodium(true)} />
+        <GameBoard categories={CATEGORIES} questions={questions} teams={teams} onPick={openQuestion} onShowTally={() => setShowTally(true)} onNewGame={newGame} hideRanking={hideRanking} onToggleHide={() => setHideRanking((h) => !h)} onFinalResults={() => setShowPodium(true)} />
       )}
 
       {currentPhase === 'question-active' && active && (
@@ -138,8 +138,6 @@ export default function App() {
         <FullScoreboard
           teams={teams}
           onAdjust={adjustScore}
-          hideRanking={hideRanking}
-          onToggleHide={() => setHideRanking((h) => !h)}
           onClose={() => setShowTally(false)}
         />
       )}
