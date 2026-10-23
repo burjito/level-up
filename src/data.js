@@ -8,11 +8,11 @@ export const CATEGORIES = [
   { id: 'grade5', slug: 'grade-5', name: 'Kakasa Ka Ba Sa Grade 5?', color: '#dd0000', img: '/grade5.webp', vo: '/vo/grade-5.m4a' },
   { id: 'scroll', slug: 'kakascroll-mo-yan', name: 'Kaka-scroll Mo Yan!', color: '#512dc3', img: '/scroll.webp', vo: '/vo/scroll.m4a' },
   { id: 'sino', slug: 'sino-yarn', name: 'Sino Yarn?', color: '#0cb820', img: '/sino.webp', vo: '/vo/sino-yarn.m4a' },
-  { id: 'trot', slug: 'trot-o-charot', name: 'Trot o Charot', color: '#0040ff', img: '/trot.webp', vo: '/vo/trotcharot.m4a' },
+  { id: 'trot', slug: 'trot-o-charot', name: 'Trot o Charot', seconds: 5, color: '#0040ff', img: '/trot.webp', vo: '/vo/trotcharot.m4a' },
   { id: 'bible', slug: 'bible', name: 'Bible Questions', color: '#ff8a00', img: '/bible.webp', vo: '/vo/bible.m4a' },
 ];
 
-export const DEFAULT_SECONDS = 20; // default timer per question
+export const DEFAULT_SECONDS = 10; // default timer per question (a category can set its own `seconds`, a question can too)
 
 // Voiceover that reads each question aloud. One file per question, in public/vo-questions/:
 //   q<question number>-<category slug>.m4a   e.g. q1-grade-5.m4a, q5-kakascroll-mo-yan.m4a, q10-bible.m4a
@@ -46,7 +46,7 @@ const RAW = {
     ['video', 'Sa FlordeLiza, ano ang dapat mahawakan ni Flor para maging mabait na sa kanya si Liza?', 'Magkabilang dulo ng rainbow', TT('ZSgJNbXt4')],
     ['text', "Ilang years na simula unang ma-ere ang noontime tv show na It's Showtime?", '17 years'],
     ['text', 'Sino-sino ang tatlong lola ni Yaya Dub sa Kalyeserye?', 'Lola Nidora, Lola Tidora, Lola Tinidora'],
-    ['video', 'Kumpletuhin ang linya ng sikat na meme: "Hi! I\'m (1)____ from Las Vegas (2)______. We\'re hiring new (3)______ (4)_______ to work in Las Vegas (5)______."', "Hi! I'm (1) LYN from Las Vegas (2) MODELS. We're hiring new (3) PROMOTIONAL (4) MODELS to work in Las Vegas (5) USA.", TT('ZSgJNeQmJ')],
+    ['video', 'Kumpletuhin ang linya ng sikat na meme: "Hi! I\'m (1)____ from Las Vegas (2)______. We\'re hiring new (3)______ (4)_______ to work in Las Vegas (5)______."', "Hi! I'm (1) LYN from Las Vegas (2) MODELS. We're hiring new (3) PROMOTIONAL (4) MODELS to work in Las Vegas (5) USA.", { ...TT('ZSgJNeQmJ'), seconds: 20 }],
     ['text', 'Sa sikat na kanta ng BINI na Karera, ilang beses binanggit sa kanta ang salitang "karera"?', '15 times'],
   ],
   sino: [
@@ -105,7 +105,7 @@ export const buildQuestions = () =>
         questionVo: o.vo ?? `${QUESTION_VO_DIR}q${i + 1}-${c.slug}.m4a`, // voiceover that reads the question
         choices: o.choices ?? (type === 'truefalse' ? ['True', 'False'] : null),
         note: o.note ?? null,
-        seconds: o.seconds ?? DEFAULT_SECONDS,
+        seconds: o.seconds ?? c.seconds ?? DEFAULT_SECONDS, // question > category > default
         mediaPlaceholder: o.media ?? (type === 'photo' ? `/media/${c.id}/${i + 1}.jpg` : type === 'video' ? `/media/${c.id}/${i + 1}.mp4` : null),
         ...MEDIA[id],
         isAnswered: false,
