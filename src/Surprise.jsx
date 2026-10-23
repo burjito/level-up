@@ -3,6 +3,7 @@ import { createTimerMusic, playAnswerReveal, playBeep, playBuzzer } from './sfx.
 import QuestionMedia from './QuestionMedia.jsx';
 import Confetti from './Confetti.jsx';
 import SettingsMenu from './SettingsMenu.jsx';
+import Podium from './Podium.jsx';
 import { SURPRISE_PASSCODE, SURPRISE_QUESTIONS, SURPRISE_SECONDS } from './surpriseData.js';
 
 const CARD_COLORS = ['#dd0000', '#512dc3', '#0cb820', '#0040ff'];
@@ -104,8 +105,19 @@ export function SurpriseBoard({ answered, playerName, onPick, onFinalResults, on
   );
 }
 
-export function SurpriseFinalResults({ onClose }) {
+export function SurpriseFinalResults({ playerName, score, onClose }) {
+  const [stage, setStage] = useState('podium');
   const [confettiRun, setConfettiRun] = useState(1);
+
+  if (stage === 'podium') {
+    return (
+      <Podium
+        teams={[{ id: 'surprise-player', name: playerName, color: '#ff8a00', score }]}
+        onClose={onClose}
+        onRevealed={(done) => { if (done) setStage('video'); }}
+      />
+    );
+  }
 
   return (
     <div role="dialog" aria-modal="true" aria-label="Surprise final results" className="fixed inset-0 z-[80] flex flex-col items-center justify-center overflow-hidden bg-white/90 p-5 backdrop-blur-md sm:p-8">

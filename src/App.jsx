@@ -192,7 +192,7 @@ export default function App() {
         />
       )}
       {surpriseOpen && surprisePhase === 'final-results' && (
-        <SurpriseFinalResults onClose={() => setSurprisePhase('board')} />
+        <SurpriseFinalResults playerName={surprisePlayerName} score={surpriseScore} onClose={() => setSurprisePhase('board')} />
       )}
       {surpriseOpen && surprisePhase === 'question-active' && surpriseId && (
         <SurpriseQuestion
