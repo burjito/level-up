@@ -105,17 +105,29 @@ export function SurpriseBoard({ answered, playerName, onPick, onFinalResults, on
 }
 
 export function SurpriseFinalResults({ onClose }) {
+  const [confettiRun, setConfettiRun] = useState(1);
+
   return (
     <div role="dialog" aria-modal="true" aria-label="Surprise final results" className="fixed inset-0 z-[80] flex flex-col items-center justify-center overflow-hidden bg-white/90 p-5 backdrop-blur-md sm:p-8">
-      <Confetti run />
-      <button
-        onClick={onClose}
-        aria-label="Back to surprise board"
-        title="Back to surprise board"
-        className="btn-ghost absolute right-5 top-5 z-20 flex h-10 w-10 items-center justify-center p-0 text-2xl sm:right-8 sm:top-8"
-      >
-        &larr;
-      </button>
+      <Confetti run={confettiRun} />
+      <div className="absolute bottom-5 right-5 z-[100] flex items-center gap-2 sm:bottom-8 sm:right-8">
+        <button
+          onClick={() => setConfettiRun((value) => value + 1)}
+          aria-label="Show confetti"
+          title="Show confetti"
+          className="btn-ghost flex h-10 items-center justify-center px-3 text-sm"
+        >
+          Confetti
+        </button>
+        <button
+          onClick={onClose}
+          aria-label="Back to surprise board"
+          title="Back to surprise board"
+          className="btn-ghost flex h-10 w-10 items-center justify-center p-0 text-2xl"
+        >
+          &larr;
+        </button>
+      </div>
       <div className="relative z-10 flex h-full w-full max-w-6xl flex-col items-center justify-center gap-5">
         <div className="text-center">
           <p className="text-sm font-semibold uppercase tracking-[.2em] text-poster-orange">Happy Pastor's Appreciation Month!</p>
