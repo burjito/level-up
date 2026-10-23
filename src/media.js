@@ -23,6 +23,6 @@ export const MEDIA = {
   'trot-9': { type: 'video', mediaPlaceholder: f(9, T, 'mp4') },
   'trot-10': { type: 'photo', mediaPlaceholder: f(10, T), answerMedia: f(10, T, 'mp4', true) },
   // Bible
-  'bible-3': { type: 'photo', mediaPlaceholder: f(3, B) },
-  'bible-2': { type: 'photo', mediaPlaceholder: f(2, B) },
+  'bible-3': { type: 'photo', mediaPlaceholder: f(3, B, 'jpg') },
+  'bible-2': { type: 'photo', mediaPlaceholder: f(2, B, 'jpg') },
 };
