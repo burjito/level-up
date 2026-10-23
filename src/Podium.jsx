@@ -6,12 +6,14 @@ import { playPodiumStep, playDrumRoll, playFanfare } from './sfx.js';
 
 // index 0 = winner. Gold / silver / bronze.
 const STYLE = [
-  { bg: 'linear-gradient(180deg,#fde68a,#f59e0b)', h: '32vh' },
-  { bg: 'linear-gradient(180deg,#f1f5f9,#94a3b8)', h: '24vh' },
-  { bg: 'linear-gradient(180deg,#fdba74,#b45309)', h: '18vh' },
+  { bg: 'linear-gradient(180deg,#fde68a,#f59e0b)', f: 1 },
+  { bg: 'linear-gradient(180deg,#f1f5f9,#94a3b8)', f: 0.75 },
+  { bg: 'linear-gradient(180deg,#fdba74,#b45309)', f: 0.55 },
 ];
 const ORDINAL = ['1st', '2nd', '3rd'];
-const EMPTY_H = '12vh'; // height of a place that hasn't been revealed yet
+const EMPTY_F = 0.3; // height of a place that hasn't been revealed yet
+// podium block height = share of the space above the name label (5.5rem), so it always fits the window
+const blockH = (f) => `calc((100% - 5.5rem) * ${f})`;
 
 function Trophy({ className }) {
   return (
@@ -88,7 +90,7 @@ export default function Podium({ teams, onClose }) {
   const small = 'h-9 px-4 py-0 text-sm';
 
   return (
-    <div role="dialog" aria-modal="true" aria-label="Final results" className="fixed inset-0 z-[80] flex flex-col items-center justify-between overflow-hidden bg-white/90 p-6 pb-8 pt-16 backdrop-blur-md sm:pt-20">
+    <div role="dialog" aria-modal="true" aria-label="Final results" className="fixed inset-0 z-[80] flex flex-col items-center justify-between overflow-y-auto overflow-x-hidden bg-white/90 p-6 pb-8 pt-14 backdrop-blur-md sm:pt-16">
       <Stars />
       <Confetti run={celebrate} />
 
@@ -103,8 +105,8 @@ export default function Podium({ teams, onClose }) {
         <p className="mt-2 h-8 font-display text-2xl text-poster-violet">{rolling ? 'And the winner is…' : stage === 0 ? 'Who made it to the top 3?' : ''}</p>
       </div>
 
-      {/* podium order: 2nd, 1st, 3rd. Names and colors sit below the podium. */}
-      <div className="relative z-10 flex w-full max-w-4xl items-end justify-center gap-3 sm:gap-6">
+      {/* podium order: 2nd, 1st, 3rd. Names and colors sit below the podium. The top padding is room for the trophy. */}
+      <div className="relative z-10 flex min-h-[18rem] w-full max-w-4xl flex-1 justify-center gap-3 pt-[7.5rem] sm:gap-6">
         {[1, 0, 2].filter((i) => i < n).map((i) => {
           const t = top[i];
           const shown = stage >= n - i;
@@ -112,8 +114,8 @@ export default function Podium({ teams, onClose }) {
           const Tag = isNext ? 'button' : 'div';
           const rank = rankOf(t);
           return (
-            <div key={t.id} className="flex w-1/3 max-w-[16rem] flex-col items-center">
-              <div className="relative w-full">
+            <div key={t.id} className="flex h-full w-1/3 max-w-[16rem] flex-col justify-end">
+              <div className="relative w-full" style={{ height: blockH(shown ? STYLE[i].f : EMPTY_F), transition: 'height .9s cubic-bezier(.2,.9,.3,1.15)' }}>
                 {i === 0 && shown && (
                   <div className="absolute bottom-full left-1/2 mb-1 -translate-x-1/2">
                     <Trophy className="w-24 animate-pop drop-shadow-lg motion-reduce:animate-none sm:w-28" />
@@ -121,8 +123,8 @@ export default function Podium({ teams, onClose }) {
                 )}
                 <Tag
                   {...(isNext ? { onClick: next, type: 'button', 'aria-label': `Reveal ${ORDINAL[i]} place` } : {})}
-                  className={`block w-full overflow-hidden rounded-t-3xl ${shown ? 'shadow-xl' : 'border-4 border-dashed border-ink/25 bg-white/50'} ${isNext ? 'cursor-pointer animate-pulse border-poster-orange/70 hover:bg-white/80 motion-reduce:animate-none' : ''}`}
-                  style={{ height: shown ? STYLE[i].h : EMPTY_H, transition: 'height .9s cubic-bezier(.2,.9,.3,1.15)', ...(shown ? { background: STYLE[i].bg } : {}) }}
+                  className={`block h-full w-full overflow-hidden rounded-t-3xl ${shown ? 'shadow-xl' : 'border-4 border-dashed border-ink/25 bg-white/50'} ${isNext ? 'cursor-pointer animate-pulse border-poster-orange/70 hover:bg-white/80 motion-reduce:animate-none' : ''}`}
+                  style={shown ? { background: STYLE[i].bg } : undefined}
                 >
                   {shown
                     ? <p className="pt-4 text-center font-display text-5xl text-white [text-shadow:0_3px_0_rgba(0,0,0,.2)] sm:text-6xl">{ORDINAL[rank - 1] ?? `${rank}th`}</p>
