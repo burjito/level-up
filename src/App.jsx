@@ -67,8 +67,8 @@ export default function App() {
   }, [showPodium, podiumDone]);
   useEffect(() => {
     const phase = surpriseOpen ? (surprisePhase === 'board' ? 'board' : surprisePhase === 'scoreboard' ? 'scoreboard' : surprisePhase === 'final-results' ? 'question-active' : 'question-active') : currentPhase;
-    setBedPhase(smallScreen ? 'off' : showPodium ? (podiumMusic ? 'podium' : 'off') : phase);
-  }, [currentPhase, smallScreen, showPodium, podiumMusic, surpriseOpen, surprisePhase]);
+    setBedPhase(smallScreen ? 'off' : showChosenReveal ? 'off' : showPodium ? (podiumMusic ? 'podium' : 'off') : phase);
+  }, [currentPhase, smallScreen, showChosenReveal, showPodium, podiumMusic, surpriseOpen, surprisePhase]);
 
   useEffect(() => {
     try {
