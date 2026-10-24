@@ -98,9 +98,9 @@ export function ChosenReveal({ onComplete, audio: initialAudio }) {
           {stage === 1 ? (
             <div key="attention" className="animate-pop motion-reduce:animate-none">
               <p className="font-display text-4xl uppercase text-poster-red sm:text-6xl">Attention</p>
-              <div className="mt-6 rounded-2xl bg-poster-red/10 px-4 py-4">
-                <p className="font-display text-2xl text-ink sm:text-4xl">The game has leveled up</p>
-                <p className="mt-3 font-display text-2xl text-ink sm:text-4xl">One player must play the game</p>
+              <div className="mt-4 rounded-2xl bg-poster-red/10 px-4 py-3">
+                <p className="font-display text-2xl leading-tight text-ink sm:text-4xl">The game has leveled up</p>
+                <p className="mt-1 whitespace-nowrap font-display text-base leading-tight text-ink sm:text-xl">One player must play the game</p>
               </div>
             </div>
           ) : (
