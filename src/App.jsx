@@ -9,7 +9,7 @@ import Podium from './Podium.jsx';
 import DesktopOnly, { useIsSmallScreen } from './DesktopOnly.jsx';
 import { enterFullscreen } from './Fullscreen.jsx';
 import { setBedPhase } from './bedMusic.js';
-import { playFanfare, playSurpriseEntry } from './sfx.js';
+import { playFanfare } from './sfx.js';
 import { ChosenReveal, NameModal, PasscodeModal, SurpriseBoard, SurpriseFinalResults, SurpriseQuestion } from './Surprise.jsx';
 import { SURPRISE_QUESTIONS } from './surpriseData.js';
 
@@ -184,7 +184,7 @@ export default function App() {
 
       {showPasscode && <PasscodeModal onUnlock={(audio) => { setChosenAudio(audio); setShowPasscode(false); setShowChosenReveal(true); }} onClose={() => setShowPasscode(false)} />}
       {showChosenReveal && <ChosenReveal audio={chosenAudio} onComplete={() => { setShowChosenReveal(false); setChosenAudio(null); setShowNamePrompt(true); }} />}
-      {showNamePrompt && <NameModal onConfirm={(name) => { playSurpriseEntry(); playFanfare(); setSurprisePlayerName(name); setShowNamePrompt(false); setSurpriseOpen(true); setSurprisePhase('board'); }} onClose={() => setShowNamePrompt(false)} />}
+      {showNamePrompt && <NameModal onConfirm={(name) => { playFanfare(); setSurprisePlayerName(name); setShowNamePrompt(false); setSurpriseOpen(true); setSurprisePhase('board'); }} onClose={() => setShowNamePrompt(false)} />}
       {surpriseOpen && surprisePhase === 'board' && (
         <SurpriseBoard
           answered={surpriseAnswered}
