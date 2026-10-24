@@ -46,18 +46,31 @@ export function playBeep(freq = 880) {
 
 export function createWarningAlarm() {
   let timer = null;
-  const ring = () => {
+  const siren = () => {
     try {
-      tone(880, 0, 0.22, 'square', 0.08);
-      tone(660, 0.28, 0.22, 'square', 0.08);
-      tone(880, 0.56, 0.22, 'square', 0.08);
+      const a = ac();
+      const start = a.currentTime;
+      const oscillator = a.createOscillator();
+      const gain = a.createGain();
+      oscillator.type = 'sawtooth';
+      oscillator.frequency.setValueAtTime(430, start);
+      oscillator.frequency.linearRampToValueAtTime(980, start + 0.48);
+      oscillator.frequency.linearRampToValueAtTime(430, start + 0.96);
+      gain.gain.setValueAtTime(0.0001, start);
+      gain.gain.linearRampToValueAtTime(0.24, start + 0.04);
+      gain.gain.setValueAtTime(0.24, start + 0.82);
+      gain.gain.linearRampToValueAtTime(0.0001, start + 0.98);
+      oscillator.connect(gain).connect(a.destination);
+      oscillator.start(start);
+      oscillator.stop(start + 1.02);
+      tone(215, 0, 0.72, 'square', 0.16);
     } catch {}
   };
   return {
     start() {
       if (timer) return;
-      ring();
-      timer = setInterval(ring, 1400);
+      siren();
+      timer = setInterval(siren, 1400);
     },
     stop() {
       if (!timer) return;
