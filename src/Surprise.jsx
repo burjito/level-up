@@ -15,7 +15,7 @@ export function PasscodeModal({ onUnlock, onClose }) {
   const submit = (event) => {
     event.preventDefault();
     if (code === SURPRISE_PASSCODE) {
-      const audio = new Audio('/kuya-jem/level-up-chosen.m4a');
+      const audio = new Audio('/kuya-jem/level-up-chosen.MP3');
       audio.preload = 'auto';
       onUnlock(audio);
       audio.play().catch(() => undefined);
@@ -43,21 +43,20 @@ export function PasscodeModal({ onUnlock, onClose }) {
 }
 
 export function ChosenReveal({ onComplete, audio: initialAudio }) {
-  const [audioBlocked, setAudioBlocked] = useState(false);
   useEffect(() => {
-    const audio = initialAudio ?? new Audio('/kuya-jem/level-up-chosen.m4a');
+    const audio = initialAudio ?? new Audio('/kuya-jem/level-up-chosen.MP3');
     let stopped = false;
     let replayTimer;
     const replay = () => {
       if (stopped) return;
       audio.currentTime = 0;
-      audio.play().catch(() => setAudioBlocked(true));
+      audio.play().catch(() => undefined);
     };
     const onEnded = () => {
       replayTimer = setTimeout(replay, 500);
     };
     audio.addEventListener('ended', onEnded);
-    audio.play().catch(() => setAudioBlocked(true));
+    audio.play().catch(() => undefined);
     return () => {
       stopped = true;
       clearTimeout(replayTimer);
@@ -80,7 +79,6 @@ export function ChosenReveal({ onComplete, audio: initialAudio }) {
           <div className="mt-5 rounded-2xl border-2 border-poster-red/25 bg-poster-red/5 px-4 py-4">
             <p className="font-display text-2xl text-poster-red sm:text-4xl">Jemuel Ocampo, you have been chosen</p>
           </div>
-          {audioBlocked && <button onClick={() => { const audio = new Audio('/kuya-jem/level-up-chosen.m4a'); audio.play().catch(() => undefined); }} className="btn-ghost mt-5 w-full border-poster-red text-poster-red shadow-[0_4px_0_#8f0000]">Play audio</button>}
           <button onClick={onComplete} className="btn-primary mt-7 w-full bg-poster-red shadow-[0_5px_0_#8f0000] hover:brightness-110 active:shadow-[0_2px_0_#8f0000]">Next</button>
         </div>
       </div>
