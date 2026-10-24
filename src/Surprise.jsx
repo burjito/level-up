@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { createTimerMusic, playAnswerReveal, playBeep, playBuzzer } from './sfx.js';
+import { createTimerMusic, createWarningAlarm, playAnswerReveal, playBeep, playBuzzer } from './sfx.js';
 import QuestionMedia from './QuestionMedia.jsx';
 import Confetti from './Confetti.jsx';
 import SettingsMenu from './SettingsMenu.jsx';
@@ -47,6 +47,7 @@ export function ChosenReveal({ onComplete, audio: initialAudio }) {
 
   useEffect(() => {
     const audio = initialAudio ?? new Audio('/kuya-jem/level-up-chosen.MP3');
+    const alarm = createWarningAlarm();
     let stopped = false;
     let replayTimer;
     let stageTimer;
@@ -72,6 +73,7 @@ export function ChosenReveal({ onComplete, audio: initialAudio }) {
     audio.addEventListener('ended', onEnded);
     audio.addEventListener('timeupdate', onTimeUpdate);
     audio.addEventListener('loadedmetadata', onLoadedMetadata);
+    alarm.start();
     audio.play().catch(() => undefined);
     stageTimer = setTimeout(showChosenPlayer, 2500);
     return () => {
@@ -79,6 +81,7 @@ export function ChosenReveal({ onComplete, audio: initialAudio }) {
       clearTimeout(replayTimer);
       clearTimeout(stageTimer);
       audio.pause();
+      alarm.stop();
       audio.removeEventListener('ended', onEnded);
       audio.removeEventListener('timeupdate', onTimeUpdate);
       audio.removeEventListener('loadedmetadata', onLoadedMetadata);
@@ -87,7 +90,7 @@ export function ChosenReveal({ onComplete, audio: initialAudio }) {
 
   return (
     <div role="alertdialog" aria-modal="true" aria-live="assertive" className="fixed inset-0 z-[60] flex items-center justify-center overflow-hidden bg-white/75 p-4 backdrop-blur-md">
-      <div aria-hidden className="pointer-events-none absolute inset-0 animate-blink bg-poster-red/20 motion-reduce:animate-none" />
+      <div aria-hidden className="pointer-events-none absolute inset-0 animate-warning-blink bg-poster-red/20 motion-reduce:animate-none" />
       <div className="relative w-full max-w-xl animate-pop rounded-[2rem] border-[6px] border-poster-red bg-white p-8 text-center shadow-[0_12px_0_#8f0000] motion-reduce:animate-none sm:p-12">
         <span aria-hidden className="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 animate-ping rounded-full border-8 border-poster-red/25 motion-reduce:animate-none" />
         <div className="relative">
