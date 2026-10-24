@@ -43,25 +43,45 @@ export function PasscodeModal({ onUnlock, onClose }) {
 }
 
 export function ChosenReveal({ onComplete, audio: initialAudio }) {
+  const [stage, setStage] = useState(1);
+
   useEffect(() => {
     const audio = initialAudio ?? new Audio('/kuya-jem/level-up-chosen.MP3');
     let stopped = false;
     let replayTimer;
+    let stageTimer;
+    const showChosenPlayer = () => setStage(2);
     const replay = () => {
       if (stopped) return;
       audio.currentTime = 0;
+      setStage(1);
+      clearTimeout(stageTimer);
+      stageTimer = setTimeout(showChosenPlayer, audio.duration && Number.isFinite(audio.duration) ? audio.duration * 500 : 2500);
       audio.play().catch(() => undefined);
     };
     const onEnded = () => {
       replayTimer = setTimeout(replay, 500);
     };
+    const onTimeUpdate = () => {
+      if (audio.duration && audio.currentTime >= audio.duration * 0.5) showChosenPlayer();
+    };
+    const onLoadedMetadata = () => {
+      clearTimeout(stageTimer);
+      stageTimer = setTimeout(showChosenPlayer, audio.duration * 500);
+    };
     audio.addEventListener('ended', onEnded);
+    audio.addEventListener('timeupdate', onTimeUpdate);
+    audio.addEventListener('loadedmetadata', onLoadedMetadata);
     audio.play().catch(() => undefined);
+    stageTimer = setTimeout(showChosenPlayer, 2500);
     return () => {
       stopped = true;
       clearTimeout(replayTimer);
+      clearTimeout(stageTimer);
       audio.pause();
       audio.removeEventListener('ended', onEnded);
+      audio.removeEventListener('timeupdate', onTimeUpdate);
+      audio.removeEventListener('loadedmetadata', onLoadedMetadata);
     };
   }, [initialAudio, onComplete]);
 
@@ -76,7 +96,7 @@ export function ChosenReveal({ onComplete, audio: initialAudio }) {
             <p className="font-display text-2xl text-ink sm:text-4xl">The game has leveled up</p>
             <p className="mt-3 text-lg font-semibold text-ink/70 sm:text-2xl">One player must play the game</p>
           </div>
-          <div className="mt-5 rounded-2xl border-2 border-poster-red/25 bg-poster-red/5 px-4 py-4">
+          <div className={`mt-5 rounded-2xl border-2 border-poster-red/25 bg-poster-red/5 px-4 py-4 transition-opacity duration-500 ${stage === 2 ? 'opacity-100' : 'opacity-0'}`}>
             <p className="font-display text-2xl text-poster-red sm:text-4xl">Jemuel Ocampo, you have been chosen</p>
           </div>
           <button onClick={onComplete} className="btn-primary mt-7 w-full bg-poster-red shadow-[0_5px_0_#8f0000] hover:brightness-110 active:shadow-[0_2px_0_#8f0000]">Next</button>
