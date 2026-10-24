@@ -37,6 +37,46 @@ export function PasscodeModal({ onUnlock, onClose }) {
   );
 }
 
+export function ChosenReveal({ onComplete }) {
+  useEffect(() => {
+    const audio = new Audio('/kuya-jem/level-up-chosen.m4a');
+    let completed = false;
+    let completionTimer;
+    const complete = () => {
+      if (completed) return;
+      completed = true;
+      clearTimeout(completionTimer);
+      completionTimer = setTimeout(onComplete, 900);
+    };
+    audio.addEventListener('ended', complete);
+    audio.addEventListener('error', complete);
+    audio.play().catch(complete);
+    const fallback = setTimeout(complete, 30000);
+    return () => {
+      clearTimeout(fallback);
+      clearTimeout(completionTimer);
+      audio.pause();
+      audio.removeEventListener('ended', complete);
+      audio.removeEventListener('error', complete);
+    };
+  }, [onComplete]);
+
+  return (
+    <div role="alertdialog" aria-modal="true" aria-live="assertive" className="fixed inset-0 z-[60] flex items-center justify-center overflow-hidden bg-white/75 p-4 backdrop-blur-md">
+      <div aria-hidden className="pointer-events-none absolute inset-0 animate-blink bg-poster-red/20 motion-reduce:animate-none" />
+      <div className="relative w-full max-w-xl animate-pop rounded-[2rem] border-[6px] border-poster-red bg-white p-8 text-center shadow-[0_12px_0_#8f0000] motion-reduce:animate-none sm:p-12">
+        <span aria-hidden className="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 animate-ping rounded-full border-8 border-poster-red/25 motion-reduce:animate-none" />
+        <div className="relative">
+          <p className="font-display text-4xl uppercase tracking-[.16em] text-poster-red sm:text-6xl">Attention</p>
+          <p className="mt-6 font-display text-2xl text-ink sm:text-4xl">The game has leveled up</p>
+          <p className="mt-4 text-lg font-semibold text-ink/70 sm:text-2xl">One person must play the game</p>
+          <p className="mt-6 rounded-2xl bg-poster-red/10 px-4 py-3 font-display text-2xl text-poster-red sm:text-4xl">Jemuel Ocampo, you have been chosen</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function NameModal({ onConfirm, onClose }) {
   const [name, setName] = useState('');
   const [error, setError] = useState(false);

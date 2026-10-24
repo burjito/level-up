@@ -9,7 +9,7 @@ import Podium from './Podium.jsx';
 import DesktopOnly, { useIsSmallScreen } from './DesktopOnly.jsx';
 import { enterFullscreen } from './Fullscreen.jsx';
 import { setBedPhase } from './bedMusic.js';
-import { NameModal, PasscodeModal, SurpriseBoard, SurpriseFinalResults, SurpriseQuestion } from './Surprise.jsx';
+import { ChosenReveal, NameModal, PasscodeModal, SurpriseBoard, SurpriseFinalResults, SurpriseQuestion } from './Surprise.jsx';
 import { SURPRISE_QUESTIONS } from './surpriseData.js';
 
 // Progress is saved in this browser, so a refresh doesn't restart the game.
@@ -46,6 +46,7 @@ export default function App() {
   const [podiumMusic, setPodiumMusic] = useState(false);
   const [hideRanking, setHideRanking] = useState(!!saved?.hideRanking); // hides the top 3 on the board and while scoring
   const [showPasscode, setShowPasscode] = useState(false);
+  const [showChosenReveal, setShowChosenReveal] = useState(false);
   const [showNamePrompt, setShowNamePrompt] = useState(false);
   const [surpriseOpen, setSurpriseOpen] = useState(false);
   const [surprisePhase, setSurprisePhase] = useState('board');
@@ -121,6 +122,7 @@ export default function App() {
     setPodiumDone(false);
     setHideRanking(false);
     setShowPasscode(false);
+    setShowChosenReveal(false);
     setShowNamePrompt(false);
     setSurpriseOpen(false);
     setSurprisePhase('board');
@@ -177,7 +179,8 @@ export default function App() {
 
       {showPodium && <Podium teams={teams} onRevealed={setPodiumDone} onClose={() => { setShowPodium(false); setPodiumDone(false); }} />}
 
-      {showPasscode && <PasscodeModal onUnlock={() => { setShowPasscode(false); setShowNamePrompt(true); }} onClose={() => setShowPasscode(false)} />}
+      {showPasscode && <PasscodeModal onUnlock={() => { setShowPasscode(false); setShowChosenReveal(true); }} onClose={() => setShowPasscode(false)} />}
+      {showChosenReveal && <ChosenReveal onComplete={() => { setShowChosenReveal(false); setShowNamePrompt(true); }} />}
       {showNamePrompt && <NameModal onConfirm={(name) => { setSurprisePlayerName(name); setShowNamePrompt(false); setSurpriseOpen(true); setSurprisePhase('board'); }} onClose={() => setShowNamePrompt(false)} />}
       {surpriseOpen && surprisePhase === 'board' && (
         <SurpriseBoard
