@@ -47,6 +47,7 @@ export default function App() {
   const [hideRanking, setHideRanking] = useState(!!saved?.hideRanking); // hides the top 3 on the board and while scoring
   const [showPasscode, setShowPasscode] = useState(false);
   const [showChosenReveal, setShowChosenReveal] = useState(false);
+  const [chosenAudio, setChosenAudio] = useState(null);
   const [showNamePrompt, setShowNamePrompt] = useState(false);
   const [surpriseOpen, setSurpriseOpen] = useState(false);
   const [surprisePhase, setSurprisePhase] = useState('board');
@@ -123,6 +124,7 @@ export default function App() {
     setHideRanking(false);
     setShowPasscode(false);
     setShowChosenReveal(false);
+    setChosenAudio(null);
     setShowNamePrompt(false);
     setSurpriseOpen(false);
     setSurprisePhase('board');
@@ -179,8 +181,8 @@ export default function App() {
 
       {showPodium && <Podium teams={teams} onRevealed={setPodiumDone} onClose={() => { setShowPodium(false); setPodiumDone(false); }} />}
 
-      {showPasscode && <PasscodeModal onUnlock={() => { setShowPasscode(false); setShowChosenReveal(true); }} onClose={() => setShowPasscode(false)} />}
-      {showChosenReveal && <ChosenReveal onComplete={() => { setShowChosenReveal(false); setShowNamePrompt(true); }} />}
+      {showPasscode && <PasscodeModal onUnlock={(audio) => { setChosenAudio(audio); setShowPasscode(false); setShowChosenReveal(true); }} onClose={() => setShowPasscode(false)} />}
+      {showChosenReveal && <ChosenReveal audio={chosenAudio} onComplete={() => { setShowChosenReveal(false); setChosenAudio(null); setShowNamePrompt(true); }} />}
       {showNamePrompt && <NameModal onConfirm={(name) => { setSurprisePlayerName(name); setShowNamePrompt(false); setSurpriseOpen(true); setSurprisePhase('board'); }} onClose={() => setShowNamePrompt(false)} />}
       {surpriseOpen && surprisePhase === 'board' && (
         <SurpriseBoard
