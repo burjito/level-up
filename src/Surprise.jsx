@@ -92,7 +92,8 @@ export function ChosenReveal({ onComplete, audio: initialAudio }) {
     <div role="alertdialog" aria-modal="true" aria-live="assertive" className="fixed inset-0 z-[60] flex items-center justify-center overflow-hidden bg-white/75 p-4 backdrop-blur-md">
       <div aria-hidden className="pointer-events-none absolute inset-0 animate-warning-blink bg-poster-red/20 motion-reduce:animate-none" />
       <div className="relative w-full max-w-xl animate-pop rounded-[2rem] border-[6px] border-poster-red bg-white p-8 text-center shadow-[0_12px_0_#8f0000] motion-reduce:animate-none sm:p-12">
-        <span aria-hidden className="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 animate-ping rounded-full border-8 border-poster-red/25 motion-reduce:animate-none" />
+        <span aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 h-[28rem] w-[28rem] -translate-x-1/2 -translate-y-1/2 animate-warning-ring rounded-full border-8 border-poster-red/25 motion-reduce:animate-none sm:h-[34rem] sm:w-[34rem]" />
+        <span aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 h-[22rem] w-[22rem] -translate-x-1/2 -translate-y-1/2 animate-warning-ring-delayed rounded-full border-8 border-poster-red/20 motion-reduce:animate-none sm:h-[28rem] sm:w-[28rem]" />
         <div className="relative">
           {stage === 1 ? (
             <div key="attention" className="animate-pop motion-reduce:animate-none">
