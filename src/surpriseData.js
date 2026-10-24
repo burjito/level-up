@@ -10,7 +10,7 @@ const QUESTIONS = [
   ['Bukod sa UP at QC, saang kalsada pa baka biglang may makita si Maki?', 'BGC'],
   ['Anong Microsoft Office ang explicitly na biniblamе ng investigators dahil sa NASA Disaster noong 2003 sa Columbia Space Shuttle?', 'PPT'],
   ['Ano ang ginagawa ni Nadine Lustre sa ending ng pelikulang "Never Not Love You"?', 'Drive'],
-  ['Guess the word! 🐑+😋-CK   😯+🛣️+👯‍♀️', 'Bali Oasis'],
+  ['Guess the word!\n🐑 + 😋 - CK 😯 + 🛣️ + 👯‍♀️', 'Bali Oasis'],
   ['Around 4 billion na puno kada taon ang pinuputol at ito ay umaaccount sa halos 35% ng deforestation annually para makagawa ng ano?', 'Papel'],
   ['Ano ang trabaho ni kuya na nasa video?', 'Grab Driver'],
   ['Ano ang sikat na pagkain sa Japan ang may Chinese origin?', 'Ramen'],
