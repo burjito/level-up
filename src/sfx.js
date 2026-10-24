@@ -52,18 +52,18 @@ export function createWarningAlarm() {
       const start = a.currentTime;
       const oscillator = a.createOscillator();
       const gain = a.createGain();
-      oscillator.type = 'sawtooth';
-      oscillator.frequency.setValueAtTime(430, start);
-      oscillator.frequency.linearRampToValueAtTime(980, start + 0.48);
-      oscillator.frequency.linearRampToValueAtTime(430, start + 0.96);
+      oscillator.type = 'triangle';
+      oscillator.frequency.setValueAtTime(760, start);
+      oscillator.frequency.linearRampToValueAtTime(760, start + 0.38);
+      oscillator.frequency.linearRampToValueAtTime(520, start + 0.46);
+      oscillator.frequency.linearRampToValueAtTime(520, start + 0.84);
       gain.gain.setValueAtTime(0.0001, start);
-      gain.gain.linearRampToValueAtTime(0.24, start + 0.04);
-      gain.gain.setValueAtTime(0.24, start + 0.82);
-      gain.gain.linearRampToValueAtTime(0.0001, start + 0.98);
+      gain.gain.linearRampToValueAtTime(0.2, start + 0.04);
+      gain.gain.setValueAtTime(0.2, start + 0.8);
+      gain.gain.linearRampToValueAtTime(0.0001, start + 0.88);
       oscillator.connect(gain).connect(a.destination);
       oscillator.start(start);
-      oscillator.stop(start + 1.02);
-      tone(215, 0, 0.72, 'square', 0.16);
+      oscillator.stop(start + 0.92);
     } catch {}
   };
   return {
