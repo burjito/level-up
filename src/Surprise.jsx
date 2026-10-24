@@ -301,7 +301,11 @@ export function SurpriseQuestion({ question: q, playerName, onProceed, onShowTal
           </div>
         )}
         {!introReady && !voReady ? null : !voReady && <p className="text-sm font-semibold text-ink/60">{voPlaying ? 'Listen to the question…' : 'Loading question…'}</p>}
-        <p className="font-display text-3xl leading-tight sm:text-5xl">{q.questionText}</p>
+        <p className="font-display text-3xl leading-tight sm:text-5xl">
+          {q.questionText.split('\n').map((line, index) => (
+            <span key={`${q.id}-${index}`} className="block">{line}</span>
+          ))}
+        </p>
         {!reveal ? <button onClick={showAnswer} disabled={!voReady} className="btn-primary mt-auto self-end">Show answer</button> : (
           <>
             {q.answerMedia && <div><p className="mb-2 text-xs font-semibold uppercase tracking-wider" style={{ color }}>Answer reveal</p><QuestionMedia key={q.answerMedia} src={q.answerMedia} /></div>}
