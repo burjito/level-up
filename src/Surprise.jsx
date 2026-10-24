@@ -40,24 +40,23 @@ export function PasscodeModal({ onUnlock, onClose }) {
 export function ChosenReveal({ onComplete }) {
   useEffect(() => {
     const audio = new Audio('/kuya-jem/level-up-chosen.m4a');
-    let completed = false;
-    let completionTimer;
-    const complete = () => {
-      if (completed) return;
-      completed = true;
-      clearTimeout(completionTimer);
-      completionTimer = setTimeout(onComplete, 900);
+    let stopped = false;
+    let replayTimer;
+    const replay = () => {
+      if (stopped) return;
+      audio.currentTime = 0;
+      audio.play().catch(() => undefined);
     };
-    audio.addEventListener('ended', complete);
-    audio.addEventListener('error', complete);
-    audio.play().catch(complete);
-    const fallback = setTimeout(complete, 30000);
+    const onEnded = () => {
+      replayTimer = setTimeout(replay, 500);
+    };
+    audio.addEventListener('ended', onEnded);
+    audio.play().catch(() => undefined);
     return () => {
-      clearTimeout(fallback);
-      clearTimeout(completionTimer);
+      stopped = true;
+      clearTimeout(replayTimer);
       audio.pause();
-      audio.removeEventListener('ended', complete);
-      audio.removeEventListener('error', complete);
+      audio.removeEventListener('ended', onEnded);
     };
   }, [onComplete]);
 
@@ -68,9 +67,14 @@ export function ChosenReveal({ onComplete }) {
         <span aria-hidden className="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 animate-ping rounded-full border-8 border-poster-red/25 motion-reduce:animate-none" />
         <div className="relative">
           <p className="font-display text-4xl uppercase tracking-[.16em] text-poster-red sm:text-6xl">Attention</p>
-          <p className="mt-6 font-display text-2xl text-ink sm:text-4xl">The game has leveled up</p>
-          <p className="mt-4 text-lg font-semibold text-ink/70 sm:text-2xl">One person must play the game</p>
-          <p className="mt-6 rounded-2xl bg-poster-red/10 px-4 py-3 font-display text-2xl text-poster-red sm:text-4xl">Jemuel Ocampo, you have been chosen</p>
+          <div className="mt-6 rounded-2xl bg-poster-red/10 px-4 py-4">
+            <p className="font-display text-2xl text-ink sm:text-4xl">The game has leveled up</p>
+            <p className="mt-3 text-lg font-semibold text-ink/70 sm:text-2xl">One player must play the game</p>
+          </div>
+          <div className="mt-5 rounded-2xl border-2 border-poster-red/25 bg-poster-red/5 px-4 py-4">
+            <p className="font-display text-2xl text-poster-red sm:text-4xl">Jemuel Ocampo, you have been chosen</p>
+          </div>
+          <button onClick={onComplete} className="btn-primary mt-7 w-full bg-poster-red shadow-[0_5px_0_#8f0000] hover:brightness-110 active:shadow-[0_2px_0_#8f0000]">Next</button>
         </div>
       </div>
     </div>
