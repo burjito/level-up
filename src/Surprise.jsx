@@ -94,14 +94,19 @@ export function ChosenReveal({ onComplete, audio: initialAudio }) {
       <div className="relative w-full max-w-xl animate-pop rounded-[2rem] border-[6px] border-poster-red bg-white p-8 text-center shadow-[0_12px_0_#8f0000] motion-reduce:animate-none sm:p-12">
         <span aria-hidden className="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 animate-ping rounded-full border-8 border-poster-red/25 motion-reduce:animate-none" />
         <div className="relative">
-          <p className="font-display text-4xl uppercase tracking-[.16em] text-poster-red sm:text-6xl">Attention</p>
-          <div className="mt-6 rounded-2xl bg-poster-red/10 px-4 py-4">
-            <p className="font-display text-2xl text-ink sm:text-4xl">The game has leveled up</p>
-            <p className="mt-3 text-lg font-semibold text-ink/70 sm:text-2xl">One player must play the game</p>
-          </div>
-          <div className={`mt-5 rounded-2xl border-2 border-poster-red/25 bg-poster-red/5 px-4 py-4 transition-opacity duration-500 ${stage === 2 ? 'opacity-100' : 'opacity-0'}`}>
-            <p className="font-display text-2xl text-poster-red sm:text-4xl">Jemuel Ocampo, you have been chosen</p>
-          </div>
+          {stage === 1 ? (
+            <div key="attention" className="animate-pop motion-reduce:animate-none">
+              <p className="font-display text-4xl uppercase tracking-[.16em] text-poster-red sm:text-6xl">Attention</p>
+              <div className="mt-6 rounded-2xl bg-poster-red/10 px-4 py-4">
+                <p className="font-display text-2xl text-ink sm:text-4xl">The game has leveled up</p>
+                <p className="mt-3 text-lg font-semibold text-ink/70 sm:text-2xl">One player must play the game</p>
+              </div>
+            </div>
+          ) : (
+            <div key="chosen" className="animate-pop motion-reduce:animate-none">
+              <p className="rounded-2xl border-2 border-poster-red/25 bg-poster-red/5 px-4 py-5 font-display text-3xl text-poster-red sm:text-5xl">Jemuel Ocampo, you have been chosen</p>
+            </div>
+          )}
           <button onClick={onComplete} className="btn-primary mt-7 w-full bg-poster-red shadow-[0_5px_0_#8f0000] hover:brightness-110 active:shadow-[0_2px_0_#8f0000]">Next</button>
         </div>
       </div>
